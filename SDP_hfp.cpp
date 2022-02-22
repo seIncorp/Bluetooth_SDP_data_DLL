@@ -81,4 +81,17 @@ void SDP::HFP::HFP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 	supported_features_handle->print<SUPPORTED_FEATURES::VV>(supported_features_handle->VALUE, dd);
 }
 
+SDP::HFP::PHFP_EXPORT SDP::HFP::HFP_class::export_ALL_ATTR()
+{
+	exp = new HFP_EXPORT();
 
+	exp->default_export = export_default_ATTR();
+
+	if (network_handle != NULL)
+		exp->network_handle_export = network_handle;
+
+	if (supported_features_handle != NULL)
+		exp->supported_features_handle_export = supported_features_handle;
+
+	return exp;
+}

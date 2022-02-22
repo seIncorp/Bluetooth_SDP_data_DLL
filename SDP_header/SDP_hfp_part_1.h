@@ -163,12 +163,17 @@ namespace SDP
 
 		} SUPPORTED_FEATURES, * PSUPPORTED_FEATURES;
 
+
 		typedef struct HFP_EXPORT_S
 		{
+			PDEFAULT_EXPORT default_export;
+
 			PNETWORK network_handle_export;
 			PSUPPORTED_FEATURES supported_features_handle_export;
 
 		} HFP_EXPORT, * PHFP_EXPORT;
+
+
 
 		void parse_NETWORK_HFP(PNETWORK handle);
 		void parse_SUPPORTED_FEATURES_HFP(PSUPPORTED_FEATURES handle);

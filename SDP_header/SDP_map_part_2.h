@@ -8,7 +8,7 @@ namespace SDP
 		// TODO: preveri ce se pravilno pokazejo supported features
 		// TODO: naredi se za MNS
 
-		class MAP_all_attributes : DEFAULT_class
+		class MAP_class : DEFAULT_class
 		{
 			public:
 
@@ -21,7 +21,7 @@ namespace SDP
 				PMAP_EXPORT exp;
 
 
-				MAP_all_attributes();
+				MAP_class();
 
 				void call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 				void print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);

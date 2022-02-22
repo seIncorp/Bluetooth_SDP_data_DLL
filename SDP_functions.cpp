@@ -362,7 +362,7 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 		if (device_data_sdp->current_used_service == SDP::Message_Access_Server)
 		{
 			// DONE!
-			SDP::MAP::MAP_all_attributes test_aa = SDP::MAP::MAP_all_attributes();
+			SDP::MAP::MAP_class test_aa = SDP::MAP::MAP_class();
 			test_aa.call_ALL_ATTR(device_data_sdp, *dd);
 			test_aa.print_ALL_ATTR(*dd);
 
@@ -399,6 +399,8 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 			SDP::HFP::HFP_class test_bb = SDP::HFP::HFP_class();
 			test_bb.call_ALL_ATTR(device_data_sdp, *dd);
 			test_bb.print_ALL_ATTR(*dd);
+
+			dd->exported_data.hfp_export = (BYTE*)test_bb.export_ALL_ATTR();
 		}
 
 		if (device_data_sdp->current_used_service == SDP::PnPInformation)

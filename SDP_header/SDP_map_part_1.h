@@ -53,6 +53,7 @@ namespace SDP
 
 			SF_S* aaa;
 
+			// TODO: bolje preimenuj, da bo bolj razumljivo
 			int flag;
 
 			SUPPORTED_FEATURES_MESSAGES_S(BYTE* a) : ttt((SMT_S*)a)
@@ -72,6 +73,8 @@ namespace SDP
 
 		std::string getMessageTypesString(SUPPORTED_FEATURES_MESSAGES_S* sfm);
 		std::string getSupportedFeaturesString(SUPPORTED_FEATURES_MESSAGES_S* sfm);
+
+
 
 
 		typedef struct GOEPL2CAPPSM_S : DEFAULT_OBJECT
@@ -163,6 +166,10 @@ namespace SDP
 
 		} MAP_SUPPORTED_FEATURES, * PMAP_SUPPORTED_FEATURES;
 
+
+
+
+
 		typedef struct MAP_EXPORT_S
 		{
 			PDEFAULT_EXPORT default_export;
@@ -213,9 +220,5 @@ namespace SDP
 				parse_MAP_SUPPORTED_FEATURES_MAP((PMAP_SUPPORTED_FEATURES)handle);
 			}
 		}
-
-
-
-		
 	}
 }

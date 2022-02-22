@@ -14,6 +14,8 @@ namespace SDP
 			PNETWORK network_handle;
 			PSUPPORTED_FEATURES supported_features_handle;
 
+			PHFP_EXPORT exp;
+
 			HFP_class();
 
 			void call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
@@ -22,6 +24,7 @@ namespace SDP
 			void call_Network(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 			void call_SupportedFeatures(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 
+			PHFP_EXPORT export_ALL_ATTR();
 
 		private:
 			SHORT att_AG_array[7]{

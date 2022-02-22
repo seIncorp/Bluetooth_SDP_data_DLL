@@ -202,7 +202,7 @@ void SDP::MAP::parse_MAP_SUPPORTED_FEATURES_MAP(PMAP_SUPPORTED_FEATURES handle)
 /* CLASS MAP_all_attributes functions */
 
 
-SDP::MAP::MAP_all_attributes::MAP_all_attributes()
+SDP::MAP::MAP_class::MAP_class()
 {
 	// set all objects
 	setDefaultObjects();
@@ -213,7 +213,7 @@ SDP::MAP::MAP_all_attributes::MAP_all_attributes()
 	map_supported_features_handle = new MAP_SUPPORTED_FEATURES();
 }
 
-void SDP::MAP::MAP_all_attributes::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+void SDP::MAP::MAP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
 {
 	callDefaultAttributes(device_data_sdp, dd);
 
@@ -262,7 +262,7 @@ void SDP::MAP::MAP_all_attributes::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sd
 	);
 }
 
-void SDP::MAP::MAP_all_attributes::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
+void SDP::MAP::MAP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
 	printDefaultData(dd);
 
@@ -273,7 +273,7 @@ void SDP::MAP::MAP_all_attributes::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 	map_supported_features_handle->print<MAP_SUPPORTED_FEATURES_S::VV>(map_supported_features_handle->VALUE, dd);
 }
 
-SDP::MAP::PMAP_EXPORT SDP::MAP::MAP_all_attributes::export_ALL_ATTR()
+SDP::MAP::PMAP_EXPORT SDP::MAP::MAP_class::export_ALL_ATTR()
 {
 	exp = new MAP_EXPORT();
 
