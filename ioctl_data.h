@@ -50,9 +50,9 @@ namespace IOCTL_S
 		struct SDP_exported_data
 		{
 			BYTE* default_export;
-			BYTE* a2dp_export;
-			BYTE* avrcp_export;
-			BYTE* hfp_export;
+			BYTE* a2dp_export;			// DONE!
+			BYTE* avrcp_export;			// 
+			BYTE* hfp_export;			// DONE!
 			BYTE* hsp_export;
 			BYTE* map_export;			// DONE!
 			BYTE* nap_export;

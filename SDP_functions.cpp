@@ -413,9 +413,11 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 		if (device_data_sdp->current_used_service == SDP::AudioSource)
 		{
 			// DONE!
-			SDP::A2DP::A2DP_all_attributes test_bb = SDP::A2DP::A2DP_all_attributes();
+			SDP::A2DP::A2DP_class test_bb = SDP::A2DP::A2DP_class();
 			test_bb.call_ALL_ATTR(device_data_sdp, *dd);
 			test_bb.print_ALL_ATTR(*dd);
+
+			dd->exported_data.a2dp_export = (BYTE*)test_bb.export_ALL_ATTR();
 		}
 
 		if (device_data_sdp->current_used_service == SDP::A_V_RemoteControl ||
@@ -424,9 +426,16 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 			)
 		{
 			// DONE!
-			SDP::AVRCP::AVRCP_all_attributes test_bb = SDP::AVRCP::AVRCP_all_attributes();
+			SDP::AVRCP::AVRCP_class test_bb = SDP::AVRCP::AVRCP_class();
 			test_bb.call_ALL_ATTR(device_data_sdp, *dd);
 			test_bb.print_ALL_ATTR(*dd);
+
+			//dd->exported_data.avrcp_export = (BYTE*)test_bb.export_ALL_ATTR();
+
+			printf("333. DO TUKAJ!!!\n");
+
+			dd->exported_data.avrcp_export = (BYTE *)test_bb.export_ALL_ATTR();
+			printf("444. DO TUKAJ!!!\n");
 		}
 
 		if (device_data_sdp->current_used_service == SDP::Headset ||

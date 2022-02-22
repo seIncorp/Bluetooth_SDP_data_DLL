@@ -7,7 +7,7 @@ namespace SDP
 
 	namespace AVRCP
 	{
-		class AVRCP_all_attributes : DEFAULT_class
+		class AVRCP_class : DEFAULT_class
 		{
 		public:
 			
@@ -15,10 +15,14 @@ namespace SDP
 
 			DEVICE_DATA_SDP* dds;
 
-			AVRCP_all_attributes();
+			PAVRCP_EXPORT exp;
+
+			AVRCP_class();
 
 			void call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 			void print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
+
+			PAVRCP_EXPORT export_ALL_ATTR();
 
 
 		private:

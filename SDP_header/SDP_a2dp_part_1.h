@@ -77,11 +77,15 @@ namespace SDP
 
 		} SUPPORTED_FEATURES, * PSUPPORTED_FEATURES;
 
+
 		typedef struct A2DP_EXPORT_S
 		{
+			PDEFAULT_EXPORT default_export;
+
 			PSUPPORTED_FEATURES supported_features_handle_export;
 
 		} A2DP_EXPORT, * PA2DP_EXPORT;
+
 
 		// TODO: naredi se za Audio Sink 
 

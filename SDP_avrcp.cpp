@@ -35,7 +35,7 @@ void SDP::AVRCP::parse_SUPPORTED_FEATURES_AVRCP(PSUPPORTED_FEATURES handle, SHOR
 /* CLASS AVRCP_all_attributes functions */
 
 
-SDP::AVRCP::AVRCP_all_attributes::AVRCP_all_attributes()
+SDP::AVRCP::AVRCP_class::AVRCP_class()
 {
 	setDefaultObjects();
 
@@ -43,7 +43,7 @@ SDP::AVRCP::AVRCP_all_attributes::AVRCP_all_attributes()
 	supported_features_handle = new SUPPORTED_FEATURES();
 }
 
-void SDP::AVRCP::AVRCP_all_attributes::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+void SDP::AVRCP::AVRCP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
 {
 	callDefaultAttributes(device_data_sdp, dd);
 
@@ -72,12 +72,22 @@ void SDP::AVRCP::AVRCP_all_attributes::call_ALL_ATTR(DEVICE_DATA_SDP* device_dat
 	dds = device_data_sdp;
 }
 
-void SDP::AVRCP::AVRCP_all_attributes::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
+void SDP::AVRCP::AVRCP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
 	printDefaultData(dd);
 
 	supported_features_handle->print<SUPPORTED_FEATURES::VV>(supported_features_handle->VALUE, dd);
 }
 
+SDP::AVRCP::PAVRCP_EXPORT SDP::AVRCP::AVRCP_class::export_ALL_ATTR()
+{
+	exp = new AVRCP_EXPORT();
 
+	exp->default_export = export_default_ATTR();
+
+	if (supported_features_handle != NULL)
+		exp->supported_features_handle_export = supported_features_handle;
+
+	return exp;
+}
 
