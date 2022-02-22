@@ -12,6 +12,10 @@ Source code for Bluetooth Service Discovery Protocol (SDP) using only communicat
 - bthdef.h
 - bthsdpdef.h
 - bthioctl.h
+- Adding lib files:
+* #pragma comment(lib, "Ws2_32.lib")
+* #pragma comment(lib, "Bthprops.lib")
+* #pragma comment(lib, "Ole32.lib")
 
 ## DLL, lib and header
 Before you can use this dll file, you must add to your app:
