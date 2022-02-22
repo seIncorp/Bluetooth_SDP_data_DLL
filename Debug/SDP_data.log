@@ -1,0 +1,44 @@
+﻿  pch.cpp
+C:\Users\simon\source\repos\SDP_data\COD_parser.h(45,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\simon\source\repos\SDP_data\COD_parser.h(49,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\simon\source\repos\SDP_data\COD_parser.h(53,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\simon\source\repos\SDP_data\BTH_devices.h(106,11): warning C4477: 'printf' : format string '%X' requires an argument of type 'unsigned int', but variadic argument 1 has type 'ULONGLONG'
+C:\Users\simon\source\repos\SDP_data\BTH_devices.h(106,11): message : consider using '%llX' in the format string
+C:\Users\simon\source\repos\SDP_data\BTH_devices.h(106,11): message : consider using '%I64X' in the format string
+  COD_parser.cpp
+  SDP.cpp
+  SDP_a2dp.cpp
+  SDP_avrcp.cpp
+  SDP_classes.cpp
+  SDP_functions.cpp
+C:\Users\simon\source\repos\SDP_data\SDP_functions.cpp(121,10): warning C4566: character represented by universal-character-name '\u2010' cannot be represented in the current code page (1250)
+C:\Users\simon\source\repos\SDP_data\SDP_functions.cpp(125,10): warning C4566: character represented by universal-character-name '\u2010' cannot be represented in the current code page (1250)
+C:\Users\simon\source\repos\SDP_data\SDP_functions.cpp(550,4): warning C4060: switch statement contains no 'case' or 'default' labels
+  SDP_hfp.cpp
+  SDP_hsp.cpp
+  SDP_map.cpp
+  SDP_nap.cpp
+  SDP_obex.cpp
+  SDP_pbap.cpp
+  SDP_pnpinfo.cpp
+  dllmain.cpp
+  ioctl_data.cpp
+C:\Users\simon\source\repos\SDP_data\ioctl_data.cpp(4,1): warning C4273: 'IOCTL_S::DEFAULT_DATA::reset_SDP_service_for_search': inconsistent dll linkage
+C:\Users\simon\source\repos\SDP_data\ioctl_data.h(72,8): message : see previous definition of 'reset_SDP_service_for_search'
+C:\Users\simon\source\repos\SDP_data\ioctl_data.cpp(27,1): warning C4273: 'IOCTL_S::DEFAULT_DATA::set_all_SDP_service_for_search': inconsistent dll linkage
+C:\Users\simon\source\repos\SDP_data\ioctl_data.h(73,8): message : see previous definition of 'set_all_SDP_service_for_search'
+C:\Users\simon\source\repos\SDP_data\ioctl_data.cpp(101,1): warning C4273: 'IOCTL_S::connectToDevice': inconsistent dll linkage
+C:\Users\simon\source\repos\SDP_data\ioctl_data.h(88,19): message : see previous definition of 'connectToDevice'
+C:\Users\simon\source\repos\SDP_data\ioctl_data.cpp(124,1): warning C4273: 'IOCTL_S::closeConnectionToDevice': inconsistent dll linkage
+C:\Users\simon\source\repos\SDP_data\ioctl_data.h(89,20): message : see previous definition of 'closeConnectionToDevice'
+C:\Users\simon\source\repos\SDP_data\ioctl_data.cpp(151,1): warning C4273: 'IOCTL_S::getBthDeviceInfo': inconsistent dll linkage
+C:\Users\simon\source\repos\SDP_data\ioctl_data.h(93,19): message : see previous definition of 'getBthDeviceInfo'
+C:\Users\simon\source\repos\SDP_data\ioctl_data.cpp(172,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\simon\source\repos\SDP_data\ioctl_data.cpp(192,1): warning C4273: 'IOCTL_S::getLocalBthInfo': inconsistent dll linkage
+C:\Users\simon\source\repos\SDP_data\ioctl_data.h(94,20): message : see previous definition of 'getLocalBthInfo'
+C:\Users\simon\source\repos\SDP_data\ioctl_data.cpp(241,1): warning C4273: 'IOCTL_S::SDPsearch': inconsistent dll linkage
+C:\Users\simon\source\repos\SDP_data\ioctl_data.h(92,19): message : see previous definition of 'SDPsearch'
+  Generating Code...
+C:\Users\simon\source\repos\SDP_data\SDP_functions.cpp(50): warning C4715: 'SDP::SUB_FUNCTIONS::getElementSize': not all control paths return a value
+     Creating library C:\Users\simon\source\repos\SDP_data\Debug\SDP_data.lib and object C:\Users\simon\source\repos\SDP_data\Debug\SDP_data.exp
+  SDP_data.vcxproj -> C:\Users\simon\source\repos\SDP_data\Debug\SDP_data.dll
