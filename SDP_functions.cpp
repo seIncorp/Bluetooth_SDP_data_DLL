@@ -430,12 +430,7 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 			test_bb.call_ALL_ATTR(device_data_sdp, *dd);
 			test_bb.print_ALL_ATTR(*dd);
 
-			//dd->exported_data.avrcp_export = (BYTE*)test_bb.export_ALL_ATTR();
-
-			printf("333. DO TUKAJ!!!\n");
-
 			dd->exported_data.avrcp_export = (BYTE *)test_bb.export_ALL_ATTR();
-			printf("444. DO TUKAJ!!!\n");
 		}
 
 		if (device_data_sdp->current_used_service == SDP::Headset ||
@@ -444,9 +439,11 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 			)
 		{
 			// DONE!
-			SDP::HSP::HSP_all_attributes test_bb = SDP::HSP::HSP_all_attributes();
+			SDP::HSP::HSP_class test_bb = SDP::HSP::HSP_class();
 			test_bb.call_ALL_ATTR(device_data_sdp, *dd);
 			test_bb.print_ALL_ATTR(*dd);
+
+			dd->exported_data.hsp_export = (BYTE*)test_bb.export_ALL_ATTR();
 		}
 
 

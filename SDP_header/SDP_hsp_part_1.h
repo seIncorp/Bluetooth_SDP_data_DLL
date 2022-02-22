@@ -18,11 +18,16 @@ namespace SDP
 
 		} REMOTE_AUDIO_VOLUME_CONTROL, * PREMOTE_AUDIO_VOLUME_CONTROL;
 
+
 		typedef struct HSP_EXPORT_S
 		{
+			PDEFAULT_EXPORT default_export;
+			
 			PREMOTE_AUDIO_VOLUME_CONTROL remote_audio_volume_control_handle_export;
 
 		} HSP_EXPORT, * PHSP_EXPORT;
+
+
 
 		void parse_REMOTE_AUDIO_VOLUME_CONTROL_HSP(PREMOTE_AUDIO_VOLUME_CONTROL handle);
 

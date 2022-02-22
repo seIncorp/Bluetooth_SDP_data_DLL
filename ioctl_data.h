@@ -51,9 +51,9 @@ namespace IOCTL_S
 		{
 			BYTE* default_export;
 			BYTE* a2dp_export;			// DONE!
-			BYTE* avrcp_export;			// 
+			BYTE* avrcp_export;			// DONE!
 			BYTE* hfp_export;			// DONE!
-			BYTE* hsp_export;
+			BYTE* hsp_export;			// DONE!
 			BYTE* map_export;			// DONE!
 			BYTE* nap_export;
 			BYTE* obex_export;
