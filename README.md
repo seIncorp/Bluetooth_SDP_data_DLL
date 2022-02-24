@@ -5,24 +5,22 @@ Source code for Bluetooth Service Discovery Protocol (SDP) using only communicat
 # How to use it
 ## Included headers and libraries for using dll
 - stdio.h
-- vector
 - iostream
 - winsock2.h
-- ws2bth.h
 - bthdef.h
-- bthsdpdef.h
 - bthioctl.h
-- Adding lib files:
-* #pragma comment(lib, "Ws2_32.lib")
-* #pragma comment(lib, "Bthprops.lib")
-* #pragma comment(lib, "Ole32.lib")
 
 ## DLL, lib and header
 Before you can use this dll file, you must add to your app:
 1. header: 
-ioctl_data.h
+
+> #include "ioctl_data.h"
+
 2. .lib file:
-SDP_data.lib
+
+> #pragma comment(lib, "SDP_data.lib")
+
 3. .dll file:
-SDP_data.dll
+
+> Add SDP_data.dll into folder where .exe of app will be
 
