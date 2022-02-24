@@ -34,5 +34,8 @@ DLL have next functions:
 > disconnection from local radio (THIS MUST BE CALLED BEFORE APP IS CLOSED!!!)
 #### Search and retriving data functions
 - SDPsearch()
+> search for service for specific device
 - getBthDeviceInfo()
+> retriving list of cached bluetooth devices from previous search
 - getLocalBthInfo()
+> information about the local Bluetooth system and radio
