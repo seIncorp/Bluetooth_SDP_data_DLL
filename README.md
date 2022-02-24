@@ -39,3 +39,12 @@ DLL have next functions:
 > retriving list of cached bluetooth devices from previous search
 - getLocalBthInfo()
 > information about the local Bluetooth system and radio
+
+## Settings of dll (IN PROGRESS...)
+- debug
+- print
+
+## Main structures
+- SDP_services_for_search
+- SDP_exported_data
+- SDP_settings
