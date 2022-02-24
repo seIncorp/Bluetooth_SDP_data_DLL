@@ -5,12 +5,16 @@
 /*********************************************************************************************************************/
 /* PNPINFO SPECIFIC */
 
-int SDP::PNPINFO::getAndParse_SPECIFICATION_ID_PNPINFO(ULONG recordHandle, HANDLE_SDP_TYPE aa, IOCTL_S::DEFAULT_DATA dd)
-{
-	printf("\n\n*** getAndParse_SPECIFICATION_ID_PNPINFO ***\n");
 
+
+SDP::PNPINFO::PNPINFO_class::PNPINFO_class()
+{
+	info_handle = new INFO();
+}
+
+void SDP::PNPINFO::PNPINFO_class::call_ALL_ATTR(ULONG recordHandle, HANDLE_SDP_TYPE aa, IOCTL_S::DEFAULT_DATA dd)
+{
 	BYTE bssr_response[5000]{ 0 };
-	SDP::PNPINFO::INFO* ttt_handle = new SDP::PNPINFO::INFO();
 
 	BOOL test = FALSE;
 
@@ -25,35 +29,31 @@ int SDP::PNPINFO::getAndParse_SPECIFICATION_ID_PNPINFO(ULONG recordHandle, HANDL
 			printf("IOCTL_BTH_SDP_ATTRIBUTE_SEARCH --> OK\n");
 
 			SDP::FUNCTIONS::printResponse(bssr_response);
-			int position = SDP::FUNCTIONS::set_save_ATTRIBUTE_ELEMENT<SDP::PNPINFO::INFO*, BYTE[]>(ttt_handle, bssr_response, 5000);
+			int position = SDP::FUNCTIONS::set_save_ATTRIBUTE_ELEMENT<SDP::PNPINFO::INFO*, BYTE[]>(info_handle, bssr_response, 5000);
 
-			position = SDP::FUNCTIONS::set_save_VALUE_ELEMENT<SDP::PNPINFO::INFO*, BYTE[]>(ttt_handle, bssr_response, 5000, position);
+			position = SDP::FUNCTIONS::set_save_VALUE_ELEMENT<SDP::PNPINFO::INFO*, BYTE[]>(info_handle, bssr_response, 5000, position);
 
 			if (bb == PrimaryRecord)
 			{
-				ttt_handle->setIDdata<BOOL>(bb, ttt_handle->VALUE.value[0]);
+				info_handle->setIDdata<BOOL>(bb, info_handle->VALUE.value[0]);
 			}
 			else
 			{
 				SHORT temp = 0x00;
-				temp |= ttt_handle->VALUE.value[0];
+				temp |= info_handle->VALUE.value[0];
 				temp <<= 8;
-				temp |= ttt_handle->VALUE.value[1];
-				ttt_handle->setIDdata<SHORT>(bb, temp);
+				temp |= info_handle->VALUE.value[1];
+				info_handle->setIDdata<SHORT>(bb, temp);
 			}
 		}
 	}
-
-	ttt_handle->print<INFO_S::VV>(ttt_handle->VALUE, dd);
-
-	PINFO_EXPORT exp = new INFO_EXPORT();
-
-	exp->info_handle_export = ttt_handle;
-
-	dd.exported_data.pnpinfo_export = (BYTE*)ttt_handle;
-
-	printf("************  %X\n", ((SDP::PNPINFO::INFO*)(dd.exported_data.pnpinfo_export))->SpecificationID);
-
-	return 1;
 }
 
+SDP::PNPINFO::PINFO_EXPORT SDP::PNPINFO::PNPINFO_class::export_ALL_ATTR()
+{
+	exp = new INFO_EXPORT();
+
+	exp->info_handle_export = info_handle;
+
+	return exp;
+}

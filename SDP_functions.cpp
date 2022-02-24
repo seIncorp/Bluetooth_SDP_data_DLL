@@ -411,9 +411,10 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 
 		if (device_data_sdp->current_used_service == SDP::PnPInformation)
 		{
-			// DONE!
-			if (SDP::PNPINFO::getAndParse_SPECIFICATION_ID_PNPINFO(device_data_sdp->buffer_res[0], device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME, *dd) == 0)
-				printf("ERROR [getAndParse_SPECIFICATION_ID_PNPINFO]\n");
+			SDP::PNPINFO::PNPINFO_class test_bb = SDP::PNPINFO::PNPINFO_class();
+			test_bb.call_ALL_ATTR(device_data_sdp->buffer_res[0], device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME, *dd);
+
+			dd->exported_data.pnpinfo_export = (BYTE*)test_bb.export_ALL_ATTR();
 		}
 
 		if (device_data_sdp->current_used_service == SDP::AudioSource)
@@ -451,15 +452,6 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 
 			dd->exported_data.hsp_export = (BYTE*)test_bb.export_ALL_ATTR();
 		}
-
-
-		//if (device_data_sdp->current_used_service == SDP::GenericAudio)
-		//{
-		//	// DONE!
-		//	SDP::DEFAULT_class test_bb = SDP::DEFAULT_class();
-		//	test_bb.callDefaultAttributes(device_data_sdp, *dd);
-		//	test_bb.printDefaultData(*dd);
-		//}
 	}
 }
 

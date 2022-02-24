@@ -11,7 +11,9 @@
 /*
 	TODO:
 	- BUG: check why app crash when use and call set_all_SDP_service_for_search() with SDPsearch() [FIXED: NOT USING GenericAudio service]
-	- ADD: to all services export function
+	- ADD: debug option
+	- ADD: print option
+
 
 
 */
@@ -299,7 +301,7 @@ namespace IOCTL_S
 			BYTE* nap_export;			// DONE!
 			BYTE* obex_export;			// DONE!
 			BYTE* pbap_export;			// DONE!
-			BYTE* pnpinfo_export;
+			BYTE* pnpinfo_export;		// 
 		};
 
 
