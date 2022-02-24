@@ -39,12 +39,21 @@ DLL have next functions:
 > retriving list of cached bluetooth devices from previous search
 - getLocalBthInfo()
 > information about the local Bluetooth system and radio
+#### DEFAULT_DATA structures functions
+- reset_SDP_service_for_search()
+- set_all_SDP_service_for_search()
 
 ## Settings of dll (IN PROGRESS...)
 - debug
 - print
 
 ## Main structures
+- DEFAULT_DATA
+> Containe all next structures and functions
 - SDP_services_for_search
+> here you can enable/disable which service will be searched on remote device
 - SDP_exported_data
+> here you get exported all data from searched service/services
 - SDP_settings
+> here you can enable/disable debug and print data (DEFAULT: disabled)
+
