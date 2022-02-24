@@ -3,7 +3,7 @@ Source code for Bluetooth Service Discovery Protocol (SDP) using only communicat
 
 
 # How to use it
-## Included libraries
+## Included headers and libraries for using dll
 - stdio.h
 - vector
 - iostream
