@@ -68,7 +68,7 @@ void SDP::OBEX::parse_SUPPORTED_FORMATS_LIST_OBEX(PSUPPORTED_FORMATS handle)
 /* CLASS NAP_PANU_all_attributes functions */
 
 
-SDP::OBEX::OBEX_all_attributes::OBEX_all_attributes()
+SDP::OBEX::OBEX_class::OBEX_class()
 {
 	// set all objects
 	setDefaultObjects();
@@ -78,7 +78,7 @@ SDP::OBEX::OBEX_all_attributes::OBEX_all_attributes()
 	service_version_handle = new SERVICE_VERSION();
 }
 
-void SDP::OBEX::OBEX_all_attributes::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+void SDP::OBEX::OBEX_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
 {
 	callDefaultAttributes(device_data_sdp, dd);
 
@@ -116,7 +116,7 @@ void SDP::OBEX::OBEX_all_attributes::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_
 		);
 }
 
-void SDP::OBEX::OBEX_all_attributes::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
+void SDP::OBEX::OBEX_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
 	printDefaultData(dd);
 
@@ -127,6 +127,22 @@ void SDP::OBEX::OBEX_all_attributes::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 
 }
 
+SDP::OBEX::POBEX_EXPORT SDP::OBEX::OBEX_class::export_ALL_ATTR()
+{
+	exp = new OBEX_EXPORT();
 
+	exp->default_export = export_default_ATTR();
+
+	if (goepl2cappsm_handle != NULL)
+		exp->goepl2cappsm_handle_export = goepl2cappsm_handle;
+
+	if (service_version_handle != NULL)
+		exp->service_version_handle_export = service_version_handle;
+
+	if (supported_formats_handle != NULL)
+		exp->supported_formats_handle_export = supported_formats_handle;
+
+	return exp;
+}
 
 

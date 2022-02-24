@@ -46,6 +46,14 @@ int SDP::PNPINFO::getAndParse_SPECIFICATION_ID_PNPINFO(ULONG recordHandle, HANDL
 
 	ttt_handle->print<INFO_S::VV>(ttt_handle->VALUE, dd);
 
+	PINFO_EXPORT exp = new INFO_EXPORT();
+
+	exp->info_handle_export = ttt_handle;
+
+	dd.exported_data.pnpinfo_export = (BYTE*)ttt_handle;
+
+	printf("************  %X\n", ((SDP::PNPINFO::INFO*)(dd.exported_data.pnpinfo_export))->SpecificationID);
+
 	return 1;
 }
 

@@ -5,7 +5,7 @@ namespace SDP
 
 	namespace PBAP
 	{
-		class PBAP_all_attributes : DEFAULT_class
+		class PBAP_class : DEFAULT_class
 		{
 		public:
 			
@@ -14,10 +14,14 @@ namespace SDP
 			PSUPPORTED_REPOSITORIES supported_repositories_handle;
 			PPBAP_SUPPORTED_FEATURES pbap_supported_features_handle;
 
-			PBAP_all_attributes();
+			PPBAP_EXPORT exp;
+
+			PBAP_class();
 
 			void call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 			void print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
+
+			PPBAP_EXPORT export_ALL_ATTR();
 
 		private:
 			SHORT att_array[8]{

@@ -10,22 +10,21 @@
 // add headers that you want to pre-compile here
 #include "framework.h"
 
-
 #include "COD_parser.h"
 #include "BTH_devices.h"
 
 
-
-
-
-
-
-
-
-
-
-
+/*************************************************/
+/*************************************************/
+/* HEADER file to use on clients */
 #include "ioctl_data.h"
+/*************************************************/
+/*************************************************/
+
+#include "SDP_header/SDP.h"
+
+
+
 
 
 

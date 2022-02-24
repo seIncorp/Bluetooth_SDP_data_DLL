@@ -1,53 +1,9 @@
 #pragma once
+
 namespace SDP
 {
-
 	namespace OBEX
 	{
-
-		std::string getSupportedFormatsString(BYTE data[], int size);
-
-		typedef struct SERVICE_VERSION_S : DEFAULT_OBJECT
-		{
-
-		} SERVICE_VERSION, * PSERVICE_VERSION;
-
-		typedef struct SUPPORTED_FORMATS_S : DEFAULT_OBJECT
-		{
-			struct VV : VALUE
-			{
-				int num_of_formats;
-				BYTE* formats;
-
-			} VALUE;
-
-			template<class T>
-			void print(T v, IOCTL_S::DEFAULT_DATA dd)
-			{
-				printATTR_ELEMENT();
-
-				printVALUE_ELEMENT(v);
-
-				printf("Number of supported formats: %d\n", v.num_of_formats);
-
-				printf("Supported formats: \n");
-				for (int aa = 0; aa < v.num_of_formats; aa++)
-					printf("0x%02X ", v.formats[aa]);
-				printf("\n");
-
-				printf("Formats: \n%s\n", getSupportedFormatsString(v.formats, v.num_of_formats).c_str());
-			}
-
-		} SUPPORTED_FORMATS, * PSUPPORTED_FORMATS;
-
-		typedef struct OBEX_EXPORT_S
-		{
-			SDP::MAP::PGOEPL2CAPPSM goepl2cappsm_handle_export;
-			PSERVICE_VERSION service_version_handle_export;
-			PSUPPORTED_FORMATS supported_formats_handle_export;
-
-		} OBEX_EXPORT, * POBEX_EXPORT;
-
 		// GoepL2CapPsm use from MAP
 
 		void parse_SERVICE_VERSION_OBEX(PSERVICE_VERSION handle);

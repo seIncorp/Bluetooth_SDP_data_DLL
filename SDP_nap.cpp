@@ -131,7 +131,7 @@ void SDP::NAP::parse_MAX_NET_ACCESS_RATE_PAN(PMAX_NET_ACCESS_RATE handle)
 
 
 
-SDP::NAP::NAP_PANU_all_attributes::NAP_PANU_all_attributes(int nap)
+SDP::NAP::NAP_PANU_class::NAP_PANU_class(int nap)
 {
 	// set all objects
 	setDefaultObjects();
@@ -156,7 +156,7 @@ SDP::NAP::NAP_PANU_all_attributes::NAP_PANU_all_attributes(int nap)
 }
 
 
-void SDP::NAP::NAP_PANU_all_attributes::call_LanguageBaseAttributeIDList(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+void SDP::NAP::NAP_PANU_class::call_LanguageBaseAttributeIDList(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
 {
 	FUNCTIONS::getAndParse_DEAFULT<PLANGUAGE_BASE_ATTRIBUTE_ID_LIST, LANGUAGE_BASE_ATTRIBUTE_ID_LIST::VV>(
 		device_data_sdp->buffer_res[0],
@@ -170,7 +170,7 @@ void SDP::NAP::NAP_PANU_all_attributes::call_LanguageBaseAttributeIDList(DEVICE_
 	);
 }
 
-void SDP::NAP::NAP_PANU_all_attributes::call_ServiceDescription(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+void SDP::NAP::NAP_PANU_class::call_ServiceDescription(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
 {
 	FUNCTIONS::getAndParse_DEAFULT<PSERVICE_DESCRIPTION, SERVICE_DESCRIPTION::VV>(
 		device_data_sdp->buffer_res[0],
@@ -184,7 +184,7 @@ void SDP::NAP::NAP_PANU_all_attributes::call_ServiceDescription(DEVICE_DATA_SDP*
 	);
 }
 
-void SDP::NAP::NAP_PANU_all_attributes::call_SecurityDescription(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+void SDP::NAP::NAP_PANU_class::call_SecurityDescription(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
 {
 	FUNCTIONS::getAndParse_DEAFULT<PSECURITY_DESCRIPTION, SECURITY_DESCRIPTION::VV>(
 		device_data_sdp->buffer_res[0],
@@ -198,7 +198,7 @@ void SDP::NAP::NAP_PANU_all_attributes::call_SecurityDescription(DEVICE_DATA_SDP
 	);
 }
 
-void SDP::NAP::NAP_PANU_all_attributes::call_NetAccessType(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+void SDP::NAP::NAP_PANU_class::call_NetAccessType(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
 {
 	FUNCTIONS::getAndParse_DEAFULT<PNET_ACCESS_TYPE, NET_ACCESS_TYPE::VV>(
 		device_data_sdp->buffer_res[0],
@@ -212,7 +212,7 @@ void SDP::NAP::NAP_PANU_all_attributes::call_NetAccessType(DEVICE_DATA_SDP* devi
 	);
 }
 
-void SDP::NAP::NAP_PANU_all_attributes::call_MaxNetAccessrate(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+void SDP::NAP::NAP_PANU_class::call_MaxNetAccessrate(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
 {
 	FUNCTIONS::getAndParse_DEAFULT<PMAX_NET_ACCESS_RATE, MAX_NET_ACCESS_RATE::VV>(
 		device_data_sdp->buffer_res[0],
@@ -227,7 +227,7 @@ void SDP::NAP::NAP_PANU_all_attributes::call_MaxNetAccessrate(DEVICE_DATA_SDP* d
 }
 
 
-void SDP::NAP::NAP_PANU_all_attributes::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+void SDP::NAP::NAP_PANU_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
 {
 	callDefaultAttributes(device_data_sdp, dd);
 
@@ -242,7 +242,7 @@ void SDP::NAP::NAP_PANU_all_attributes::call_ALL_ATTR(DEVICE_DATA_SDP* device_da
 	}
 }
 
-void SDP::NAP::NAP_PANU_all_attributes::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
+void SDP::NAP::NAP_PANU_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
 	printDefaultData(dd);
 	
@@ -258,7 +258,23 @@ void SDP::NAP::NAP_PANU_all_attributes::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 
 
 
+SDP::NAP::PNAP_EXPORT SDP::NAP::NAP_PANU_class::export_ALL_ATTR()
+{
+	exp = new NAP_EXPORT();
 
+	exp->default_export = export_default_ATTR();
+
+	if (security_description_handle != NULL)
+		exp->security_description_handle_export = security_description_handle;
+
+	if (net_access_type_handle != NULL)
+		exp->net_access_type_handle_export = net_access_type_handle;
+
+	if (max_net_access_rate_handle != NULL)
+		exp->max_net_access_rate_handle_export = max_net_access_rate_handle;
+
+	return exp;
+}
 
 
 

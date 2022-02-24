@@ -372,25 +372,31 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 		if (device_data_sdp->current_used_service == SDP::_NAP)
 		{
 			// DONE!
-			SDP::NAP::NAP_PANU_all_attributes test_vv = SDP::NAP::NAP_PANU_all_attributes(1);
+			SDP::NAP::NAP_PANU_class test_vv = SDP::NAP::NAP_PANU_class(1);
 			test_vv.call_ALL_ATTR(device_data_sdp, *dd);
 			test_vv.print_ALL_ATTR(*dd);
+
+			dd->exported_data.nap_export = (BYTE*)test_vv.export_ALL_ATTR();
 		}
 
 		if (device_data_sdp->current_used_service == SDP::Phonebook_Access_PSE)
 		{
 			// DONE!
-			SDP::PBAP::PBAP_all_attributes test_bb = SDP::PBAP::PBAP_all_attributes();
+			SDP::PBAP::PBAP_class test_bb = SDP::PBAP::PBAP_class();
 			test_bb.call_ALL_ATTR(device_data_sdp, *dd);
 			test_bb.print_ALL_ATTR(*dd);
+
+			dd->exported_data.pbap_export = (BYTE*)test_bb.export_ALL_ATTR();
 		}
 
 		if (device_data_sdp->current_used_service == SDP::OBEXObjectPush)
 		{
 			// DONE!
-			SDP::OBEX::OBEX_all_attributes test_bb = SDP::OBEX::OBEX_all_attributes();
+			SDP::OBEX::OBEX_class test_bb = SDP::OBEX::OBEX_class();
 			test_bb.call_ALL_ATTR(device_data_sdp, *dd);
 			test_bb.print_ALL_ATTR(*dd);
+
+			dd->exported_data.obex_export = (BYTE*)test_bb.export_ALL_ATTR();
 		}
 
 		if (device_data_sdp->current_used_service == SDP::Handsfree)

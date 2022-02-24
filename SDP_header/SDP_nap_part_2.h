@@ -7,7 +7,7 @@ namespace SDP
 	namespace NAP
 	{
 
-		class NAP_PANU_all_attributes : DEFAULT_class
+		class NAP_PANU_class : DEFAULT_class
 		{
 		public:
 
@@ -16,9 +16,11 @@ namespace SDP
 			PNET_ACCESS_TYPE net_access_type_handle;
 			PMAX_NET_ACCESS_RATE max_net_access_rate_handle;
 			
+			PNAP_EXPORT exp;
+
 			int nap_flag;
 
-			NAP_PANU_all_attributes(int nap = 1);
+			NAP_PANU_class(int nap = 1);
 
 			void call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 			void print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
@@ -28,6 +30,8 @@ namespace SDP
 			void call_SecurityDescription(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 			void call_NetAccessType(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 			void call_MaxNetAccessrate(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+
+			PNAP_EXPORT export_ALL_ATTR();
 
 
 		private:
