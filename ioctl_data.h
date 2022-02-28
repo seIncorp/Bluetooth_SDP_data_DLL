@@ -304,6 +304,11 @@ namespace IOCTL_S
 			BYTE* pnpinfo_export;		// 
 		};
 
+		struct SDP_settings
+		{
+			int debug;
+			int print;
+		};
 
 		HANDLE hDevice;
 		BOOL bResult;
@@ -311,6 +316,7 @@ namespace IOCTL_S
 		SHORT service_class_id_in_use;
 		SDP_services_for_search services_for_search;
 		SDP_exported_data exported_data;
+		SDP_settings sdp_settings;
 
 		void reset_SDP_service_for_search();
 		void set_all_SDP_service_for_search();
