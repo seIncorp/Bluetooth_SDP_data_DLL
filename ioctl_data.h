@@ -308,6 +308,28 @@ namespace IOCTL_S
 		{
 			int debug;
 			int print;
+			int print_info;
+
+			struct SDP_print_service
+			{
+				/* DEFAULT ATTR. */
+				int print_service_record;
+				int print_service_class_id_list;
+				int print_protocol_descriptor_list;
+				int print_service_name;
+				int print_provider_name;
+				int print_bluetooth_profile_descriptor_list;
+				int print_language_base_attribute_id_list;
+				int print_service_description;
+				//int print_service_availability;
+
+				/* SPECIAL ATTR. */
+
+
+
+			};
+
+			SDP_print_service print_service;
 		};
 
 		HANDLE hDevice;
@@ -328,7 +350,7 @@ namespace IOCTL_S
 
 
 	/* LOCAL functions */
-	void printErrorMessage(DWORD id);
+	
 	int str2ba(const char* straddr, BTH_ADDR* btaddr);
 
 
@@ -342,6 +364,7 @@ namespace IOCTL_S
 	SDP_DATA_API int getBthDeviceInfo(DEFAULT_DATA* dd, int print = 1);
 	SDP_DATA_API void getLocalBthInfo(DEFAULT_DATA* dd);
 
+	SDP_DATA_API void printErrorMessage(DWORD id);
 
 };
 
@@ -537,6 +560,8 @@ namespace SDP
 		template<class T>
 		void print(T v, IOCTL_S::DEFAULT_DATA dd)
 		{
+			printf("*************************************************\n");
+			printf("RECORD HANDLE: \n");
 			printATTR_ELEMENT();
 
 			printVALUE_ELEMENT(v);
@@ -558,6 +583,8 @@ namespace SDP
 		template<class T>
 		void print(T v, IOCTL_S::DEFAULT_DATA dd)
 		{
+			printf("*************************************************\n");
+			printf("CLASS ID: \n");
 			printATTR_ELEMENT();
 
 			printVALUE_ELEMENT(v);
@@ -587,6 +614,9 @@ namespace SDP
 		template<class T>
 		void print(T v, IOCTL_S::DEFAULT_DATA dd)
 		{
+			printf("*************************************************\n");
+			printf("PROTOCOL DESCRIPTOR LIST: \n");
+			
 			printATTR_ELEMENT();
 
 			printVALUE_ELEMENT(v);
@@ -717,6 +747,9 @@ namespace SDP
 		template<class T>
 		void print(T v, IOCTL_S::DEFAULT_DATA dd)
 		{
+			printf("*************************************************\n");
+			printf("SERVICE NAME: \n");
+
 			printATTR_ELEMENT();
 
 			printVALUE_ELEMENT(v);
@@ -738,6 +771,9 @@ namespace SDP
 		template<class T>
 		void print(T v, IOCTL_S::DEFAULT_DATA dd)
 		{
+			printf("*************************************************\n");
+			printf("PROVIDER NAME: \n");
+			
 			printATTR_ELEMENT();
 
 			printVALUE_ELEMENT(v);
@@ -765,6 +801,9 @@ namespace SDP
 		template<class T>
 		void print(T v, IOCTL_S::DEFAULT_DATA dd)
 		{
+			printf("*************************************************\n");
+			printf("BLUETOOTH PROFILE DESCRIPTOR LIST: \n");
+
 			printATTR_ELEMENT();
 
 			printVALUE_ELEMENT(v);
@@ -790,6 +829,8 @@ namespace SDP
 		template<class T>
 		void print(T v, IOCTL_S::DEFAULT_DATA dd)
 		{
+			printf("*************************************************\n");
+			printf("LANGUAGE ATTRIBUTE ID LIST: \n");
 			printATTR_ELEMENT();
 
 			printVALUE_ELEMENT(v);
@@ -813,6 +854,9 @@ namespace SDP
 		template<class T>
 		void print(T v, IOCTL_S::DEFAULT_DATA dd)
 		{
+			printf("*************************************************\n");
+			printf("SERVICE DESCRIPTION: \n");
+
 			printATTR_ELEMENT();
 
 			printVALUE_ELEMENT(v);
@@ -925,6 +969,9 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
+				printf("*************************************************\n");
+				printf("GOEPL2CAPPSM: \n");
+
 				printATTR_ELEMENT();
 
 				printVALUE_ELEMENT(v);
@@ -948,6 +995,9 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
+				printf("*************************************************\n");
+				printf("SUPPORTED MESSAGE TYPES: \n");
+				
 				printATTR_ELEMENT();
 
 				printVALUE_ELEMENT(v);
@@ -971,6 +1021,9 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
+				printf("*************************************************\n");
+				printf("MAS INSTACE ID: \n");
+
 				printATTR_ELEMENT();
 
 				printVALUE_ELEMENT(v);
@@ -993,6 +1046,9 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
+				printf("*************************************************\n");
+				printf("MAP SUPPORTED FEATURES: \n");
+				
 				printATTR_ELEMENT();
 
 				printVALUE_ELEMENT(v);
@@ -1036,7 +1092,7 @@ namespace SDP
 
 			SUPPORTED_FEATURES_DATA_S(SHORT* a) : repo((SR_S*)a)
 			{
-				printf("FROM STRUCT --> %X\n", *a);
+				//printf("FROM STRUCT --> %X\n", *a);
 			};
 
 			std::string getSupportedFeaturesString()
@@ -1081,6 +1137,9 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
+				printf("*************************************************\n");
+				printf("SUPORTED FEATURES: \n");
+				
 				printATTR_ELEMENT();
 
 				printVALUE_ELEMENT(v);
@@ -1268,6 +1327,9 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
+				printf("*************************************************\n");
+				printf("SUPPORTED FEATURES: \n");
+				
 				printATTR_ELEMENT();
 
 				printVALUE_ELEMENT(v);
@@ -1319,7 +1381,7 @@ namespace SDP
 
 			SUPPORTED_FEATURES_DATA_S(SHORT* a) : repo((SR_S*)a)
 			{
-				printf("FROM STRUCT --> %X\n", *a);
+				//printf("FROM STRUCT --> %X\n", *a);
 			};
 
 			std::string getSupportedFeatures_AG_String()
@@ -1422,6 +1484,9 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
+				printf("*************************************************\n");
+				printf("NETWORK: \n");
+
 				printATTR_ELEMENT();
 
 				printVALUE_ELEMENT(v);
@@ -1445,6 +1510,9 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
+				printf("*************************************************\n");
+				printf("SUPPORTED FEATURES: \n");
+				
 				printATTR_ELEMENT();
 
 				printVALUE_ELEMENT(v);
@@ -1475,6 +1543,9 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
+				printf("*************************************************\n");
+				printf("REMOTE AUDIO VOLUME CONTROL: \n");
+				
 				printATTR_ELEMENT();
 
 				printVALUE_ELEMENT(v);
@@ -1509,6 +1580,9 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
+				printf("*************************************************\n");
+				printf("SECURITY DESCRIPTION: \n");
+				
 				printATTR_ELEMENT();
 
 				printVALUE_ELEMENT(v);
@@ -1530,6 +1604,9 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
+				printf("*************************************************\n");
+				printf("NET ACCESS TYPE: \n");
+				
 				printATTR_ELEMENT();
 
 				printVALUE_ELEMENT(v);
@@ -1550,6 +1627,9 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
+				printf("*************************************************\n");
+				printf("MAX NET ACCESS RATE: \n");
+				
 				printATTR_ELEMENT();
 
 				printVALUE_ELEMENT(v);
@@ -1592,6 +1672,9 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
+				printf("*************************************************\n");
+				printf("SUPPORTED FORMATS: \n");
+				
 				printATTR_ELEMENT();
 
 				printVALUE_ELEMENT(v);
@@ -1636,7 +1719,7 @@ namespace SDP
 
 			SUPPORTED_REPOSITORIES_DATA_S(BYTE* a) : repo((SR_S*)a)
 			{
-				printf("FROM STRUCT --> %X\n", *a);
+				//printf("FROM STRUCT --> %X\n", *a);
 			};
 
 			std::string getSupportedRepositoriesString()
@@ -1679,6 +1762,9 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
+				printf("*************************************************\n");
+				printf("SUPPORTED REPOSITORIES: \n");
+				
 				printATTR_ELEMENT();
 
 				printVALUE_ELEMENT(v);
@@ -1694,6 +1780,9 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
+				printf("*************************************************\n");
+				printf("PBAP SUPPORTED FEATURES: \n");
+				
 				printATTR_ELEMENT();
 
 				printVALUE_ELEMENT(v);
@@ -1759,6 +1848,9 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
+				printf("*************************************************\n");
+				printf("INFO: \n");
+				
 				printATTR_ELEMENT();
 
 				printVALUE_ELEMENT(v);

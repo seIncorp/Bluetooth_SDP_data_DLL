@@ -62,7 +62,10 @@ void SDP::A2DP::A2DP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
 	printDefaultData(dd);
 
-	supported_features_handle->print<SUPPORTED_FEATURES_S::VV>(supported_features_handle->VALUE, dd);
+	if (supported_features_handle  != NULL && dd.sdp_settings.print == 1)
+	{
+		supported_features_handle->print<SUPPORTED_FEATURES_S::VV>(supported_features_handle->VALUE, dd);
+	}
 }
 
 SDP::A2DP::PA2DP_EXPORT SDP::A2DP::A2DP_class::export_ALL_ATTR()

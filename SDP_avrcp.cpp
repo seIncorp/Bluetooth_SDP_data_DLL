@@ -75,8 +75,10 @@ void SDP::AVRCP::AVRCP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IO
 void SDP::AVRCP::AVRCP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
 	printDefaultData(dd);
-
-	supported_features_handle->print<SUPPORTED_FEATURES::VV>(supported_features_handle->VALUE, dd);
+	if (dd.sdp_settings.print == 1)
+	{
+		supported_features_handle->print<SUPPORTED_FEATURES::VV>(supported_features_handle->VALUE, dd);
+	}
 }
 
 SDP::AVRCP::PAVRCP_EXPORT SDP::AVRCP::AVRCP_class::export_ALL_ATTR()

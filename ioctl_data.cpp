@@ -125,7 +125,10 @@ void IOCTL_S::closeConnectionToDevice(DEFAULT_DATA* dd)
 	if (CloseHandle(dd->hDevice) == 0)
 		printErrorMessage(GetLastError());
 	else
-		printf("CONNECTION TO DEVICE CLOSED!\n");
+	{
+		if(dd->sdp_settings.print_info == 1)
+			printf("CONNECTION TO DEVICE CLOSED!\n");
+	}
 }
 
 int IOCTL_S::str2ba(const char* straddr, BTH_ADDR* btaddr)
@@ -251,7 +254,8 @@ int IOCTL_S::SDPsearch(DEFAULT_DATA* dd, char address[])	// TODO: preimenuj v pr
 
 	if (SDP::FUNCTIONS::SDP_INIT_CONNECT::call_IOCTL_BTH_SDP_CONNECT(device_data_sdp, *dd))
 	{
-		printf("DEVICE CONNECTED!!\n");
+		if(dd->sdp_settings.print_info == 1)
+			printf("DEVICE CONNECTED!!\n");
 
 		/******************************************/
 		/* SERVICE SEARCH */

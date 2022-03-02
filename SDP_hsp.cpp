@@ -40,8 +40,10 @@ void SDP::HSP::HSP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_
 void SDP::HSP::HSP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
 	printDefaultData(dd);
-
-	remote_audio_volume_control_handle->print<REMOTE_AUDIO_VOLUME_CONTROL_S::VV>(remote_audio_volume_control_handle->VALUE,dd);
+	if (dd.sdp_settings.print == 1)
+	{
+		remote_audio_volume_control_handle->print<REMOTE_AUDIO_VOLUME_CONTROL_S::VV>(remote_audio_volume_control_handle->VALUE, dd);
+	}
 }
 
 SDP::HSP::PHSP_EXPORT SDP::HSP::HSP_class::export_ALL_ATTR()

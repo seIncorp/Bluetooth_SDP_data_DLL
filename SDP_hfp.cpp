@@ -76,9 +76,11 @@ void SDP::HFP::HFP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_
 void SDP::HFP::HFP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
 	printDefaultData(dd);
-
-	network_handle->print<NETWORK::VV>(network_handle->VALUE, dd);
-	supported_features_handle->print<SUPPORTED_FEATURES::VV>(supported_features_handle->VALUE, dd);
+	if (dd.sdp_settings.print == 1)
+	{
+		network_handle->print<NETWORK::VV>(network_handle->VALUE, dd);
+		supported_features_handle->print<SUPPORTED_FEATURES::VV>(supported_features_handle->VALUE, dd);
+	}
 }
 
 SDP::HFP::PHFP_EXPORT SDP::HFP::HFP_class::export_ALL_ATTR()

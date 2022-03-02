@@ -253,7 +253,8 @@ namespace SDP
 		template<class C, class D>
 		int getAndParse_DEAFULT(ULONG recordHandle, HANDLE_SDP_TYPE aa, C handle, USHORT minAttr, USHORT maxAttr, DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd, int print = 1)
 		{
-			printf("\n\n*** getAndParse_DEAFULT ***\n");
+			if(dd.sdp_settings.debug == 1)
+				printf("\n\n*** getAndParse_DEAFULT ***\n");
 
 			BYTE bssr_response[5000]{ 0 };		// TODO: premisli
 
@@ -261,8 +262,11 @@ namespace SDP
 
 			if (test)
 			{
-				printf("IOCTL_BTH_SDP_ATTRIBUTE_SEARCH --> OK\n");
-				printResponse(bssr_response);
+				if (dd.sdp_settings.debug == 1)
+				{
+					printf("IOCTL_BTH_SDP_ATTRIBUTE_SEARCH --> OK\n");
+					printResponse(bssr_response);
+				}
 
 				int position = set_save_ATTRIBUTE_ELEMENT<C, BYTE[]>(handle, bssr_response, 5000);
 				position = set_save_VALUE_ELEMENT<C, BYTE[]>(handle, bssr_response, 5000, position);

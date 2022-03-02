@@ -295,7 +295,8 @@ BOOL SDP::FUNCTIONS::SDP_ATTRIBUTE_SEARCH::call_IOCTL_BTH_SDP_ATTRIBUTE_SEARCH(B
 	DWORD err = GetLastError();
 	IOCTL_S::printErrorMessage(err);
 
-	printf("-- %d\n", dd.junk);
+	if (dd.sdp_settings.debug == 1)
+		printf("Returned number of bytes: %d\n", dd.junk);
 
 	return test_sdp_call_222;
 }
@@ -338,7 +339,8 @@ int SDP::FUNCTIONS::SDP_INIT_DISCONNECT::call_IOCTL_BTH_SDP_DISCONNECT(DEVICE_DA
 
 	if (device_data_sdp->disconnection_res)
 	{
-		printf("DISCONNECTED FROM DEVICE!!\n");
+		if (dd.sdp_settings.print_info == 1)
+			printf("DISCONNECTED FROM DEVICE!!\n");
 
 		return 1;
 	}
@@ -354,7 +356,8 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 
 	if (SDP::FUNCTIONS::SDP_SERVICE_SEARCH::call_IOCTL_BTH_SDP_SERVICE_SEARCH(device_data_sdp, *dd))
 	{
-		printf("SERVICE FOUNDED!! [0x%04X]\n", device_data_sdp->current_used_service);
+		if (dd->sdp_settings.print_info == 1)
+			printf("SERVICE FOUNDED!! [0x%04X]\n", device_data_sdp->current_used_service);
 
 		/******************************************/
 		/* ATTRIBUTES SEARCH (for current service) */

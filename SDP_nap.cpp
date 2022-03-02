@@ -244,15 +244,18 @@ void SDP::NAP::NAP_PANU_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, I
 
 void SDP::NAP::NAP_PANU_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
-	printDefaultData(dd);
 	
-	security_description_handle->print<SECURITY_DESCRIPTION_S::VV>(security_description_handle->VALUE, dd);
-
-
-	if (nap_flag == 1)
+	printDefaultData(dd);
+	if (dd.sdp_settings.print == 1)
 	{
-		net_access_type_handle->print<NET_ACCESS_TYPE_S::VV>(net_access_type_handle->VALUE, dd);
-		max_net_access_rate_handle->print<MAX_NET_ACCESS_RATE_S::VV>(max_net_access_rate_handle->VALUE, dd);
+		security_description_handle->print<SECURITY_DESCRIPTION_S::VV>(security_description_handle->VALUE, dd);
+
+
+		if (nap_flag == 1)
+		{
+			net_access_type_handle->print<NET_ACCESS_TYPE_S::VV>(net_access_type_handle->VALUE, dd);
+			max_net_access_rate_handle->print<MAX_NET_ACCESS_RATE_S::VV>(max_net_access_rate_handle->VALUE, dd);
+		}
 	}
 }
 
