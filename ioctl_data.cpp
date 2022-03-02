@@ -55,44 +55,56 @@ void IOCTL_S::printErrorMessage(DWORD id)
 	if (id != 0x00)
 		switch (id)
 		{
-		case 0x00:
-			printf("ERROR [0x%X - %d] [OK]\n", id, id);
+			case 0x00:
+				printf("ERROR [0x%X - %d] [OK]\n", id, id);
 			break;
 
-		case 0x3A:
-			printf("ERROR [0x%X - %d] [ERROR_BAD_NET_RESP]\n", id, id);
+			case 0x01:
+				printf("ERROR [0x%X - %d] [ERROR_INVALID_FUNCTION]\n", id, id);
 			break;
 
-		case 0x57:
-			printf("ERROR [0x%X - %d] [ERROR_INVALID_PARAMETER]\n", id, id);
+			case 0x02:
+				printf("ERROR [0x%X - %d] [ERROR_FILE_NOT_FOUND]\n", id, id);
 			break;
 
-		case 0x79:
-			printf("ERROR [0x%X - %d] [ERROR_SEM_TIMEOUT]\n", id, id);
+			case 0x3A:
+				printf("ERROR [0x%X - %d] [ERROR_BAD_NET_RESP]\n", id, id);
 			break;
 
-		case 0x7A:
-			printf("ERROR [0x%X - %d] [ERROR_INSUFFICIENT_BUFFER]\n", id, id);
+			case 0x57:
+				printf("ERROR [0x%X - %d] [ERROR_INVALID_PARAMETER]\n", id, id);
 			break;
 
-		case 0x32:
-			printf("ERROR [0x%X - %d] [ERROR_NOT_SUPPORTED]\n", id, id);
+			case 0x79:
+				printf("ERROR [0x%X - %d] [ERROR_SEM_TIMEOUT]\n", id, id);
 			break;
 
-		case 0x522:
-			printf("ERROR [0x%X - %d] [ERROR_PRIVILEGE_NOT_HELD]\n", id, id);
+			case 0x7A:
+				printf("ERROR [0x%X - %d] [ERROR_INSUFFICIENT_BUFFER]\n", id, id);
 			break;
 
-		case 0x48F:
-			printf("ERROR [0x%X - %d] [ERROR_DEVICE_NOT_CONNECTED]\n", id, id);
+			case 0x7B:
+				printf("ERROR [0x%X - %d] [ERROR_INVALID_NAME]\n", id, id);
 			break;
 
-		case 0x6F8:
-			printf("ERROR [0x%X - %d] [ERROR_INVALID_USER_BUFFER]\n", id, id);
+			case 0x32:
+				printf("ERROR [0x%X - %d] [ERROR_NOT_SUPPORTED]\n", id, id);
 			break;
 
-		default:
-			printf("ERROR [0x%X - %d] [????]\n", id, id);
+			case 0x522:
+				printf("ERROR [0x%X - %d] [ERROR_PRIVILEGE_NOT_HELD]\n", id, id);
+			break;
+
+			case 0x48F:
+				printf("ERROR [0x%X - %d] [ERROR_DEVICE_NOT_CONNECTED]\n", id, id);
+			break;
+
+			case 0x6F8:
+				printf("ERROR [0x%X - %d] [ERROR_INVALID_USER_BUFFER]\n", id, id);
+			break;
+
+			default:
+				printf("ERROR [0x%X - %d] [????]\n", id, id);
 			break;
 		}
 }
@@ -156,11 +168,11 @@ int IOCTL_S::getBthDeviceInfo(DEFAULT_DATA* dd, int print)
 
 	dd->bResult = DeviceIoControl(
 		dd->hDevice,						// device to be queried
-		IOCTL_BTH_GET_DEVICE_INFO,		// operation to perform
-		NULL, 0,						// no input buffer
-		data, sizeof(data),             // output buffer
-		&dd->junk,                       // # bytes returned
-		(LPOVERLAPPED)NULL);			// synchronous I/O
+		IOCTL_BTH_GET_DEVICE_INFO,			// operation to perform
+		NULL, 0,							// no input buffer
+		data, sizeof(data),					// output buffer
+		&dd->junk,							// # bytes returned
+		(LPOVERLAPPED)NULL);				// synchronous I/O
 
 	printErrorMessage(GetLastError());
 
@@ -169,8 +181,8 @@ int IOCTL_S::getBthDeviceInfo(DEFAULT_DATA* dd, int print)
 		BTH_DEVICE_INFO_LIST* bdil = (BTH_DEVICE_INFO_LIST*)data;
 		BTH_DEVICE_INFO* bdi = bdil->deviceList;
 
-		BTH_DEVICES::PSEARCHED_CACHED_DEVICES devices = new BTH_DEVICES::SEARCHED_CACHED_DEVICES();
-		devices->numOfDevices = bdil->numOfDevices;
+		dd->exported_data.devices = new BTH_DEVICES::SEARCHED_CACHED_DEVICES();
+		dd->exported_data.devices->numOfDevices = bdil->numOfDevices;
 
 		for (int a = 0; a < bdil->numOfDevices; a++)
 		{
@@ -178,11 +190,11 @@ int IOCTL_S::getBthDeviceInfo(DEFAULT_DATA* dd, int print)
 
 			BTH_DEVICES::CACHED_DEVICE_S temp{ (bdi + a)->name, bas->rgBytes, (bdi + a)->flags };
 
-			devices->devices.push_back(temp);
+			dd->exported_data.devices->devices.push_back(temp);
 		}
 
 		if (print == 1)
-			devices->print();
+			dd->exported_data.devices->print();
 
 		return 1;
 	}
@@ -191,17 +203,17 @@ int IOCTL_S::getBthDeviceInfo(DEFAULT_DATA* dd, int print)
 }
 
 // information about the local Bluetooth system and radio
-void IOCTL_S::getLocalBthInfo(DEFAULT_DATA* dd)
+void IOCTL_S::getLocalBthInfo(DEFAULT_DATA* dd, int print)
 {
 	BTH_LOCAL_RADIO_INFO blri{ 0 };
 
 	dd->bResult = DeviceIoControl(
 		dd->hDevice,					// device to be queried
-		IOCTL_BTH_GET_LOCAL_INFO,	// operation to perform
-		NULL, 0,                    // no input buffer
-		&blri, sizeof(blri),        // output buffer
-		&dd->junk,                   // # bytes returned
-		(LPOVERLAPPED)NULL);        // synchronous I/O
+		IOCTL_BTH_GET_LOCAL_INFO,		// operation to perform
+		NULL, 0,						// no input buffer
+		&blri, sizeof(blri),			// output buffer
+		&dd->junk,						// # bytes returned
+		(LPOVERLAPPED)NULL);			// synchronous I/O
 
 	printErrorMessage(GetLastError());
 
@@ -210,7 +222,7 @@ void IOCTL_S::getLocalBthInfo(DEFAULT_DATA* dd)
 		BTH_DEVICE_INFO bdi = blri.localInfo;
 		BTH_RADIO_INFO* bri = &blri.radioInfo;
 
-		BTH_DEVICES::PLOCAL_RADIO_DEVICE_DATA local_device_radio = new BTH_DEVICES::LOCAL_RADIO_DEVICE_DATA(
+		dd->exported_data.local_device_radio = new BTH_DEVICES::LOCAL_RADIO_DEVICE_DATA(
 			blri.flags,
 			blri.hciRevision,
 			blri.hciVersion
@@ -218,22 +230,23 @@ void IOCTL_S::getLocalBthInfo(DEFAULT_DATA* dd)
 
 		BTH_DEVICES::DEVICE_DATA_S temp_d;
 
-		temp_d.init(
+		dd->exported_data.local_device_radio->device = new BTH_DEVICES::DEVICE_DATA();
+
+		dd->exported_data.local_device_radio->device->init(
 			((BLUETOOTH_ADDRESS_STRUCT*)(&bdi.address))->rgBytes,
 			bdi.flags,
 			bdi.name
 		);
-		local_device_radio->device = &temp_d;
-
+		
 		COD_PARSER::PDEVICE_PARSED_COD_DATA cod_temp = new COD_PARSER::DEVICE_PARSED_COD_DATA();
 		parseCODdata((COD_PARSER::COD_data*)&bdi.classOfDevice, cod_temp);
-		local_device_radio->device->cod = cod_temp;
+		dd->exported_data.local_device_radio->device->cod = cod_temp;
 
-		BTH_DEVICES::RADIO_DATA_S temp_s{ bri->lmpSupportedFeatures ,bri->mfg,bri->lmpSubversion, bri->lmpVersion };
-		local_device_radio->radio = &temp_s;
+		dd->exported_data.local_device_radio->radio = new BTH_DEVICES::RADIO_DATA{ bri->lmpSupportedFeatures ,bri->mfg,bri->lmpSubversion, bri->lmpVersion };
 
 		// TODO: preveri tezavo s prikazom zunaj
-		local_device_radio->print();
+		if(print == 1)
+			dd->exported_data.local_device_radio->print();
 	}
 }
 

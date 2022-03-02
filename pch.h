@@ -10,7 +10,7 @@
 // add headers that you want to pre-compile here
 #include "framework.h"
 
-#include "COD_parser.h"
+
 #include "BTH_devices.h"
 
 
@@ -20,7 +20,7 @@
 #include "ioctl_data.h"
 /*************************************************/
 /*************************************************/
-
+#include "COD_parser.h"
 #include "SDP_header/SDP.h"
 
 
