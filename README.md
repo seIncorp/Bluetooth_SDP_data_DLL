@@ -88,7 +88,7 @@ DLL have next functions:
 - set_all_SDP_service_for_search()
 > all flags in SDP_services_for_search structure are set to 0x01 value [true]
 
-## Settings of dll (IN PROGRESS...)
+## Settings of dll
 - debug
 > if you set this to 1 you will get printed raw data from bluetooth response
 - print
