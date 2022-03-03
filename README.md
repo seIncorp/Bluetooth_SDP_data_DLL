@@ -2,6 +2,21 @@
 Source code for Bluetooth Service Discovery Protocol (SDP) using only communication with local bluetooth radio through driver (using IOCTL). 
 This DLL does not use any Windows Bluetooth api (bluetoothapis.h).
 
+# Prerequisites
+- Visual studio 2019
+- Windows 10
+- Windows 7 (not tested yet)
+
+# How to get/open project and building it
+1. download this project from Github
+2. open it 
+3. set x64 or x86 (it must be the same as app which will be using it)
+4. build it
+5. in main folder you will get ioctl_data.h
+6. in ..\x64\Debug you will find SDP_data.lib and SDP_data.dll (for X64)
+7. in ..\Debug you will find SDP_data.lib and SDP_data.dll (for X86)
+OR
+1. you can download all three builded files from Github (IN PROGRESS...)
 
 # How to use it
 ## Included headers and libraries for using dll
