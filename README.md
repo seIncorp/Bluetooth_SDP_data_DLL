@@ -15,7 +15,9 @@ This DLL does not use any Windows Bluetooth api (bluetoothapis.h).
 5. in main folder you will get ioctl_data.h
 6. in ..\x64\Debug you will find SDP_data.lib and SDP_data.dll (for X64)
 7. in ..\Debug you will find SDP_data.lib and SDP_data.dll (for X86)
+
 OR
+
 1. you can download all three builded files from Github (IN PROGRESS...)
 
 # How to use it
