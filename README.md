@@ -117,3 +117,4 @@ DLL have next functions:
 > - printf_info (DEFAULT: disabled)
 > - printing only selected attribute from searched device (NOTE: only if print is disabled) (DEFAULT: disabled)
 
+# Exmples 
