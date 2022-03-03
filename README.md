@@ -73,7 +73,10 @@ DLL have next functions:
 
 ## Settings of dll (IN PROGRESS...)
 - debug
+> if you set this to 1 you will get printed raw data from bluetooth response
 - print
+> you will get printed all parsed data of every attribute of the searched service
+> and also override every flag in SDP_print_service structure
 
 ## Main structures
 - DEFAULT_DATA
