@@ -94,6 +94,10 @@ DLL have next functions:
 - print
 > you will get printed all parsed data of every attribute of the searched service
 > and also override every flag in SDP_print_service structure
+- print_info
+> print events when is app connected to radio, remote device, disconnected from remote device, local radio
+- print_service flags
+> here you can enable/disable printing of particular attribute of the searched service (NOTE: only if print is disabled!!)
 
 ## Main structures
 - DEFAULT_DATA
