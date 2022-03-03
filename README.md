@@ -84,7 +84,14 @@ DLL have next functions:
 - SDP_services_for_search
 > here you can enable/disable which service will be searched on remote device
 - SDP_exported_data
-> here you get exported all data from searched service/services
+> here you get exported all data from: 
+> - searched service/services
+> - cached bluetooth remote devices
+> - data of local radio/device
 - SDP_settings
-> here you can enable/disable debug and print data (DEFAULT: disabled)
+> here you can enable/disable:
+> - debug (DEFAULT: disabled)
+> - print data (NOTE: printing all attributes of the service) (DEFAULT: disabled)
+> - printf_info (DEFAULT: disabled)
+> - printing only selected attribute from searched device (NOTE: only if print is disabled) (DEFAULT: disabled)
 
