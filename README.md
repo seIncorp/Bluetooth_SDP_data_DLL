@@ -6,6 +6,7 @@ This DLL does not use any Windows Bluetooth api (bluetoothapis.h).
 - Visual studio 2019
 - Windows 10
 - Windows 7 (not tested yet)
+- Bluetooth USB dongle or integrated Bluetooth radio (laptop)
 
 # How to get/open project and building it
 1. download this project from Github
