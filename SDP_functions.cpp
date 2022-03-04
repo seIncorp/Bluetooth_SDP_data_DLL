@@ -567,8 +567,12 @@ void SDP::FUNCTIONS::parse_PROTOCOL_DESCRIPTOR_LIST(PPROTOCOL_DESCRIPTOR_LIST ha
 
 		// TODO: tukaj naprej so lahko razlicni parametri za razlicne service in protokole
 
+		printf("ID: %d -> add bits size %d\n",c, handle->VALUE.protocols[c].additional_bits_for_size);
+
 		if (handle->VALUE.protocols[c].additional_bits_for_size > 3)
 		{
+			printf("1. TUKAJ CEZ!!!!!!!\n");
+
 
 			if (dd.service_class_id_in_use == SDP::Handsfree ||
 				dd.service_class_id_in_use == SDP::Headset ||
@@ -583,9 +587,14 @@ void SDP::FUNCTIONS::parse_PROTOCOL_DESCRIPTOR_LIST(PPROTOCOL_DESCRIPTOR_LIST ha
 				dd.service_class_id_in_use == SDP::GenericAudio
 				)
 			{
+				printf("?????????? %d\n", *(handle->VALUE.protocols[c].value + 4));
+				
 				handle->VALUE.protocols[c].additional_parameters_flag = 1;
 				handle->VALUE.protocols[c].pdsp = new SDP::PROTOCOL_DESCRIPTOR_SPECIFIC_PARAMETER();
 				handle->VALUE.protocols[c].pdsp->server_channel_num = *(handle->VALUE.protocols[c].value + 4);
+
+				
+
 			}
 
 			if (dd.service_class_id_in_use == SDP::AudioSource ||

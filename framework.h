@@ -19,6 +19,9 @@
 #include <bthdef.h>
 #include <winioctl.h>
 #include <bthioctl.h>
+#include <functional>
+
+#include <cstdarg>
 
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "Bthprops.lib")

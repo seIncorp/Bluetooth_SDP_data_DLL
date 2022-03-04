@@ -174,7 +174,7 @@ void SDP::MAP::parse_GOEPL2CAPPSM_MAP(PGOEPL2CAPPSM handle)
 
 void SDP::MAP::parse_SUPPORTED_MESSAGE_TYPES_MAP(PSUPPORTED_MESSAGE_TYPES handle)
 {
-	handle->VALUE.sfm = new SUPPORTED_FEATURES_MESSAGES_S(handle->VALUE.value);
+	handle->VALUE.sfm = new SUPPORTED_FEATURES_MESSAGES_S(0, 0, handle->VALUE.value[handle->VALUE.size_bytes-1]);
 }
 
 void SDP::MAP::parse_MAS_INSTANCE_ID_MAP(PMAS_INSTANCE_ID handle)
@@ -194,7 +194,7 @@ void SDP::MAP::parse_MAP_SUPPORTED_FEATURES_MAP(PMAP_SUPPORTED_FEATURES handle)
 	temp <<= 8;
 	temp |= handle->VALUE.value[3];
 
-	handle->VALUE.sfm = new SUPPORTED_FEATURES_MESSAGES_S(&temp);
+	handle->VALUE.sfm = new SUPPORTED_FEATURES_MESSAGES_S(1, temp,0);
 }
 
 
@@ -264,7 +264,6 @@ void SDP::MAP::MAP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_
 
 void SDP::MAP::MAP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
-	
 	printDefaultData(dd);
 
 	if (dd.sdp_settings.print == 1)
