@@ -217,6 +217,10 @@ void SDP::MAP::MAP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_
 {
 	callDefaultAttributes(device_data_sdp, dd);
 
+	
+
+	//printf("2-- DEBUGLE:  %x\n", *class_id_handle->VALUE.element);
+
 	FUNCTIONS::getAndParse_DEAFULT<PGOEPL2CAPPSM, GOEPL2CAPPSM::VV>(
 		device_data_sdp->buffer_res[0],
 		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
@@ -227,7 +231,8 @@ void SDP::MAP::MAP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_
 		dd,
 		0
 	);
-	
+	//printf("2.1-- DEBUGLE:  %x\n", *class_id_handle->VALUE.element);
+
 	FUNCTIONS::getAndParse_DEAFULT<PSUPPORTED_MESSAGE_TYPES, SUPPORTED_MESSAGE_TYPES::VV>(
 		device_data_sdp->buffer_res[0],
 		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
@@ -260,6 +265,8 @@ void SDP::MAP::MAP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_
 		dd,
 		0
 	);
+
+	//printf("2.2-- DEBUGLE:  %x\n", *class_id_handle->VALUE.element);
 }
 
 void SDP::MAP::MAP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)

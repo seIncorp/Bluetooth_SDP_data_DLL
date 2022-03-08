@@ -29,6 +29,13 @@
 #define ATTR_NAME_6		"LANGUAGE ATTRIBUTE ID LIST: \n"
 #define ATTR_NAME_7		"SERVICE DESCRIPTION: \n"
 
+#define VALUE_1			"VALUE ELEMENT:\n"
+#define VALUE_2			"ATTRIBUTE ID:\n"
+#define VALUE_3			"Type:"
+#define VALUE_4			"Size:"
+#define VALUE_5			"Value:"
+#define VALUE_6			"Additional size:"
+
 
 /************************************************************************/
 /* ENUMs */
@@ -603,8 +610,9 @@ namespace IOCTL_S
 		void reset_SDP_service_for_search();
 		void set_all_SDP_service_for_search();
 
+
+		// currently only for x64, does not work for x86
 		// pointer to outside print function
-		
 		void (*outside_print_function) (std::string text, ...);
 		BYTE* data_outside_print_function;
 
@@ -633,32 +641,6 @@ namespace IOCTL_S
 	SDP_DATA_API void getLocalBthInfo(DEFAULT_DATA* dd, int print = 1);
 
 	SDP_DATA_API void printErrorMessage(DWORD id);
-
-
-	/* solution 1 */
-	// pointer to outside print function
-	//__declspec(selectany) std::function<void(std::string text)> outside_print_function;
-	
-	///* solution 2 */
-	//template <class F>
-	//void call_it(F&& f)
-	//{
-	//	f();
-	//}
-
-	///* solution 3 */
-	//class fn_t {
-	//public:
-	//	typedef void (*fn_1_t)();
-	//	typedef void (*fn_2_t)(int, ...);
-	//	fn_1_t fn_1;
-	//	fn_2_t fn_2;
-	//	fn_t operator=(fn_1_t func_1) { fn_1 = func_1; return *this; }
-	//	fn_t operator=(fn_2_t func_2) { fn_2 = func_2; return *this; }
-	//	void operator()() { (*fn_1)(); }
-	//	void operator()(int a, ...) { va_list vl;  (*fn_2)(a, vl); }
-	//};
-	
 
 	
 };
@@ -803,52 +785,127 @@ namespace SDP
 
 		} VALUE;
 
-		void printATTR_ELEMENT()
+		void printATTR_ELEMENT(IOCTL_S::DEFAULT_DATA* dd)
 		{
-			printf("ATTRIBUTE ID:\n");
-			printf("Type: %s [%d]\n", SDP::SUB_FUNCTIONS::getElementTypeString(attr_id->element->element.type).c_str(), attr_id->element->element.type);
-
-			if (attr_id->additional_bits_flag)
+			if (dd->outside_print_function != NULL && dd->sdp_settings.print_with_outside_funct == 1)
 			{
-				printf("Additional size: %d\n", attr_id->additional_bits_for_size);
-			}
-			else
-			{
-				printf("Size: %d Bytes [%d]\n", attr_id->size_bytes, attr_id->size_bytes);
+				dd->outside_print_function(VALUE_2);
 
-				printf("Value: 0x");
-				for (int a = 0; a < attr_id->size_bytes; a++)
-					printf("%02X", attr_id->value[a]);
-				printf("\n");
-			}
-		}
+				char test[100]{ 0 };
+				sprintf_s(test, "%s %s [%d]\n", VALUE_3, SDP::SUB_FUNCTIONS::getElementTypeString(attr_id->element->element.type).c_str(), attr_id->element->element.type);
+				dd->outside_print_function(test);
 
-		template<class T>
-		void printVALUE_ELEMENT(T v)
-		{
-			printf("VALUE ELEMENT:\n");
-			printf("Type: %s [%d]\n", SDP::SUB_FUNCTIONS::getElementTypeString(v.element->element.type).c_str(), v.element->element.type);
-			if (v.additional_bits_flag)
-			{
-				printf("Additional size: %d\n", v.additional_bits_for_size);
-				if (v.additional_bits_for_size == 1)
+				if (attr_id->additional_bits_flag)
 				{
-					printf("Data size: %d\n", v.size_bytes);
+					sprintf_s(test, "%s %d\n", VALUE_6, attr_id->additional_bits_for_size);
+					dd->outside_print_function(test);
+				}
+				else
+				{
+					sprintf_s(test, "%s %d Bytes [%d]\n", VALUE_4, attr_id->size_bytes, attr_id->size_bytes);
+					dd->outside_print_function(test);
 
-					printf("Value: ");
-					for (int a = 0; a < v.size_bytes; a++)
-						printf("0x%02X ", v.value[a]);
-					printf("\n");
+					sprintf_s(test, "%s ", VALUE_5);
+					for (int a = 0; a < attr_id->size_bytes; a++)
+						sprintf_s(test, "%s0x%02X ", test, attr_id->value[a]);
+					
+					sprintf_s(test, "%s\n", test);
+					dd->outside_print_function(test);
 				}
 			}
 			else
 			{
-				printf("Size: %d Bytes [%d]\n", v.size_bytes, v.size_bytes);
+				printf(VALUE_2);
+				printf("%s %s [%d]\n", VALUE_3, SDP::SUB_FUNCTIONS::getElementTypeString(attr_id->element->element.type).c_str(), attr_id->element->element.type);
 
-				printf("Value: 0x");
-				for (int a = 0; a < v.size_bytes; a++)
-					printf("%02X", v.value[a]);
-				printf("\n");
+				if (attr_id->additional_bits_flag)
+				{
+					printf("%s %d\n", VALUE_6, attr_id->additional_bits_for_size);
+				}
+				else
+				{
+					printf("%s %d Bytes [%d]\n", VALUE_4, attr_id->size_bytes, attr_id->size_bytes);
+
+					printf("%s 0x", VALUE_5);
+					for (int a = 0; a < attr_id->size_bytes; a++)
+						printf("%02X", attr_id->value[a]);
+					printf("\n");
+				}
+
+			}
+		}
+
+		template<class T>
+		void printVALUE_ELEMENT(T v, IOCTL_S::DEFAULT_DATA* dd)
+		{
+			if (dd->outside_print_function != NULL && dd->sdp_settings.print_with_outside_funct == 1)
+			{
+				dd->outside_print_function(VALUE_1);
+
+				char test[100]{ 0 };
+
+				sprintf_s(test, "%s %s [%d]\n", VALUE_3, SDP::SUB_FUNCTIONS::getElementTypeString(v.element->element.type).c_str(), v.element->element.type);
+				dd->outside_print_function(test);
+
+				if (v.additional_bits_flag)
+				{
+					sprintf_s(test, "%s %d\n", VALUE_6, v.additional_bits_for_size);
+					dd->outside_print_function(test);
+
+					if (v.additional_bits_for_size == 1)
+					{
+						sprintf_s(test, "Data size: %d\n", v.size_bytes);
+						dd->outside_print_function(test);
+
+						sprintf_s(test, "%s ", VALUE_5);
+
+						for (int a = 0; a < v.size_bytes; a++)
+							sprintf_s(test, "%s0x%02X ", test, v.value[a]);
+
+						sprintf_s(test, "%s\n", test);
+						dd->outside_print_function(test);
+					}
+				}
+				else
+				{
+					sprintf_s(test, "%s %d Bytes [%d]\n", VALUE_4, v.size_bytes, v.size_bytes);
+					dd->outside_print_function(test);
+
+					sprintf_s(test, "%s ", VALUE_5);
+					for (int a = 0; a < v.size_bytes; a++)
+						sprintf_s(test, "%s0x%02X ",test, v.value[a]);
+
+					sprintf_s(test, "%s\n",test);
+					dd->outside_print_function(test);
+				}
+			}
+			else
+			{
+				printf(VALUE_1);
+
+				printf("%s %s [%d]\n", VALUE_3, SDP::SUB_FUNCTIONS::getElementTypeString(v.element->element.type).c_str(), v.element->element.type);
+				if (v.additional_bits_flag)
+				{
+					printf("%s %d\n", VALUE_6, v.additional_bits_for_size);
+					if (v.additional_bits_for_size == 1)
+					{
+						printf("Data size: %d\n", v.size_bytes);
+
+						printf("%s ", VALUE_5);
+						for (int a = 0; a < v.size_bytes; a++)
+							printf("0x%02X ", v.value[a]);
+						printf("\n");
+					}
+				}
+				else
+				{
+					printf("%s %d Bytes [%d]\n", VALUE_4, v.size_bytes, v.size_bytes);
+
+					printf("%s 0x", VALUE_5);
+					for (int a = 0; a < v.size_bytes; a++)
+						printf("%02X", v.value[a]);
+					printf("\n");
+				}
 			}
 		}
 
@@ -859,6 +916,11 @@ namespace SDP
 			{
 				dd.outside_print_function(DELIMITER_PRINT);
 				dd.outside_print_function(ATTR_NAME_0);
+
+				printATTR_ELEMENT(&dd);
+
+				printVALUE_ELEMENT(v, &dd);
+
 
 				char test[100]{ 0 };
 				DWORD temp = 0x00;
@@ -877,9 +939,9 @@ namespace SDP
 			{
 				printf(DELIMITER_PRINT);
 				printf(ATTR_NAME_0);
-				printATTR_ELEMENT();
+				printATTR_ELEMENT(&dd);
 
-				printVALUE_ELEMENT(v);
+				printVALUE_ELEMENT(v, &dd);
 
 				printf("\n");
 			}
@@ -915,9 +977,9 @@ namespace SDP
 
 				printf(DELIMITER_PRINT);
 				printf(ATTR_NAME_1);
-				printATTR_ELEMENT();
+				printATTR_ELEMENT(&dd);
 
-				printVALUE_ELEMENT(v);
+				printVALUE_ELEMENT(v, &dd);
 
 				// TODO: naredi tako da se bodo kreirali objekt za vsak class posebej, ker jih je v prihodnosti lahko vec
 
@@ -1098,9 +1160,9 @@ namespace SDP
 				printf(DELIMITER_PRINT);
 				printf(ATTR_NAME_2);
 
-				printATTR_ELEMENT();
+				printATTR_ELEMENT(&dd);
 
-				printVALUE_ELEMENT(v);
+				printVALUE_ELEMENT(v, &dd);
 
 				for (int c = 0; c < VALUE.num_protocols; c++)
 				{
@@ -1244,9 +1306,9 @@ namespace SDP
 				printf(DELIMITER_PRINT);
 				printf(ATTR_NAME_3);
 
-				printATTR_ELEMENT();
+				printATTR_ELEMENT(&dd);
 
-				printVALUE_ELEMENT(v);
+				printVALUE_ELEMENT(v, &dd);
 
 				printf("Service name: %s\n", v.service_name);
 				printf("\n");
@@ -1280,9 +1342,9 @@ namespace SDP
 				printf(DELIMITER_PRINT);
 				printf(ATTR_NAME_4);
 
-				printATTR_ELEMENT();
+				printATTR_ELEMENT(&dd);
 
-				printVALUE_ELEMENT(v);
+				printVALUE_ELEMENT(v, &dd);
 
 				printf("Provider name: %s\n", v.provider_name);
 				printf("\n");
@@ -1324,9 +1386,9 @@ namespace SDP
 				printf(DELIMITER_PRINT);
 				printf(ATTR_NAME_5);
 
-				printATTR_ELEMENT();
+				printATTR_ELEMENT(&dd);
 
-				printVALUE_ELEMENT(v);
+				printVALUE_ELEMENT(v, &dd);
 
 				printf("Profile UUID: 0x%04X\n", VALUE.profile_UUID);
 				printf("Profile version: 0x%04X\n", VALUE.profile_version);
@@ -1368,9 +1430,9 @@ namespace SDP
 			{
 				printf(DELIMITER_PRINT);
 				printf(ATTR_NAME_6);
-				printATTR_ELEMENT();
+				printATTR_ELEMENT(&dd);
 
-				printVALUE_ELEMENT(v);
+				printVALUE_ELEMENT(v, &dd);
 
 				printf("Natural language ID: 0x%04X\n", VALUE.triplet_id_natural_lang);
 				printf("Character encoding ID: 0x%04X\n", VALUE.triplet_id_char_encoding);
@@ -1406,9 +1468,9 @@ namespace SDP
 				printf(DELIMITER_PRINT);
 				printf(ATTR_NAME_7);
 
-				printATTR_ELEMENT();
+				printATTR_ELEMENT(&dd);
 
-				printVALUE_ELEMENT(v);
+				printVALUE_ELEMENT(v, &dd);
 
 				printf("Description: %s\n", v.description);
 				printf("\n");
@@ -1536,9 +1598,9 @@ namespace SDP
 					printf(DELIMITER_PRINT);
 					printf("GOEPL2CAPPSM: \n");
 
-					printATTR_ELEMENT();
+					printATTR_ELEMENT(&dd);
 
-					printVALUE_ELEMENT(v);
+					printVALUE_ELEMENT(v, &dd);
 
 					printf("GoepL2CapPsm value: 0x%04X\n", v.GoepL2CapPsm_value);
 
@@ -1575,9 +1637,9 @@ namespace SDP
 					printf(DELIMITER_PRINT);
 					printf("SUPPORTED MESSAGE TYPES: \n");
 
-					printATTR_ELEMENT();
+					printATTR_ELEMENT(&dd);
 
-					printVALUE_ELEMENT(v);
+					printVALUE_ELEMENT(v, &dd);
 
 					printf("Message types: \n%s\n", getMessageTypesString(VALUE.sfm).c_str());
 
@@ -1614,9 +1676,9 @@ namespace SDP
 					printf(DELIMITER_PRINT);
 					printf("MAS INSTACE ID: \n");
 
-					printATTR_ELEMENT();
+					printATTR_ELEMENT(&dd);
 
-					printVALUE_ELEMENT(v);
+					printVALUE_ELEMENT(v, &dd);
 
 					printf("MAS instance ID: 0x%02X\n", v.instance_ID);
 
@@ -1652,9 +1714,9 @@ namespace SDP
 					printf(DELIMITER_PRINT);
 					printf("MAP SUPPORTED FEATURES: \n");
 
-					printATTR_ELEMENT();
+					printATTR_ELEMENT(&dd);
 
-					printVALUE_ELEMENT(v);
+					printVALUE_ELEMENT(v, &dd);
 
 					printf("Features: \n%s\n", getSupportedFeaturesString(v.sfm).c_str());
 					printf("\n");
@@ -1744,9 +1806,9 @@ namespace SDP
 				printf("*************************************************\n");
 				printf("SUPORTED FEATURES: \n");
 				
-				printATTR_ELEMENT();
+				printATTR_ELEMENT(&dd);
 
-				printVALUE_ELEMENT(v);
+				printVALUE_ELEMENT(v, &dd);
 
 
 				printf("Supported features: 0x%04X\n", v.supported_features_value);
@@ -1934,9 +1996,9 @@ namespace SDP
 				printf("*************************************************\n");
 				printf("SUPPORTED FEATURES: \n");
 				
-				printATTR_ELEMENT();
+				printATTR_ELEMENT(&dd);
 
-				printVALUE_ELEMENT(v);
+				printVALUE_ELEMENT(v, &dd);
 
 
 				printf("Supported features: 0x%04X\n", v.supported_features_value);
@@ -2091,9 +2153,9 @@ namespace SDP
 				printf("*************************************************\n");
 				printf("NETWORK: \n");
 
-				printATTR_ELEMENT();
+				printATTR_ELEMENT(&dd);
 
-				printVALUE_ELEMENT(v);
+				printVALUE_ELEMENT(v, &dd);
 
 				printf("Network: %s\n", v.value[0] == 0x01 ? "Ability to reject a call" : "No ability to reject a call");
 				printf("\n");
@@ -2117,9 +2179,9 @@ namespace SDP
 				printf("*************************************************\n");
 				printf("SUPPORTED FEATURES: \n");
 				
-				printATTR_ELEMENT();
+				printATTR_ELEMENT(&dd);
 
-				printVALUE_ELEMENT(v);
+				printVALUE_ELEMENT(v, &dd);
 
 				// TODO: naredi da bo tudi za brez AG (trenutno narejeno samo za AG)
 				printf("Supported features: 0x%04X\n", v.supported_features_value);
@@ -2150,9 +2212,9 @@ namespace SDP
 				printf("*************************************************\n");
 				printf("REMOTE AUDIO VOLUME CONTROL: \n");
 				
-				printATTR_ELEMENT();
+				printATTR_ELEMENT(&dd);
 
-				printVALUE_ELEMENT(v);
+				printVALUE_ELEMENT(v, &dd);
 
 				// TODO: najdi primer za parsanje
 			}
@@ -2187,9 +2249,9 @@ namespace SDP
 				printf("*************************************************\n");
 				printf("SECURITY DESCRIPTION: \n");
 				
-				printATTR_ELEMENT();
+				printATTR_ELEMENT(&dd);
 
-				printVALUE_ELEMENT(v);
+				printVALUE_ELEMENT(v, &dd);
 
 				printf("Security Description [0x%04X][%s]\n", VALUE.security_value, getSecurityDescriptionString(VALUE.security_value).c_str());
 				printf("\n");
@@ -2211,9 +2273,9 @@ namespace SDP
 				printf("*************************************************\n");
 				printf("NET ACCESS TYPE: \n");
 				
-				printATTR_ELEMENT();
+				printATTR_ELEMENT(&dd);
 
-				printVALUE_ELEMENT(v);
+				printVALUE_ELEMENT(v, &dd);
 
 				printf("Type of Network Access Available[0x%04X][%s]\n", VALUE.NetAccessType, getNetAccessTypeString(VALUE.NetAccessType).c_str());
 				printf("\n");
@@ -2234,9 +2296,9 @@ namespace SDP
 				printf("*************************************************\n");
 				printf("MAX NET ACCESS RATE: \n");
 				
-				printATTR_ELEMENT();
+				printATTR_ELEMENT(&dd);
 
-				printVALUE_ELEMENT(v);
+				printVALUE_ELEMENT(v, &dd);
 
 				printf("Maximum possible Network Access Data Rate: 0x%08X\n", VALUE.Maximum_possible_Network_Access_Data_Rate);
 				printf("\n");
@@ -2279,9 +2341,9 @@ namespace SDP
 				printf("*************************************************\n");
 				printf("SUPPORTED FORMATS: \n");
 				
-				printATTR_ELEMENT();
+				printATTR_ELEMENT(&dd);
 
-				printVALUE_ELEMENT(v);
+				printVALUE_ELEMENT(v, &dd);
 
 				printf("Number of supported formats: %d\n", v.num_of_formats);
 
@@ -2369,9 +2431,9 @@ namespace SDP
 				printf("*************************************************\n");
 				printf("SUPPORTED REPOSITORIES: \n");
 				
-				printATTR_ELEMENT();
+				printATTR_ELEMENT(&dd);
 
-				printVALUE_ELEMENT(v);
+				printVALUE_ELEMENT(v, &dd);
 
 				printf("Repositories: \n%s\n", v.srs->getSupportedRepositoriesString().c_str());
 			}
@@ -2387,9 +2449,9 @@ namespace SDP
 				printf("*************************************************\n");
 				printf("PBAP SUPPORTED FEATURES: \n");
 				
-				printATTR_ELEMENT();
+				printATTR_ELEMENT(&dd);
 
-				printVALUE_ELEMENT(v);
+				printVALUE_ELEMENT(v, &dd);
 			}
 
 

@@ -49,9 +49,9 @@ namespace SDP
 			record_handle_element = (SDP::PATTRIBUTE_ID_ELEMENT)(res + position);
 
 			id_handle->attr_id = new ATTR_ID();
-			id_handle->attr_id->element = record_handle_element;
-
-
+			id_handle->attr_id->element = new SDP::ATTRIBUTE_ID_ELEMENT();
+			id_handle->attr_id->element->element.size = record_handle_element->element.size;
+			id_handle->attr_id->element->element.type = record_handle_element->element.type;
 
 			int temp_size = SDP::SUB_FUNCTIONS::getElementSize(id_handle->attr_id->element->element.size, &(id_handle->attr_id->additional_bits_flag));
 
@@ -66,12 +66,13 @@ namespace SDP
 				id_handle->attr_id->size_bytes = temp_size;
 				position++;
 
-				id_handle->attr_id->value = (BYTE*)malloc(id_handle->attr_id->size_bytes * sizeof(BYTE));
-				memset(id_handle->attr_id->value, 0x00, id_handle->attr_id->size_bytes);
-				for (int a = 0; a < id_handle->attr_id->size_bytes; a++)
+				id_handle->attr_id->value = new BYTE[temp_size]();
+
+				memset(id_handle->attr_id->value, 0x00, temp_size);
+				
+				for (int a = 0; a < temp_size; a++)
 				{
 					position += a;
-					//printf("%X ", *(res + position));
 					id_handle->attr_id->value[a] = *(res + position);
 				}
 				printf("\n");
@@ -88,21 +89,40 @@ namespace SDP
 			SDP::PATTRIBUTE_ID_ELEMENT record_handle_element_2 = new SDP::ATTRIBUTE_ID_ELEMENT();
 			record_handle_element_2 = (SDP::PATTRIBUTE_ID_ELEMENT)(res + position);
 
-			id_handle->VALUE.element = record_handle_element_2;
+			//id_handle->VALUE.element = record_handle_element_2;
+			id_handle->VALUE.element = new SDP::ATTRIBUTE_ID_ELEMENT();
+			//id_handle->VALUE.element = (SDP::PATTRIBUTE_ID_ELEMENT)(res + position);
+			id_handle->VALUE.element->element.size = record_handle_element_2->element.size;
+			id_handle->VALUE.element->element.type = record_handle_element_2->element.type;
 
-			int temp_size_VALUE = SDP::SUB_FUNCTIONS::getElementSize(id_handle->VALUE.element->element.size, &(id_handle->VALUE.additional_bits_flag));
+			//printf("-- DEBUGLE:  %x\n", *id_handle->VALUE.element);
+			//printf("-- DEBUGLE:  %x\n", id_handle->VALUE.element->element.size);
+			//printf("-- DEBUGLE:  %x\n", id_handle->VALUE.element->element.type);
+
+			int temp_size_VALUE = SDP::SUB_FUNCTIONS::getElementSize(
+										id_handle->VALUE.element->element.size, 
+										&(id_handle->VALUE.additional_bits_flag)
+									);
 
 			if (id_handle->VALUE.additional_bits_flag)
 			{
 				id_handle->VALUE.additional_bits_for_size = temp_size_VALUE;
+
+				//printf("-- DEBUGLE:  %x\n", id_handle->VALUE.additional_bits_for_size);
+
 
 				if (id_handle->VALUE.additional_bits_for_size = 1)
 				{
 					position++;
 					id_handle->VALUE.size_bytes = *(res + position);
 
-					id_handle->VALUE.value = (BYTE*)malloc(id_handle->VALUE.size_bytes * sizeof(BYTE));
-					memset(id_handle->VALUE.value, 0x00, id_handle->VALUE.size_bytes);
+					//printf("-- DEBUGLE:  %x\n", id_handle->VALUE.size_bytes);
+
+
+					//id_handle->VALUE.value = (BYTE*)malloc(id_handle->VALUE.size_bytes * sizeof(BYTE));
+					id_handle->VALUE.value = new BYTE[*(res + position)]();
+
+					memset(id_handle->VALUE.value, 0x00, *(res + position));
 
 					position++;
 					for (int b = 0; b < id_handle->VALUE.size_bytes; b++)
@@ -117,7 +137,8 @@ namespace SDP
 				id_handle->VALUE.size_bytes = temp_size_VALUE;
 				position++;
 
-				id_handle->VALUE.value = (BYTE*)malloc(id_handle->VALUE.size_bytes * sizeof(BYTE));
+				//id_handle->VALUE.value = (BYTE*)malloc(id_handle->VALUE.size_bytes * sizeof(BYTE));
+				id_handle->VALUE.value = new BYTE[id_handle->VALUE.size_bytes]();
 				memset(id_handle->VALUE.value, 0x00, id_handle->VALUE.size_bytes);
 				for (int b = 0; b < id_handle->VALUE.size_bytes; b++)
 				{
@@ -271,9 +292,14 @@ namespace SDP
 				int position = set_save_ATTRIBUTE_ELEMENT<C, BYTE[]>(handle, bssr_response, 5000);
 				position = set_save_VALUE_ELEMENT<C, BYTE[]>(handle, bssr_response, 5000, position);
 
+				//printf("0-- DEBUGLE:  %x\n", *handle->VALUE.element);
+
+
 				const std::type_info& a1 = typeid(C);
 				
 				parse_by_type<C>(a1, handle, device_data_sdp->current_used_service, dd);
+
+				//printf("0.0-- DEBUGLE:  %x\n", *handle->VALUE.element);
 
 				if (print == 1)
 					handle->print<D>(handle->VALUE, dd);

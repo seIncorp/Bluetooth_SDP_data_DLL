@@ -8,7 +8,7 @@ namespace SDP
 		// TODO: preveri ce se pravilno pokazejo supported features
 		// TODO: naredi se za MNS
 
-		class MAP_class : DEFAULT_class
+		class MAP_class : public DEFAULT_class
 		{
 			public:
 

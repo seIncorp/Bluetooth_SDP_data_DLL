@@ -37,6 +37,9 @@ void SDP::DEFAULT_class::call_ServiceClassIDList(DEVICE_DATA_SDP* device_data_sd
 		dd,
 		0
 	);
+
+	//printf("1-- DEBUGLE:  %x\n", *class_id_handle->VALUE.element);
+
 }
 
 void SDP::DEFAULT_class::call_ProtocolDescriptorList(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
@@ -90,6 +93,9 @@ void SDP::DEFAULT_class::callDefaultAttributes(DEVICE_DATA_SDP* device_data_sdp,
 	call_ProtocolDescriptorList(device_data_sdp, dd);
 	call_ServiceName(device_data_sdp, dd);
 	call_BluetoothProfileDescriptorList(device_data_sdp, dd);
+
+
+	//printf("1.1-- DEBUGLE:  %x\n", *class_id_handle->VALUE.element);
 }
 
 void SDP::DEFAULT_class::printDefaultData(IOCTL_S::DEFAULT_DATA dd)

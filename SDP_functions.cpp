@@ -358,7 +358,15 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 	{
 		if (dd->sdp_settings.print_info == 1)
 			printf("SERVICE FOUNDED!! [0x%04X]\n", device_data_sdp->current_used_service);
+		
+		if (dd->outside_print_function != NULL && dd->sdp_settings.print_with_outside_funct == 1)
+		{
+			char test[100]{ 0 };
+			sprintf_s(test, "SERVICE FOUNDED!! [0x%04X]\n", device_data_sdp->current_used_service);
+			dd->outside_print_function(test);
+		}
 
+		dd->service_class_id_in_use = device_data_sdp->current_used_service;
 		/******************************************/
 		/* ATTRIBUTES SEARCH (for current service) */
 
@@ -367,9 +375,16 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 			// DONE!
 			SDP::MAP::MAP_class test_aa = SDP::MAP::MAP_class();
 			test_aa.call_ALL_ATTR(device_data_sdp, *dd);
+			//printf("3-- DEBUGLE:  %x\n", *test_aa.class_id_handle->VALUE.element);
+
 			test_aa.print_ALL_ATTR(*dd);
+			
+			
 
 			dd->exported_data.map_export = (BYTE*)test_aa.export_ALL_ATTR();
+
+			
+
 		}
 
 		if (device_data_sdp->current_used_service == SDP::_NAP)
@@ -512,6 +527,9 @@ void SDP::FUNCTIONS::parse_SERVICE_CLASS_ID_LIST(PSERVICE_CLASS_ID_LIST handle)
 		handle->VALUE.classes[b].value <<= 8;
 		handle->VALUE.classes[b].value |= *(handle->VALUE.value + a + 2);
 	}
+
+
+	//printf("0.1-- DEBUGLE:  %x\n", *handle->VALUE.element);
 }
 
 void SDP::FUNCTIONS::parse_PROTOCOL_DESCRIPTOR_LIST(PPROTOCOL_DESCRIPTOR_LIST handle, IOCTL_S::DEFAULT_DATA dd)
@@ -567,13 +585,8 @@ void SDP::FUNCTIONS::parse_PROTOCOL_DESCRIPTOR_LIST(PPROTOCOL_DESCRIPTOR_LIST ha
 
 		// TODO: tukaj naprej so lahko razlicni parametri za razlicne service in protokole
 
-		printf("ID: %d -> add bits size %d\n",c, handle->VALUE.protocols[c].additional_bits_for_size);
-
 		if (handle->VALUE.protocols[c].additional_bits_for_size > 3)
 		{
-			printf("1. TUKAJ CEZ!!!!!!!\n");
-
-
 			if (dd.service_class_id_in_use == SDP::Handsfree ||
 				dd.service_class_id_in_use == SDP::Headset ||
 				dd.service_class_id_in_use == SDP::Headset_Audio_Gateway ||
@@ -587,14 +600,9 @@ void SDP::FUNCTIONS::parse_PROTOCOL_DESCRIPTOR_LIST(PPROTOCOL_DESCRIPTOR_LIST ha
 				dd.service_class_id_in_use == SDP::GenericAudio
 				)
 			{
-				printf("?????????? %d\n", *(handle->VALUE.protocols[c].value + 4));
-				
 				handle->VALUE.protocols[c].additional_parameters_flag = 1;
 				handle->VALUE.protocols[c].pdsp = new SDP::PROTOCOL_DESCRIPTOR_SPECIFIC_PARAMETER();
 				handle->VALUE.protocols[c].pdsp->server_channel_num = *(handle->VALUE.protocols[c].value + 4);
-
-				
-
 			}
 
 			if (dd.service_class_id_in_use == SDP::AudioSource ||
