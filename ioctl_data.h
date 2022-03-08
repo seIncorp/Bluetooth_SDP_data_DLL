@@ -28,6 +28,8 @@
 #define ATTR_NAME_5		"BLUETOOTH PROFILE DESCRIPTOR LIST: \n"
 #define ATTR_NAME_6		"LANGUAGE ATTRIBUTE ID LIST: \n"
 #define ATTR_NAME_7		"SERVICE DESCRIPTION: \n"
+#define ATTR_NAME_8		"GOEPL2CAPPSM: \n"
+#define ATTR_NAME_9		"SUPORTED FEATURES: \n"
 
 #define VALUE_1			"VALUE ELEMENT:\n"
 #define VALUE_2			"ATTRIBUTE ID:\n"
@@ -36,6 +38,8 @@
 #define VALUE_5			"Value:"
 #define VALUE_6			"Additional size:"
 
+
+#define MAX_TEMP_STRING_LENGTH	500
 
 /************************************************************************/
 /* ENUMs */
@@ -842,7 +846,7 @@ namespace SDP
 			{
 				dd->outside_print_function(VALUE_1);
 
-				char test[100]{ 0 };
+				char test[MAX_TEMP_STRING_LENGTH]{ 0 };
 
 				sprintf_s(test, "%s %s [%d]\n", VALUE_3, SDP::SUB_FUNCTIONS::getElementTypeString(v.element->element.type).c_str(), v.element->element.type);
 				dd->outside_print_function(test);
@@ -966,8 +970,10 @@ namespace SDP
 				dd.outside_print_function(DELIMITER_PRINT);
 				dd.outside_print_function(ATTR_NAME_1);
 
+				printATTR_ELEMENT(&dd);
+				printVALUE_ELEMENT(v, &dd);
 
-				char test[500]{ 0 };
+				char test[MAX_TEMP_STRING_LENGTH]{ 0 };
 				for (int a = 0; a < VALUE.num_classes; a++)
 					sprintf_s(test, "%sClass ID [%d]: 0x%04X\n", test, a, VALUE.classes[a].value);
 				dd.outside_print_function(test);
@@ -977,8 +983,8 @@ namespace SDP
 
 				printf(DELIMITER_PRINT);
 				printf(ATTR_NAME_1);
-				printATTR_ELEMENT(&dd);
 
+				printATTR_ELEMENT(&dd);
 				printVALUE_ELEMENT(v, &dd);
 
 				// TODO: naredi tako da se bodo kreirali objekt za vsak class posebej, ker jih je v prihodnosti lahko vec
@@ -1012,9 +1018,10 @@ namespace SDP
 				dd.outside_print_function(DELIMITER_PRINT);
 				dd.outside_print_function(ATTR_NAME_2);
 
+				printATTR_ELEMENT(&dd);
+				printVALUE_ELEMENT(v, &dd);
 
-
-				char test[100]{ 0 };
+				char test[MAX_TEMP_STRING_LENGTH]{ 0 };
 
 				for (int c = 0; c < VALUE.num_protocols; c++)
 				{
@@ -1161,7 +1168,6 @@ namespace SDP
 				printf(ATTR_NAME_2);
 
 				printATTR_ELEMENT(&dd);
-
 				printVALUE_ELEMENT(v, &dd);
 
 				for (int c = 0; c < VALUE.num_protocols; c++)
@@ -1296,10 +1302,14 @@ namespace SDP
 				dd.outside_print_function(DELIMITER_PRINT);
 				dd.outside_print_function(ATTR_NAME_3);
 
+				printATTR_ELEMENT(&dd);
+				printVALUE_ELEMENT(v, &dd);
 
-				char test[100]{ 0 };
+				char test[MAX_TEMP_STRING_LENGTH]{ 0 };
 				sprintf_s(test, "Service name: %s\n", v.service_name);
 				dd.outside_print_function(test);
+
+				//printf("Service name: %s\n", v.service_name);
 			}
 			else
 			{
@@ -1307,7 +1317,6 @@ namespace SDP
 				printf(ATTR_NAME_3);
 
 				printATTR_ELEMENT(&dd);
-
 				printVALUE_ELEMENT(v, &dd);
 
 				printf("Service name: %s\n", v.service_name);
@@ -1333,7 +1342,10 @@ namespace SDP
 				dd.outside_print_function(DELIMITER_PRINT);
 				dd.outside_print_function(ATTR_NAME_4);
 
-				char test[100]{ 0 };
+				printATTR_ELEMENT(&dd);
+				printVALUE_ELEMENT(v, &dd);
+
+				char test[MAX_TEMP_STRING_LENGTH]{ 0 };
 				sprintf_s(test, "Provider name: %s\n", v.provider_name);
 				dd.outside_print_function(test);
 			}
@@ -1343,7 +1355,6 @@ namespace SDP
 				printf(ATTR_NAME_4);
 
 				printATTR_ELEMENT(&dd);
-
 				printVALUE_ELEMENT(v, &dd);
 
 				printf("Provider name: %s\n", v.provider_name);
@@ -1375,7 +1386,10 @@ namespace SDP
 				dd.outside_print_function(DELIMITER_PRINT);
 				dd.outside_print_function(ATTR_NAME_5);
 
-				char test[100]{ 0 };
+				printATTR_ELEMENT(&dd);
+				printVALUE_ELEMENT(v, &dd);
+
+				char test[MAX_TEMP_STRING_LENGTH]{ 0 };
 				sprintf_s(test, "Profile UUID: 0x%04X\n", VALUE.profile_UUID);
 				dd.outside_print_function(test);
 				sprintf_s(test, "Profile version: 0x%04X\n", VALUE.profile_version);
@@ -1387,7 +1401,6 @@ namespace SDP
 				printf(ATTR_NAME_5);
 
 				printATTR_ELEMENT(&dd);
-
 				printVALUE_ELEMENT(v, &dd);
 
 				printf("Profile UUID: 0x%04X\n", VALUE.profile_UUID);
@@ -1417,7 +1430,10 @@ namespace SDP
 				dd.outside_print_function(DELIMITER_PRINT);
 				dd.outside_print_function(ATTR_NAME_6);
 
-				char test[100]{ 0 };
+				printATTR_ELEMENT(&dd);
+				printVALUE_ELEMENT(v, &dd);
+
+				char test[MAX_TEMP_STRING_LENGTH]{ 0 };
 				sprintf_s(test, "Natural language ID: 0x%04X\n", VALUE.triplet_id_natural_lang);
 				dd.outside_print_function(test);
 				sprintf_s(test, "Character encoding ID: 0x%04X\n", VALUE.triplet_id_char_encoding);
@@ -1430,8 +1446,8 @@ namespace SDP
 			{
 				printf(DELIMITER_PRINT);
 				printf(ATTR_NAME_6);
-				printATTR_ELEMENT(&dd);
 
+				printATTR_ELEMENT(&dd);
 				printVALUE_ELEMENT(v, &dd);
 
 				printf("Natural language ID: 0x%04X\n", VALUE.triplet_id_natural_lang);
@@ -1459,7 +1475,10 @@ namespace SDP
 				dd.outside_print_function(DELIMITER_PRINT);
 				dd.outside_print_function(ATTR_NAME_7);
 
-				char test[100]{ 0 };
+				printATTR_ELEMENT(&dd);
+				printVALUE_ELEMENT(v, &dd);
+
+				char test[MAX_TEMP_STRING_LENGTH]{ 0 };
 				sprintf_s(test, "Description: %s\n", v.description);
 				dd.outside_print_function(test);
 			}
@@ -1469,7 +1488,6 @@ namespace SDP
 				printf(ATTR_NAME_7);
 
 				printATTR_ELEMENT(&dd);
-
 				printVALUE_ELEMENT(v, &dd);
 
 				printf("Description: %s\n", v.description);
@@ -1587,7 +1605,10 @@ namespace SDP
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
 					dd.outside_print_function(DELIMITER_PRINT);
-					dd.outside_print_function("GOEPL2CAPPSM: \n");
+					dd.outside_print_function(ATTR_NAME_8);
+
+					printATTR_ELEMENT(&dd);
+					printVALUE_ELEMENT(v, &dd);
 
 					char test[100]{ 0 };
 					sprintf_s(test, "GoepL2CapPsm value: 0x%04X\n", v.GoepL2CapPsm_value);
@@ -1596,10 +1617,9 @@ namespace SDP
 				else
 				{
 					printf(DELIMITER_PRINT);
-					printf("GOEPL2CAPPSM: \n");
+					printf(ATTR_NAME_8);
 
 					printATTR_ELEMENT(&dd);
-
 					printVALUE_ELEMENT(v, &dd);
 
 					printf("GoepL2CapPsm value: 0x%04X\n", v.GoepL2CapPsm_value);
@@ -1627,6 +1647,9 @@ namespace SDP
 					dd.outside_print_function(DELIMITER_PRINT);
 					dd.outside_print_function("SUPPORTED MESSAGE TYPES: \n");
 
+					printATTR_ELEMENT(&dd);
+					printVALUE_ELEMENT(v, &dd);
+
 					std::string temp_s = "Message types: \n";
 					temp_s.append(getMessageTypesString(VALUE.sfm));
 					temp_s.append("\n");
@@ -1638,7 +1661,6 @@ namespace SDP
 					printf("SUPPORTED MESSAGE TYPES: \n");
 
 					printATTR_ELEMENT(&dd);
-
 					printVALUE_ELEMENT(v, &dd);
 
 					printf("Message types: \n%s\n", getMessageTypesString(VALUE.sfm).c_str());
@@ -1666,6 +1688,8 @@ namespace SDP
 					dd.outside_print_function(DELIMITER_PRINT);
 					dd.outside_print_function("MAS INSTACE ID: \n");
 
+					printATTR_ELEMENT(&dd);
+					printVALUE_ELEMENT(v, &dd);
 
 					char test[100]{ 0 };
 					sprintf_s(test, "MAS instance ID: 0x%02X\n", v.instance_ID);
@@ -1677,7 +1701,6 @@ namespace SDP
 					printf("MAS INSTACE ID: \n");
 
 					printATTR_ELEMENT(&dd);
-
 					printVALUE_ELEMENT(v, &dd);
 
 					printf("MAS instance ID: 0x%02X\n", v.instance_ID);
@@ -1704,6 +1727,9 @@ namespace SDP
 					dd.outside_print_function(DELIMITER_PRINT);
 					dd.outside_print_function("MAP SUPPORTED FEATURES: \n");
 
+					printATTR_ELEMENT(&dd);
+					printVALUE_ELEMENT(v, &dd);
+
 					std::string temp_s = "Features: \n";
 					temp_s.append(getSupportedFeaturesString(v.sfm));
 					temp_s.append("\n");
@@ -1715,7 +1741,6 @@ namespace SDP
 					printf("MAP SUPPORTED FEATURES: \n");
 
 					printATTR_ELEMENT(&dd);
-
 					printVALUE_ELEMENT(v, &dd);
 
 					printf("Features: \n%s\n", getSupportedFeaturesString(v.sfm).c_str());
@@ -1803,17 +1828,40 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
-				printf("*************************************************\n");
-				printf("SUPORTED FEATURES: \n");
-				
-				printATTR_ELEMENT(&dd);
+				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
+				{
+					dd.outside_print_function(DELIMITER_PRINT);
+					dd.outside_print_function(ATTR_NAME_9);
 
-				printVALUE_ELEMENT(v, &dd);
+					printATTR_ELEMENT(&dd);
+					printVALUE_ELEMENT(v, &dd);
 
 
-				printf("Supported features: 0x%04X\n", v.supported_features_value);
-				printf("%s\n", v.sfds->getSupportedFeaturesString().c_str());
+					char test[100]{ 0 };
+					sprintf_s(test, "Supported features: 0x%04X\n", v.supported_features_value);
+					dd.outside_print_function(test);
 
+					//printf("Supported features: 0x%04X\n", v.supported_features_value);
+					//printf("%s\n", v.sfds->getSupportedFeaturesString().c_str());
+					sprintf_s(test, "%s\n", v.sfds->getSupportedFeaturesString().c_str());
+					dd.outside_print_function(test);
+
+
+
+
+				}
+				else
+				{
+					printf(DELIMITER_PRINT);
+					printf(ATTR_NAME_9);
+
+					printATTR_ELEMENT(&dd);
+					printVALUE_ELEMENT(v, &dd);
+
+
+					printf("Supported features: 0x%04X\n", v.supported_features_value);
+					printf("%s\n", v.sfds->getSupportedFeaturesString().c_str());
+				}
 			}
 
 		} SUPPORTED_FEATURES, * PSUPPORTED_FEATURES;
