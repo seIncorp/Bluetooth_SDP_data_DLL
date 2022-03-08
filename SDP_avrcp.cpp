@@ -8,6 +8,8 @@
 
 void SDP::AVRCP::parse_SUPPORTED_FEATURES_AVRCP(PSUPPORTED_FEATURES handle, SHORT current_used_service)
 {
+	// TODO: popravi bug, ker se ne pravilno parsa
+	
 	SHORT temp = 0x00;
 
 	temp |= handle->VALUE.value[0];
@@ -55,7 +57,7 @@ void SDP::AVRCP::AVRCP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IO
 		SDP::ProviderName,
 		device_data_sdp,
 		dd,
-		1
+		0
 	);
 
 	FUNCTIONS::getAndParse_DEAFULT<PSUPPORTED_FEATURES, SUPPORTED_FEATURES::VV>(

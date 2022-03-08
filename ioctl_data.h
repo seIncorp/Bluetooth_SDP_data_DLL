@@ -31,6 +31,7 @@
 #define ATTR_NAME_8		"GOEPL2CAPPSM: \n"
 #define ATTR_NAME_9		"SUPORTED FEATURES: \n"
 
+
 #define VALUE_1			"VALUE ELEMENT:\n"
 #define VALUE_2			"ATTRIBUTE ID:\n"
 #define VALUE_3			"Type:"
@@ -38,6 +39,10 @@
 #define VALUE_5			"Value:"
 #define VALUE_6			"Additional size:"
 
+
+/*************************************************/
+/*************************************************/
+/* DEFINING VALUES */
 
 #define MAX_TEMP_STRING_LENGTH	500
 
@@ -1308,8 +1313,6 @@ namespace SDP
 				char test[MAX_TEMP_STRING_LENGTH]{ 0 };
 				sprintf_s(test, "Service name: %s\n", v.service_name);
 				dd.outside_print_function(test);
-
-				//printf("Service name: %s\n", v.service_name);
 			}
 			else
 			{
@@ -1610,7 +1613,7 @@ namespace SDP
 					printATTR_ELEMENT(&dd);
 					printVALUE_ELEMENT(v, &dd);
 
-					char test[100]{ 0 };
+					char test[MAX_TEMP_STRING_LENGTH]{ 0 };
 					sprintf_s(test, "GoepL2CapPsm value: 0x%04X\n", v.GoepL2CapPsm_value);
 					dd.outside_print_function(test);
 				}
@@ -1691,7 +1694,7 @@ namespace SDP
 					printATTR_ELEMENT(&dd);
 					printVALUE_ELEMENT(v, &dd);
 
-					char test[100]{ 0 };
+					char test[MAX_TEMP_STRING_LENGTH]{ 0 };
 					sprintf_s(test, "MAS instance ID: 0x%02X\n", v.instance_ID);
 					dd.outside_print_function(test);
 				}
@@ -2041,22 +2044,53 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
-				printf("*************************************************\n");
-				printf("SUPPORTED FEATURES: \n");
-				
-				printATTR_ELEMENT(&dd);
+				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
+				{
+					dd.outside_print_function(DELIMITER_PRINT);
+					dd.outside_print_function(ATTR_NAME_9);
 
-				printVALUE_ELEMENT(v, &dd);
+					printATTR_ELEMENT(&dd);
+					printVALUE_ELEMENT(v, &dd);
+
+					//printf("Supported features: 0x%04X\n", v.supported_features_value);
+					char test[MAX_TEMP_STRING_LENGTH]{ 0 };
+					sprintf_s(test, "Supported features: 0x%04X\n", v.supported_features_value);
+					dd.outside_print_function(test);
 
 
-				printf("Supported features: 0x%04X\n", v.supported_features_value);
+					// TODO: premisli kako bi to naredil da se data pravilno izpise
+					if (v.sfds->avrct != NULL)
+					{
+						//printf("%s\n", v.sfds->getSupportedFeaturesString_AVRCT().c_str());
+						sprintf_s(test, "%s\n", v.sfds->getSupportedFeaturesString_AVRCT().c_str());
+						dd.outside_print_function(test);
+					}
 
-				// TODO: premisli kako bi to naredil da se data pravilno izpise
-				if (v.sfds->avrct != NULL)
-					printf("%s\n", v.sfds->getSupportedFeaturesString_AVRCT().c_str());
+					if (v.sfds->avrc_avrcc != NULL)
+					{
+						//printf("%s\n", v.sfds->getSupportedFeaturesString_AVRC_AVRCC().c_str());
+						sprintf_s(test, "%s\n", v.sfds->getSupportedFeaturesString_AVRC_AVRCC().c_str());
+						dd.outside_print_function(test);
+					}
+				}
+				else
+				{
+					printf(DELIMITER_PRINT);
+					printf(ATTR_NAME_9);
 
-				if (v.sfds->avrc_avrcc != NULL)
-					printf("%s\n", v.sfds->getSupportedFeaturesString_AVRC_AVRCC().c_str());
+					printATTR_ELEMENT(&dd);
+					printVALUE_ELEMENT(v, &dd);
+
+
+					printf("Supported features: 0x%04X\n", v.supported_features_value);
+
+					// TODO: premisli kako bi to naredil da se data pravilno izpise
+					if (v.sfds->avrct != NULL)
+						printf("%s\n", v.sfds->getSupportedFeaturesString_AVRCT().c_str());
+
+					if (v.sfds->avrc_avrcc != NULL)
+						printf("%s\n", v.sfds->getSupportedFeaturesString_AVRC_AVRCC().c_str());
+				}
 			}
 
 		} SUPPORTED_FEATURES, * PSUPPORTED_FEATURES;
