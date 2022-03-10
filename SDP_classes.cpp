@@ -37,9 +37,6 @@ void SDP::DEFAULT_class::call_ServiceClassIDList(DEVICE_DATA_SDP* device_data_sd
 		dd,
 		0
 	);
-
-	//printf("1-- DEBUGLE:  %x\n", *class_id_handle->VALUE.element);
-
 }
 
 void SDP::DEFAULT_class::call_ProtocolDescriptorList(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
@@ -93,39 +90,33 @@ void SDP::DEFAULT_class::callDefaultAttributes(DEVICE_DATA_SDP* device_data_sdp,
 	call_ProtocolDescriptorList(device_data_sdp, dd);
 	call_ServiceName(device_data_sdp, dd);
 	call_BluetoothProfileDescriptorList(device_data_sdp, dd);
-
-
-	//printf("1.1-- DEBUGLE:  %x\n", *class_id_handle->VALUE.element);
 }
 
 void SDP::DEFAULT_class::printDefaultData(IOCTL_S::DEFAULT_DATA dd)
 {
-	//if (dd.sdp_settings.print == 1)
-	//{
-		if (record_handle != NULL && (dd.sdp_settings.print_service.print_service_record == 1 || dd.sdp_settings.print == 1))
-			record_handle->print(record_handle->VALUE, dd);
+	if (record_handle != NULL && (dd.sdp_settings.print_service.print_service_record == 1 || dd.sdp_settings.print == 1))
+		record_handle->print(record_handle->VALUE, dd);
 
-		if (class_id_handle != NULL && (dd.sdp_settings.print_service.print_service_class_id_list == 1 || dd.sdp_settings.print == 1))
-			class_id_handle->print<SERVICE_CLASS_ID_LIST_S::VV>(class_id_handle->VALUE, dd);
+	if (class_id_handle != NULL && (dd.sdp_settings.print_service.print_service_class_id_list == 1 || dd.sdp_settings.print == 1))
+		class_id_handle->print<SERVICE_CLASS_ID_LIST_S::VV>(class_id_handle->VALUE, dd);
 
-		if (protocol_descriptor_list_handle != NULL && (dd.sdp_settings.print_service.print_protocol_descriptor_list == 1 || dd.sdp_settings.print == 1))
-			protocol_descriptor_list_handle->print<PROTOCOL_DESCRIPTOR_LIST_S::VV>(protocol_descriptor_list_handle->VALUE, dd);
+	if (protocol_descriptor_list_handle != NULL && (dd.sdp_settings.print_service.print_protocol_descriptor_list == 1 || dd.sdp_settings.print == 1))
+		protocol_descriptor_list_handle->print<PROTOCOL_DESCRIPTOR_LIST_S::VV>(protocol_descriptor_list_handle->VALUE, dd);
 
-		if (service_name_handle != NULL && (dd.sdp_settings.print_service.print_service_name == 1 || dd.sdp_settings.print == 1))
-			service_name_handle->print<SERVICE_NAME_S::VV>(service_name_handle->VALUE, dd);
+	if (service_name_handle != NULL && (dd.sdp_settings.print_service.print_service_name == 1 || dd.sdp_settings.print == 1))
+		service_name_handle->print<SERVICE_NAME_S::VV>(service_name_handle->VALUE, dd);
 
-		if (provider_name_handle != NULL && (dd.sdp_settings.print_service.print_provider_name == 1 || dd.sdp_settings.print == 1))
-			provider_name_handle->print<PROVIDER_NAME_S::VV>(provider_name_handle->VALUE, dd);
+	if (provider_name_handle != NULL && (dd.sdp_settings.print_service.print_provider_name == 1 || dd.sdp_settings.print == 1))
+		provider_name_handle->print<PROVIDER_NAME_S::VV>(provider_name_handle->VALUE, dd);
 
-		if (bluetooth_profile_descriptor_list_handle != NULL && (dd.sdp_settings.print_service.print_bluetooth_profile_descriptor_list == 1 || dd.sdp_settings.print == 1))
-			bluetooth_profile_descriptor_list_handle->print<BLUETOOTH_PROFILE_DESCRIPTOR_LIST_S::VV>(bluetooth_profile_descriptor_list_handle->VALUE, dd);
+	if (bluetooth_profile_descriptor_list_handle != NULL && (dd.sdp_settings.print_service.print_bluetooth_profile_descriptor_list == 1 || dd.sdp_settings.print == 1))
+		bluetooth_profile_descriptor_list_handle->print<BLUETOOTH_PROFILE_DESCRIPTOR_LIST_S::VV>(bluetooth_profile_descriptor_list_handle->VALUE, dd);
 
-		if (language_base_attribute_id_list_handle != NULL && (dd.sdp_settings.print_service.print_language_base_attribute_id_list == 1 || dd.sdp_settings.print == 1))
-			language_base_attribute_id_list_handle->print<LANGUAGE_BASE_ATTRIBUTE_ID_LIST_S::VV>(language_base_attribute_id_list_handle->VALUE, dd);
+	if (language_base_attribute_id_list_handle != NULL && (dd.sdp_settings.print_service.print_language_base_attribute_id_list == 1 || dd.sdp_settings.print == 1))
+		language_base_attribute_id_list_handle->print<LANGUAGE_BASE_ATTRIBUTE_ID_LIST_S::VV>(language_base_attribute_id_list_handle->VALUE, dd);
 
-		if (service_description_handle != NULL && (dd.sdp_settings.print_service.print_service_description == 1 || dd.sdp_settings.print == 1))
-			service_description_handle->print<SERVICE_DESCRIPTION_S::VV>(service_description_handle->VALUE, dd);
-	//}
+	if (service_description_handle != NULL && (dd.sdp_settings.print_service.print_service_description == 1 || dd.sdp_settings.print == 1))
+		service_description_handle->print<SERVICE_DESCRIPTION_S::VV>(service_description_handle->VALUE, dd);
 }
 
 SDP::PDEFAULT_EXPORT SDP::DEFAULT_class::export_default_ATTR()

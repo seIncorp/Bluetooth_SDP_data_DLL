@@ -51,44 +51,44 @@ int SDP::SUB_FUNCTIONS::getElementSize(BYTE size, int* add_bits)
 
 std::string SDP::SUB_FUNCTIONS::getElementTypeString(BYTE type)
 {
-	std::string temp;
+	std::string temp = "";
 
 	switch (type)
 	{
-	case SDP::_Nil:
-		temp = "NIL";
+		case SDP::_Nil:
+			temp.append("NIL");
 		break;
 
-	case SDP::_Unsigned_int:
-		temp = "Unsigned int";
+		case SDP::_Unsigned_int:
+			temp.append("Unsigned int");
 		break;
 
-	case SDP::_Signed_twos_complement_int:
-		temp = "Signed twos complement int";
+		case SDP::_Signed_twos_complement_int:
+			temp.append("Signed twos complement int");
 		break;
 
-	case SDP::_UUID:
-		temp = "UUID";
+		case SDP::_UUID:
+			temp.append("UUID");
 		break;
 
-	case SDP::_Text_string:
-		temp = "Text string";
+		case SDP::_Text_string:
+			temp.append("Text string");
 		break;
 
-	case SDP::_Boolean:
-		temp = "Boolean";
+		case SDP::_Boolean:
+			temp.append("Boolean");
 		break;
 
-	case SDP::_Data_element_sequence:
-		temp = "Data element sequence";
+		case SDP::_Data_element_sequence:
+			temp.append("Data element sequence");
 		break;
 
-	case SDP::_Data_element_alternative:
-		temp = "Data element alternative";
+		case SDP::_Data_element_alternative:
+			temp.append("Data element alternative");
 		break;
 
-	case SDP::_URL:
-		temp = "URL";
+		case SDP::_URL:
+			temp.append("URL");
 		break;
 	}
 
@@ -282,15 +282,12 @@ BOOL SDP::FUNCTIONS::SDP_ATTRIBUTE_SEARCH::call_IOCTL_BTH_SDP_ATTRIBUTE_SEARCH(B
 	BOOL test_sdp_call_222;
 
 	test_sdp_call_222 = DeviceIoControl(
-		dd.hDevice, // device to be queried
-		IOCTL_BTH_SDP_ATTRIBUTE_SEARCH, // operation to perform
-
-		bsasr, sizeof(*bsasr),                       // no input buffer
-
-		bssr_response, res_length,             // output buffer
-
-		&dd.junk,                         // # bytes returned
-		(LPOVERLAPPED)NULL);          // synchronous I/O
+		dd.hDevice,								// device to be queried
+		IOCTL_BTH_SDP_ATTRIBUTE_SEARCH,			// operation to perform
+		bsasr, sizeof(*bsasr),					// no input buffer
+		bssr_response, res_length,				// output buffer
+		&dd.junk,								// # bytes returned
+		(LPOVERLAPPED)NULL);					// synchronous I/O
 
 	DWORD err = GetLastError();
 	IOCTL_S::printErrorMessage(err);
@@ -308,8 +305,6 @@ BOOL SDP::FUNCTIONS::SDP_ATTRIBUTE_SEARCH::set_and_call_BTH_SDP_ATTRIBUTE_SEARCH
 	bsasr->recordHandle = recordHandle;
 	bsasr->range[0].minAttribute = minAttr;
 	bsasr->range[0].maxAttribute = maxAttr;
-
-	//BYTE bssr_response[5000]{ 0 };		// TODO: premisli
 
 	BOOL test_sdp_call_222 = false;
 	test_sdp_call_222 = SDP::FUNCTIONS::SDP_ATTRIBUTE_SEARCH::call_IOCTL_BTH_SDP_ATTRIBUTE_SEARCH(bsasr, res, res_length, dd);
@@ -374,17 +369,11 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 		{
 			// DONE!
 			SDP::MAP::MAP_class test_aa = SDP::MAP::MAP_class();
-			test_aa.call_ALL_ATTR(device_data_sdp, *dd);
-			//printf("3-- DEBUGLE:  %x\n", *test_aa.class_id_handle->VALUE.element);
 
+			test_aa.call_ALL_ATTR(device_data_sdp, *dd);
 			test_aa.print_ALL_ATTR(*dd);
-			
-			
 
 			dd->exported_data.map_export = (BYTE*)test_aa.export_ALL_ATTR();
-
-			
-
 		}
 
 		if (device_data_sdp->current_used_service == SDP::_NAP)
@@ -453,9 +442,11 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 			// DONE!
 			SDP::AVRCP::AVRCP_class test_bb = SDP::AVRCP::AVRCP_class();
 			test_bb.call_ALL_ATTR(device_data_sdp, *dd);
-			test_bb.print_ALL_ATTR(*dd);
-
+			
 			dd->exported_data.avrcp_export = (BYTE *)test_bb.export_ALL_ATTR();
+
+			dd->temp_class_id = test_bb.class_id_handle->VALUE.classes[0].value;
+			test_bb.print_ALL_ATTR(*dd);
 		}
 
 		if (device_data_sdp->current_used_service == SDP::Headset ||
@@ -527,9 +518,6 @@ void SDP::FUNCTIONS::parse_SERVICE_CLASS_ID_LIST(PSERVICE_CLASS_ID_LIST handle)
 		handle->VALUE.classes[b].value <<= 8;
 		handle->VALUE.classes[b].value |= *(handle->VALUE.value + a + 2);
 	}
-
-
-	//printf("0.1-- DEBUGLE:  %x\n", *handle->VALUE.element);
 }
 
 void SDP::FUNCTIONS::parse_PROTOCOL_DESCRIPTOR_LIST(PPROTOCOL_DESCRIPTOR_LIST handle, IOCTL_S::DEFAULT_DATA dd)

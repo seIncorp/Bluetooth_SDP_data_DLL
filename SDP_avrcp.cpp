@@ -8,19 +8,14 @@
 
 void SDP::AVRCP::parse_SUPPORTED_FEATURES_AVRCP(PSUPPORTED_FEATURES handle, SHORT current_used_service)
 {
-	// TODO: popravi bug, ker se ne pravilno parsa
-	
 	SHORT temp = 0x00;
 
 	temp |= handle->VALUE.value[0];
 	temp <<= 8;
 	temp |= handle->VALUE.value[1];
 
-
 	handle->VALUE.supported_features_value = temp;
 
-	// TODO: preveri ce se pravilno shrani oz. na pravo mesto
-	 
 	if (current_used_service == SDP::A_V_RemoteControl ||
 		current_used_service == SDP::A_V_RemoteControlController
 		)
@@ -48,6 +43,10 @@ SDP::AVRCP::AVRCP_class::AVRCP_class()
 void SDP::AVRCP::AVRCP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
 {
 	callDefaultAttributes(device_data_sdp, dd);
+
+	// this is used to show correct data from supported features (show data based on returned class and not searched class)
+	device_data_sdp->current_used_service = class_id_handle->VALUE.classes[0].value;
+	dd.temp_class_id = device_data_sdp->current_used_service;
 
 	FUNCTIONS::getAndParse_DEAFULT<PPROVIDER_NAME, PROVIDER_NAME::VV>(
 		device_data_sdp->buffer_res[0],
