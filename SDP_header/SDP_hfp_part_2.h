@@ -6,7 +6,7 @@ namespace SDP
 
 	namespace HFP
 	{
-		class HFP_class : DEFAULT_class
+		class HFP_class : public DEFAULT_class
 		{
 		public:
 

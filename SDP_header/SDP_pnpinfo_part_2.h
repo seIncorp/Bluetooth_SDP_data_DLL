@@ -4,7 +4,7 @@ namespace SDP
 {
 	namespace PNPINFO
 	{
-		class PNPINFO_class : DEFAULT_class
+		class PNPINFO_class : public DEFAULT_class
 		{
 		public:
 			PINFO info_handle;

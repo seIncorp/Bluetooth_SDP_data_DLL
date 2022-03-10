@@ -5,7 +5,7 @@ namespace SDP
 
 	namespace OBEX
 	{
-		class OBEX_class : DEFAULT_class
+		class OBEX_class : public DEFAULT_class
 		{
 		public:
 

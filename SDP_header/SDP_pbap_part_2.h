@@ -5,7 +5,7 @@ namespace SDP
 
 	namespace PBAP
 	{
-		class PBAP_class : DEFAULT_class
+		class PBAP_class : public DEFAULT_class
 		{
 		public:
 			

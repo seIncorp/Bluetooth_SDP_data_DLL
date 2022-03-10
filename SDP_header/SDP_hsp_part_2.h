@@ -7,7 +7,7 @@ namespace SDP
 	namespace HSP
 	{
 		
-		class HSP_class : DEFAULT_class
+		class HSP_class : public DEFAULT_class
 		{
 		public:
 

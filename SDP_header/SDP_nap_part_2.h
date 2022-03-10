@@ -7,7 +7,7 @@ namespace SDP
 	namespace NAP
 	{
 
-		class NAP_PANU_class : DEFAULT_class
+		class NAP_PANU_class : public DEFAULT_class
 		{
 		public:
 

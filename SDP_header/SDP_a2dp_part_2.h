@@ -6,7 +6,7 @@ namespace SDP
 
 	namespace A2DP
 	{
-		class A2DP_class : DEFAULT_class
+		class A2DP_class : public DEFAULT_class
 		{
 		public:
 
