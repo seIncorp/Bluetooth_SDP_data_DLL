@@ -12,7 +12,10 @@
 	TODO:
 	- BUG: check why app crash when use and call set_all_SDP_service_for_search() with SDPsearch() [FIXED: NOT USING GenericAudio service]
 	- ADD: record attribute and not to use default directly
-
+	- IMPROVE: all specific attributes change printing from print all to printall/print one only, same as for default
+	- ADD: dodaj se za HandsfreeAudioGateway service
+	- ADD: dodaj se za razlikovanje Handsfree in HandsfreeAG izpis featurjev
+	- ADD: dodaj logiko debug, print, itd. za  PNPINFO	<-- DONE!!!
 
 */
 
@@ -30,6 +33,19 @@
 #define ATTR_NAME_7		"SERVICE DESCRIPTION: \n"
 #define ATTR_NAME_8		"GOEPL2CAPPSM: \n"
 #define ATTR_NAME_9		"SUPORTED FEATURES: \n"
+#define ATTR_NAME_10	"SUPPORTED MESSAGE TYPES: \n"
+#define ATTR_NAME_11	"MAS INSTACE ID: \n"
+#define ATTR_NAME_12	"MAP SUPPORTED FEATURES: \n"
+#define ATTR_NAME_13	"NETWORK: \n"
+#define ATTR_NAME_14	"REMOTE AUDIO VOLUME CONTROL: \n"
+#define ATTR_NAME_15	"SECURITY DESCRIPTION: \n"
+#define ATTR_NAME_16	"NET ACCESS TYPE: \n"
+#define ATTR_NAME_17	"MAX NET ACCESS RATE: \n"
+#define ATTR_NAME_18	"SUPPORTED FORMATS: \n"
+#define ATTR_NAME_19	"SUPPORTED REPOSITORIES: \n"
+#define ATTR_NAME_20	"PBAP SUPPORTED FEATURES: \n"
+#define ATTR_NAME_21	"INFO: \n"
+
 
 
 #define VALUE_1			"VALUE ELEMENT:\n"
@@ -38,6 +54,7 @@
 #define VALUE_4			"Size:"
 #define VALUE_5			"Value:"
 #define VALUE_6			"Additional size:"
+#define VALUE_7			"Supported features:"
 
 
 /*************************************************/
@@ -599,7 +616,28 @@ namespace IOCTL_S
 				int print_service_description;
 				//int print_service_availability;
 
+				/***********************************************/
 				/* SPECIAL ATTR. */
+				
+				/* PNPINFO */
+				struct print_PNPINFO
+				{
+					int print_pnp_info;
+				};
+				print_PNPINFO print_PNPINFO_attributes;
+
+				/* PBAP */
+				struct print_PBAP
+				{
+					int print_goepl2cappsm;
+					int print_supported_repositories;
+					int print_pbap_supported_features;
+				};
+				print_PBAP print_PBAP_attributes;
+
+
+
+
 
 
 
@@ -1651,7 +1689,7 @@ namespace SDP
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
 					dd.outside_print_function(DELIMITER_PRINT);
-					dd.outside_print_function("SUPPORTED MESSAGE TYPES: \n");
+					dd.outside_print_function(ATTR_NAME_10);
 
 					printATTR_ELEMENT(dd);
 					printVALUE_ELEMENT(v, dd);
@@ -1664,7 +1702,7 @@ namespace SDP
 				else
 				{
 					printf(DELIMITER_PRINT);
-					printf("SUPPORTED MESSAGE TYPES: \n");
+					printf(ATTR_NAME_10);
 
 					printATTR_ELEMENT(dd);
 					printVALUE_ELEMENT(v, dd);
@@ -1692,7 +1730,7 @@ namespace SDP
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
 					dd.outside_print_function(DELIMITER_PRINT);
-					dd.outside_print_function("MAS INSTACE ID: \n");
+					dd.outside_print_function(ATTR_NAME_11);
 
 					printATTR_ELEMENT(dd);
 					printVALUE_ELEMENT(v, dd);
@@ -1704,7 +1742,7 @@ namespace SDP
 				else
 				{
 					printf(DELIMITER_PRINT);
-					printf("MAS INSTACE ID: \n");
+					printf(ATTR_NAME_11);
 
 					printATTR_ELEMENT(dd);
 					printVALUE_ELEMENT(v, dd);
@@ -1731,7 +1769,7 @@ namespace SDP
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
 					dd.outside_print_function(DELIMITER_PRINT);
-					dd.outside_print_function("MAP SUPPORTED FEATURES: \n");
+					dd.outside_print_function(ATTR_NAME_12);
 
 					printATTR_ELEMENT(dd);
 					printVALUE_ELEMENT(v, dd);
@@ -1744,7 +1782,7 @@ namespace SDP
 				else
 				{
 					printf(DELIMITER_PRINT);
-					printf("MAP SUPPORTED FEATURES: \n");
+					printf(ATTR_NAME_12);
 
 					printATTR_ELEMENT(dd);
 					printVALUE_ELEMENT(v, dd);
@@ -1844,17 +1882,11 @@ namespace SDP
 
 
 					char test[100]{ 0 };
-					sprintf_s(test, "Supported features: 0x%04X\n", v.supported_features_value);
+					sprintf_s(test, "%s 0x%04X\n", VALUE_7, v.supported_features_value);
 					dd.outside_print_function(test);
 
-					//printf("Supported features: 0x%04X\n", v.supported_features_value);
-					//printf("%s\n", v.sfds->getSupportedFeaturesString().c_str());
 					sprintf_s(test, "%s\n", v.sfds->getSupportedFeaturesString().c_str());
 					dd.outside_print_function(test);
-
-
-
-
 				}
 				else
 				{
@@ -1865,7 +1897,7 @@ namespace SDP
 					printVALUE_ELEMENT(v, dd);
 
 
-					printf("Supported features: 0x%04X\n", v.supported_features_value);
+					printf("%s 0x%04X\n", VALUE_7, v.supported_features_value);
 					printf("%s\n", v.sfds->getSupportedFeaturesString().c_str());
 				}
 			}
@@ -2058,7 +2090,7 @@ namespace SDP
 					printVALUE_ELEMENT(v, dd);
 
 					char test[MAX_TEMP_STRING_LENGTH]{ 0 };
-					sprintf_s(test, "Supported features: 0x%04X\n", v.supported_features_value);
+					sprintf_s(test, "%s 0x%04X\n", VALUE_7, v.supported_features_value);
 					dd.outside_print_function(test);
 
 					// TODO: najdi boljso resitev, ker se pri klicu printVALUE_ELEMENT() value spremeni na random
@@ -2086,7 +2118,7 @@ namespace SDP
 					printATTR_ELEMENT(dd);
 					printVALUE_ELEMENT(v, dd);
 
-					printf("Supported features: 0x%04X\n", v.supported_features_value);
+					printf("%s 0x%04X\n", VALUE_7, v.supported_features_value);
 
 					// TODO: najdi boljso resitev, ker se pri klicu printVALUE_ELEMENT() value spremeni na random
 					v.sfds->avrct = (SUPPORTED_FEATURES_DATA_S::AVRCT_S*)&v.supported_features_value;
@@ -2132,9 +2164,12 @@ namespace SDP
 
 			SR_S* repo;
 
-			SUPPORTED_FEATURES_DATA_S(SHORT* a) : repo((SR_S*)a)
+			SHORT temp_data;
+
+			SUPPORTED_FEATURES_DATA_S(SHORT a)
 			{
-				//printf("FROM STRUCT --> %X\n", *a);
+				temp_data = a;
+				repo = (SR_S*)&temp_data;
 			};
 
 			std::string getSupportedFeatures_AG_String()
@@ -2143,42 +2178,42 @@ namespace SDP
 
 				if (repo->a0)
 				{
-					temp += "Three-way calling\n";
+					temp.append("Three-way calling\n");
 				}
 
 				if (repo->a1)
 				{
-					temp += "EC and/or NR function\n";
+					temp.append("EC and/or NR function\n");
 				}
 
 				if (repo->a2)
 				{
-					temp += "Voice recognition function\n";
+					temp.append("Voice recognition function\n");
 				}
 
 				if (repo->a3)
 				{
-					temp += "In-band ring tone capability\n";
+					temp.append("In-band ring tone capability\n");
 				}
 
 				if (repo->a4)
 				{
-					temp += "Attach a phone number to a voice tag\n";
+					temp.append("Attach a phone number to a voice tag\n");
 				}
 
 				if (repo->a5)
 				{
-					temp += "Wide band speech\n";
+					temp.append("Wide band speech\n");
 				}
 
 				if (repo->a6)
 				{
-					temp += "Enhanced Voice Recognition Status \n";
+					temp.append("Enhanced Voice Recognition Status \n");
 				}
 
 				if (repo->a7)
 				{
-					temp += "Voice Recognition Text\n";
+					temp.append("Voice Recognition Text\n");
 				}
 
 				return temp;
@@ -2237,15 +2272,35 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
-				printf("*************************************************\n");
-				printf("NETWORK: \n");
+				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
+				{
+					dd.outside_print_function(DELIMITER_PRINT);
+					dd.outside_print_function(ATTR_NAME_13);
 
-				printATTR_ELEMENT(dd);
+					printATTR_ELEMENT(dd);
+					printVALUE_ELEMENT(v, dd);
 
-				printVALUE_ELEMENT(v, dd);
+					char test[MAX_TEMP_STRING_LENGTH]{ 0 };
+					sprintf_s(test, "Network: %s\n", v.value[0] == 0x01 ? "Ability to reject a call" : "No ability to reject a call");
+					dd.outside_print_function(test);
 
-				printf("Network: %s\n", v.value[0] == 0x01 ? "Ability to reject a call" : "No ability to reject a call");
-				printf("\n");
+					//printf("Network: %s\n", v.value[0] == 0x01 ? "Ability to reject a call" : "No ability to reject a call");
+					sprintf_s(test, "\n");
+					dd.outside_print_function(test);
+					//printf("\n");
+				}
+				else
+				{
+					printf(DELIMITER_PRINT);
+					printf(ATTR_NAME_13);
+
+					printATTR_ELEMENT(dd);
+
+					printVALUE_ELEMENT(v, dd);
+
+					printf("Network: %s\n", v.value[0] == 0x01 ? "Ability to reject a call" : "No ability to reject a call");
+					printf("\n");
+				}
 			}
 
 		} NETWORK, * PNETWORK;
@@ -2263,17 +2318,36 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
-				printf("*************************************************\n");
-				printf("SUPPORTED FEATURES: \n");
-				
-				printATTR_ELEMENT(dd);
+				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
+				{
+					dd.outside_print_function(DELIMITER_PRINT);
+					dd.outside_print_function(ATTR_NAME_9);
 
-				printVALUE_ELEMENT(v, dd);
+					printATTR_ELEMENT(dd);
 
-				// TODO: naredi da bo tudi za brez AG (trenutno narejeno samo za AG)
-				printf("Supported features: 0x%04X\n", v.supported_features_value);
-				printf("%s\n", v.sfds->getSupportedFeatures_AG_String().c_str());
-				printf("\n");
+					printVALUE_ELEMENT(v, dd);
+
+					char test[MAX_TEMP_STRING_LENGTH]{ 0 };
+					sprintf_s(test, "Supported features: 0x%04X\n", v.supported_features_value);
+					dd.outside_print_function(test);
+
+					sprintf_s(test, "%s\n", v.sfds->getSupportedFeatures_AG_String().c_str());
+					dd.outside_print_function(test);
+				}
+				else
+				{
+					printf(DELIMITER_PRINT);
+					printf(ATTR_NAME_9);
+
+					printATTR_ELEMENT(dd);
+
+					printVALUE_ELEMENT(v, dd);
+
+					// TODO: naredi da bo tudi za brez AG (trenutno narejeno samo za AG)
+					printf("Supported features: 0x%04X\n", v.supported_features_value);
+					printf("%s\n", v.sfds->getSupportedFeatures_AG_String().c_str());
+					printf("\n");
+				}
 			}
 
 		} SUPPORTED_FEATURES, * PSUPPORTED_FEATURES;
@@ -2296,13 +2370,24 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
-				printf("*************************************************\n");
-				printf("REMOTE AUDIO VOLUME CONTROL: \n");
-				
-				printATTR_ELEMENT(dd);
+				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
+				{
+					dd.outside_print_function(DELIMITER_PRINT);
+					dd.outside_print_function(ATTR_NAME_14);
 
-				printVALUE_ELEMENT(v, dd);
+					printATTR_ELEMENT(dd);
 
+					printVALUE_ELEMENT(v, dd);
+				}
+				else
+				{
+					printf(DELIMITER_PRINT);
+					printf(ATTR_NAME_14);
+
+					printATTR_ELEMENT(dd);
+
+					printVALUE_ELEMENT(v, dd);
+				}
 				// TODO: najdi primer za parsanje
 			}
 
@@ -2333,16 +2418,29 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
-				printf("*************************************************\n");
-				printf("SECURITY DESCRIPTION: \n");
-				
-				printATTR_ELEMENT(dd);
+				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
+				{
+					dd.outside_print_function(DELIMITER_PRINT);
+					dd.outside_print_function(ATTR_NAME_15);
 
-				printVALUE_ELEMENT(v, dd);
+					printATTR_ELEMENT(dd);
+					printVALUE_ELEMENT(v, dd);
 
-				printf("Security Description [0x%04X][%s]\n", VALUE.security_value, getSecurityDescriptionString(VALUE.security_value).c_str());
-				printf("\n");
+					char test[MAX_TEMP_STRING_LENGTH]{ 0 };
+					sprintf_s(test, "Security Description [0x%04X][%s]\n", VALUE.security_value, getSecurityDescriptionString(VALUE.security_value).c_str());
+					dd.outside_print_function(test);
+				}
+				else
+				{
+					printf(DELIMITER_PRINT);
+					printf(ATTR_NAME_15);
 
+					printATTR_ELEMENT(dd);
+					printVALUE_ELEMENT(v, dd);
+
+					printf("Security Description [0x%04X][%s]\n", VALUE.security_value, getSecurityDescriptionString(VALUE.security_value).c_str());
+					printf("\n");
+				}
 			}
 
 		} SECURITY_DESCRIPTION, * PSECURITY_DESCRIPTION;
@@ -2357,15 +2455,30 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
-				printf("*************************************************\n");
-				printf("NET ACCESS TYPE: \n");
-				
-				printATTR_ELEMENT(dd);
+				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
+				{
+					dd.outside_print_function(DELIMITER_PRINT);
+					dd.outside_print_function(ATTR_NAME_16);
 
-				printVALUE_ELEMENT(v, dd);
+					printATTR_ELEMENT(dd);
+					printVALUE_ELEMENT(v, dd);
 
-				printf("Type of Network Access Available[0x%04X][%s]\n", VALUE.NetAccessType, getNetAccessTypeString(VALUE.NetAccessType).c_str());
-				printf("\n");
+					char test[MAX_TEMP_STRING_LENGTH]{ 0 };
+					sprintf_s(test, "Type of Network Access Available[0x%04X][%s]\n", VALUE.NetAccessType, getNetAccessTypeString(VALUE.NetAccessType).c_str());
+					dd.outside_print_function(test);
+				}
+				else
+				{
+
+					printf(DELIMITER_PRINT);
+					printf(ATTR_NAME_16);
+
+					printATTR_ELEMENT(dd);
+					printVALUE_ELEMENT(v, dd);
+
+					printf("Type of Network Access Available[0x%04X][%s]\n", VALUE.NetAccessType, getNetAccessTypeString(VALUE.NetAccessType).c_str());
+					printf("\n");
+				}
 			}
 
 		} NET_ACCESS_TYPE, * PNET_ACCESS_TYPE;
@@ -2380,15 +2493,29 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
-				printf("*************************************************\n");
-				printf("MAX NET ACCESS RATE: \n");
-				
-				printATTR_ELEMENT(dd);
+				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
+				{
+					dd.outside_print_function(DELIMITER_PRINT);
+					dd.outside_print_function(ATTR_NAME_17);
 
-				printVALUE_ELEMENT(v, dd);
+					printATTR_ELEMENT(dd);
+					printVALUE_ELEMENT(v, dd);
 
-				printf("Maximum possible Network Access Data Rate: 0x%08X\n", VALUE.Maximum_possible_Network_Access_Data_Rate);
-				printf("\n");
+					char test[MAX_TEMP_STRING_LENGTH]{ 0 };
+					sprintf_s(test, "Maximum possible Network Access Data Rate: 0x%08X\n", VALUE.Maximum_possible_Network_Access_Data_Rate);
+					dd.outside_print_function(test);
+				}
+				else
+				{
+					printf(DELIMITER_PRINT);
+					printf(ATTR_NAME_17);
+
+					printATTR_ELEMENT(dd);
+					printVALUE_ELEMENT(v, dd);
+
+					printf("Maximum possible Network Access Data Rate: 0x%08X\n", VALUE.Maximum_possible_Network_Access_Data_Rate);
+					printf("\n");
+				}
 			}
 
 		} MAX_NET_ACCESS_RATE, * PMAX_NET_ACCESS_RATE;
@@ -2410,7 +2537,7 @@ namespace SDP
 
 		typedef struct SERVICE_VERSION_S : DEFAULT_OBJECT
 		{
-
+			// TODO: ko bo default object urejene tako da bo zares default bo v redu, trenutno pa javi kot record handle!!!
 		} SERVICE_VERSION, * PSERVICE_VERSION;
 
 		typedef struct SUPPORTED_FORMATS_S : DEFAULT_OBJECT
@@ -2425,21 +2552,48 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
-				printf("*************************************************\n");
-				printf("SUPPORTED FORMATS: \n");
-				
-				printATTR_ELEMENT(dd);
+				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
+				{
+					dd.outside_print_function(DELIMITER_PRINT);
+					dd.outside_print_function(ATTR_NAME_18);
 
-				printVALUE_ELEMENT(v, dd);
+					printATTR_ELEMENT(dd);
+					printVALUE_ELEMENT(v, dd);
 
-				printf("Number of supported formats: %d\n", v.num_of_formats);
+					char test[MAX_TEMP_STRING_LENGTH]{ 0 };
+					sprintf_s(test, "Number of supported formats: %d\n", v.num_of_formats);
+					dd.outside_print_function(test);
 
-				printf("Supported formats: \n");
-				for (int aa = 0; aa < v.num_of_formats; aa++)
-					printf("0x%02X ", v.formats[aa]);
-				printf("\n");
+					sprintf_s(test, "Supported formats: \n");
+					dd.outside_print_function(test);
 
-				printf("Formats: \n%s\n", getSupportedFormatsString(v.formats, v.num_of_formats).c_str());
+					sprintf_s(test, "");
+					for (int aa = 0; aa < v.num_of_formats; aa++)
+						sprintf_s(test, "%s0x%02X ", test, v.formats[aa]);
+					dd.outside_print_function(test);
+
+
+					sprintf_s(test, "Formats: \n%s\n", getSupportedFormatsString(v.formats, v.num_of_formats).c_str());
+					dd.outside_print_function(test);
+				}
+				else
+				{
+
+					printf(DELIMITER_PRINT);
+					printf(ATTR_NAME_18);
+
+					printATTR_ELEMENT(dd);
+					printVALUE_ELEMENT(v, dd);
+
+					printf("Number of supported formats: %d\n", v.num_of_formats);
+
+					printf("Supported formats: \n");
+					for (int aa = 0; aa < v.num_of_formats; aa++)
+						printf("0x%02X ", v.formats[aa]);
+					printf("\n");
+
+					printf("Formats: \n%s\n", getSupportedFormatsString(v.formats, v.num_of_formats).c_str());
+				}
 			}
 
 		} SUPPORTED_FORMATS, * PSUPPORTED_FORMATS;
@@ -2515,14 +2669,28 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
-				printf("*************************************************\n");
-				printf("SUPPORTED REPOSITORIES: \n");
-				
-				printATTR_ELEMENT(dd);
+				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
+				{
+					dd.outside_print_function(DELIMITER_PRINT);
+					dd.outside_print_function(ATTR_NAME_19);
 
-				printVALUE_ELEMENT(v, dd);
+					printATTR_ELEMENT(dd);
+					printVALUE_ELEMENT(v, dd);
 
-				printf("Repositories: \n%s\n", v.srs->getSupportedRepositoriesString().c_str());
+					char test[MAX_TEMP_STRING_LENGTH]{ 0 };
+					sprintf_s(test, "Repositories: \n%s\n", v.srs->getSupportedRepositoriesString().c_str());
+					dd.outside_print_function(test);
+				}
+				else
+				{
+					printf(DELIMITER_PRINT);
+					printf(ATTR_NAME_19);
+
+					printATTR_ELEMENT(dd);
+					printVALUE_ELEMENT(v, dd);
+
+					printf("Repositories: \n%s\n", v.srs->getSupportedRepositoriesString().c_str());
+				}
 			}
 
 		} SUPPORTED_REPOSITORIES, * PSUPPORTED_REPOSITORIES;
@@ -2533,12 +2701,22 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
-				printf("*************************************************\n");
-				printf("PBAP SUPPORTED FEATURES: \n");
-				
-				printATTR_ELEMENT(dd);
+				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
+				{
+					dd.outside_print_function(DELIMITER_PRINT);
+					dd.outside_print_function(ATTR_NAME_20);
 
-				printVALUE_ELEMENT(v, dd);
+					printATTR_ELEMENT(dd);
+					printVALUE_ELEMENT(v, dd);
+				}
+				else
+				{
+					printf(DELIMITER_PRINT);
+					printf(ATTR_NAME_20);
+
+					printATTR_ELEMENT(dd);
+					printVALUE_ELEMENT(v, dd);
+				}
 			}
 
 
@@ -2571,28 +2749,28 @@ namespace SDP
 			{
 				switch (id)
 				{
-				case ATTRIBUTE_ID_DEVICE_SDP::SpecificationID:
-					this->SpecificationID = data;
+					case ATTRIBUTE_ID_DEVICE_SDP::SpecificationID:
+						this->SpecificationID = data;
 					break;
 
-				case ATTRIBUTE_ID_DEVICE_SDP::VendorID:
-					this->VendorID = data;
+					case ATTRIBUTE_ID_DEVICE_SDP::VendorID:
+						this->VendorID = data;
 					break;
 
-				case ATTRIBUTE_ID_DEVICE_SDP::ProductID:
-					this->ProductID = data;
+					case ATTRIBUTE_ID_DEVICE_SDP::ProductID:
+						this->ProductID = data;
 					break;
 
-				case ATTRIBUTE_ID_DEVICE_SDP::Version:
-					this->Version = data;
+					case ATTRIBUTE_ID_DEVICE_SDP::Version:
+						this->Version = data;
 					break;
 
-				case ATTRIBUTE_ID_DEVICE_SDP::PrimaryRecord:
-					this->PrimaryRecord = data;
+					case ATTRIBUTE_ID_DEVICE_SDP::PrimaryRecord:
+						this->PrimaryRecord = data;
 					break;
 
-				case ATTRIBUTE_ID_DEVICE_SDP::VendorIDSource:
-					this->VendorIDSource = data;
+					case ATTRIBUTE_ID_DEVICE_SDP::VendorIDSource:
+						this->VendorIDSource = data;
 					break;
 				}
 			}
@@ -2601,19 +2779,48 @@ namespace SDP
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA dd)
 			{
-				printf("*************************************************\n");
-				printf("INFO: \n");
-				
-				printATTR_ELEMENT();
+				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
+				{
+					dd.outside_print_function(DELIMITER_PRINT);
+					dd.outside_print_function(ATTR_NAME_21);
 
-				printVALUE_ELEMENT(v);
+					printATTR_ELEMENT(dd);
+					printVALUE_ELEMENT(v, dd);
 
-				printf("Specification ID: 0x%04X\n", this->SpecificationID);
-				printf("Vendor ID: 0x%04X\n", this->VendorID);
-				printf("Product ID: 0x%04X\n", this->ProductID);
-				printf("Version: 0x%04X\n", this->Version);
-				printf("Primary Record: 0x%02X\n", this->PrimaryRecord);
-				printf("Vendor ID Source: 0x%04X\n", this->VendorIDSource);
+					char test[MAX_TEMP_STRING_LENGTH]{ 0 };
+					sprintf_s(test, "Specification ID: 0x%04X\n", this->SpecificationID);
+					dd.outside_print_function(test);
+
+					sprintf_s(test, "Vendor ID: 0x%04X\n", this->VendorID);
+					dd.outside_print_function(test);
+
+					sprintf_s(test, "Product ID: 0x%04X\n", this->ProductID);
+					dd.outside_print_function(test);
+
+					sprintf_s(test, "Version: 0x%04X\n", this->Version);
+					dd.outside_print_function(test);
+
+					sprintf_s(test, "Primary Record: 0x%02X\n", this->PrimaryRecord);
+					dd.outside_print_function(test);
+
+					sprintf_s(test, "Vendor ID Source: 0x%04X\n", this->VendorIDSource);
+					dd.outside_print_function(test);
+				}
+				else
+				{
+					printf(DELIMITER_PRINT);
+					printf(ATTR_NAME_21);
+
+					printATTR_ELEMENT(dd);
+					printVALUE_ELEMENT(v, dd);
+
+					printf("Specification ID: 0x%04X\n", this->SpecificationID);
+					printf("Vendor ID: 0x%04X\n", this->VendorID);
+					printf("Product ID: 0x%04X\n", this->ProductID);
+					printf("Version: 0x%04X\n", this->Version);
+					printf("Primary Record: 0x%02X\n", this->PrimaryRecord);
+					printf("Vendor ID Source: 0x%04X\n", this->VendorIDSource);
+				}
 			}
 
 		} INFO, * PINFO;

@@ -12,16 +12,16 @@ std::string SDP::NAP::getSecurityDescriptionString(SHORT type)
 
 	switch (type)
 	{
-	case 0x0000:
-		temp = "None";
+		case 0x0000:
+			temp = "None";
 		break;
 
-	case 0x0001:
-		temp = "Service - level enforced Security";
+		case 0x0001:
+			temp = "Service - level enforced Security";
 		break;
 
-	case 0x0002:
-		temp = "802.1x Security";
+		case 0x0002:
+			temp = "802.1x Security";
 		break;
 	}
 
@@ -34,64 +34,64 @@ std::string SDP::NAP::getNetAccessTypeString(SHORT type)
 
 	switch (type)
 	{
-	case 0x0000:
-		temp = "PSTN";
+		case 0x0000:
+			temp = "PSTN";
 		break;
 
-	case 0x0001:
-		temp = "ISDN";
+		case 0x0001:
+			temp = "ISDN";
 		break;
 
-	case 0x0002:
-		temp = "DSL";
+		case 0x0002:
+			temp = "DSL";
 		break;
 
-	case 0x0003:
-		temp = "Cable Modem";
+		case 0x0003:
+			temp = "Cable Modem";
 		break;
 
-	case 0x0004:
-		temp = "10Mb Ethernet";
+		case 0x0004:
+			temp = "10Mb Ethernet";
 		break;
 
-	case 0x0005:
-		temp = "100Mb Ethernet";
+		case 0x0005:
+			temp = "100Mb Ethernet";
 		break;
 
-	case 0x0006:
-		temp = "4 Mb Token Ring";
+		case 0x0006:
+			temp = "4 Mb Token Ring";
 		break;
 
-	case 0x0007:
-		temp = "16 Mb Token Ring";
+		case 0x0007:
+			temp = "16 Mb Token Ring";
 		break;
 
-	case 0x0008:
-		temp = "100 Mb Token Ring";
+		case 0x0008:
+			temp = "100 Mb Token Ring";
 		break;
 
-	case 0x0009:
-		temp = "FDDI";
+		case 0x0009:
+			temp = "FDDI";
 		break;
 
-	case 0x000A:
-		temp = "GSM";
+		case 0x000A:
+			temp = "GSM";
 		break;
 
-	case 0x000B:
-		temp = "CDMA";
+		case 0x000B:
+			temp = "CDMA";
 		break;
 
-	case 0x000C:
-		temp = "GPRS";
+		case 0x000C:
+			temp = "GPRS";
 		break;
 
-	case 0x000D:
-		temp = "3G Cellular";
+		case 0x000D:
+			temp = "3G Cellular";
 		break;
 
-	case 0xFFFE:
-		temp = "other";
+		case 0xFFFE:
+			temp = "other";
 		break;
 	}
 

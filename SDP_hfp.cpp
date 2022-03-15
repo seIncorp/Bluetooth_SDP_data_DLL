@@ -18,10 +18,8 @@ void SDP::HFP::parse_SUPPORTED_FEATURES_HFP(PSUPPORTED_FEATURES handle)
 	temp <<= 8;
 	temp |= handle->VALUE.value[1];
 
-
 	handle->VALUE.supported_features_value = temp;
-
-	handle->VALUE.sfds = new SUPPORTED_FEATURES_DATA_S(&temp);
+	handle->VALUE.sfds = new SDP::HFP::SUPPORTED_FEATURES_DATA_S(temp);
 }
 
 

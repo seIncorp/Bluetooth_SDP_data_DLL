@@ -19,7 +19,7 @@ namespace SDP
 
 
 			void call_ALL_ATTR(ULONG recordHandle, HANDLE_SDP_TYPE aa, IOCTL_S::DEFAULT_DATA dd);
-
+			void print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
 
 		};
 	};

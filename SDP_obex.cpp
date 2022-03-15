@@ -13,32 +13,32 @@ std::string SDP::OBEX::getSupportedFormatsString(BYTE data_arr[], int size)
 	for (int aa = 0; aa < size; aa++)
 		switch (data_arr[aa])
 		{
-		case 0x01:
-			temp += "vCard 2.1\n";
+			case 0x01:
+				temp.append("vCard 2.1\n");
 			break;
 
-		case 0x02:
-			temp += "vCard 3.0\n";
+			case 0x02:
+				temp.append("vCard 3.0\n");
 			break;
 
-		case 0x03:
-			temp += "vCal 1.0\n";
+			case 0x03:
+				temp.append("vCal 1.0\n");
 			break;
 
-		case 0x04:
-			temp += "iCal 2.0\n";
+			case 0x04:
+				temp.append("iCal 2.0\n");
 			break;
 
-		case 0x05:
-			temp += "vNote\n";
+			case 0x05:
+				temp.append("vNote\n");
 			break;
 
-		case 0x06:
-			temp += "vMessage\n";
+			case 0x06:
+				temp.append("vMessage\n");
 			break;
 
-		case 0xff:
-			temp += "any type of object\n";
+			case 0xff:
+				temp.append("any type of object\n");
 			break;
 		};
 

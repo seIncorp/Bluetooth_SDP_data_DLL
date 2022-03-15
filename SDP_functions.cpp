@@ -421,6 +421,8 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 			SDP::PNPINFO::PNPINFO_class test_bb = SDP::PNPINFO::PNPINFO_class();
 			test_bb.call_ALL_ATTR(device_data_sdp->buffer_res[0], device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME, *dd);
 
+			test_bb.print_ALL_ATTR(*dd);
+
 			dd->exported_data.pnpinfo_export = (BYTE*)test_bb.export_ALL_ATTR();
 		}
 

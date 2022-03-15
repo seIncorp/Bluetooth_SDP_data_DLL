@@ -76,12 +76,22 @@ void SDP::PBAP::PBAP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCT
 void SDP::PBAP::PBAP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
 	printDefaultData(dd);
-	if (dd.sdp_settings.print == 1)
-	{
+
+	if (goepl2cappsm_handle != NULL &&
+		(dd.sdp_settings.print == 1 || dd.sdp_settings.print_service.print_PBAP_attributes.print_goepl2cappsm == 1
+	))
 		goepl2cappsm_handle->print<SDP::MAP::GOEPL2CAPPSM_S::VV>(goepl2cappsm_handle->VALUE, dd);
+	
+	if (supported_repositories_handle != NULL && 
+		(dd.sdp_settings.print == 1 || dd.sdp_settings.print_service.print_PBAP_attributes.print_supported_repositories == 1
+	))
 		supported_repositories_handle->print<SUPPORTED_REPOSITORIES::VV>(supported_repositories_handle->VALUE, dd);
+	
+	if (pbap_supported_features_handle != NULL && 
+		(dd.sdp_settings.print == 1 || dd.sdp_settings.print_service.print_PBAP_attributes.print_pbap_supported_features == 1
+	))
 		pbap_supported_features_handle->print<PBAP_SUPPORTED_FEATURES::VV>(pbap_supported_features_handle->VALUE, dd);
-	}
+	
 }
 
 SDP::PBAP::PPBAP_EXPORT SDP::PBAP::PBAP_class::export_ALL_ATTR()
