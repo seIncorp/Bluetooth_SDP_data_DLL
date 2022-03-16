@@ -621,11 +621,15 @@ namespace IOCTL_S
 				int ServiceVersion;
 			};
 			att_search_OBEX att_OBEX;
-			
+
 			/* NAP */
-			int SecurityDescription;
-			int NetAccessType;
-			int MaxNetAccessRate;
+			struct att_search_NAP
+			{
+				int SecurityDescription;
+				int NetAccessType;
+				int MaxNetAccessRate;
+			};
+			att_search_NAP att_NAP;
 			
 			/* HSP */
 			int RemoteAudioVolumeControl;
@@ -642,10 +646,20 @@ namespace IOCTL_S
 			
 			/* A2DP */
 			
+			///* MAP */
+			//int SupportedMessageTypes;
+			//int MasInstanceId;
+			//int MapSupportedFeatures;
+
 			/* MAP */
-			int SupportedMessageTypes;
-			int MasInstanceId;
-			int MapSupportedFeatures;
+			struct att_search_MAP
+			{
+				int Goepl2cappsm;
+				int SupportedMessageTypes;
+				int MasInstanceId;
+				int MapSupportedFeatures;
+			};
+			att_search_MAP att_MAP;
 		};
 
 		struct SDP_exported_data
