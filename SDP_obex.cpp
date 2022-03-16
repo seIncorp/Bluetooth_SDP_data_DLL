@@ -68,51 +68,59 @@ void SDP::OBEX::parse_SUPPORTED_FORMATS_LIST_OBEX(PSUPPORTED_FORMATS handle)
 /* CLASS NAP_PANU_all_attributes functions */
 
 
-SDP::OBEX::OBEX_class::OBEX_class()
+SDP::OBEX::OBEX_class::OBEX_class(IOCTL_S::DEFAULT_DATA dd)
 {
 	// set all objects
-	setDefaultObjects();
+	setDefaultObjects(dd);
 
-	goepl2cappsm_handle = new SDP::MAP::GOEPL2CAPPSM();
-	supported_formats_handle = new SUPPORTED_FORMATS();
-	service_version_handle = new SERVICE_VERSION();
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_OBEX.Goepl2cappsm == 1)
+		goepl2cappsm_handle = new SDP::MAP::GOEPL2CAPPSM();
+
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_OBEX.SupportedFormats == 1)
+		supported_formats_handle = new SUPPORTED_FORMATS();
+
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_OBEX.ServiceVersion == 1)
+		service_version_handle = new SERVICE_VERSION();
 }
 
 void SDP::OBEX::OBEX_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
 {
 	callDefaultAttributes(device_data_sdp, dd);
 
-	FUNCTIONS::getAndParse_DEAFULT<SDP::MAP::PGOEPL2CAPPSM, SDP::MAP::GOEPL2CAPPSM::VV>(
-		device_data_sdp->buffer_res[0],
-		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-		goepl2cappsm_handle,
-		GoepL2capPsm,
-		GoepL2capPsm,
-		device_data_sdp,
-		dd,
-		0
-	);
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_OBEX.Goepl2cappsm == 1)
+		FUNCTIONS::getAndParse_DEAFULT<SDP::MAP::PGOEPL2CAPPSM, SDP::MAP::GOEPL2CAPPSM::VV>(
+			device_data_sdp->buffer_res[0],
+			device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+			goepl2cappsm_handle,
+			GoepL2capPsm,
+			GoepL2capPsm,
+			device_data_sdp,
+			dd,
+			0
+		);
 
-	FUNCTIONS::getAndParse_DEAFULT<PSUPPORTED_FORMATS, SUPPORTED_FORMATS::VV>(
-		device_data_sdp->buffer_res[0],
-		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-		supported_formats_handle,
-		SupportedFormatsList,
-		SupportedFormatsList,
-		device_data_sdp,
-		dd,
-		0
-	);
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_OBEX.SupportedFormats == 1)
+		FUNCTIONS::getAndParse_DEAFULT<PSUPPORTED_FORMATS, SUPPORTED_FORMATS::VV>(
+			device_data_sdp->buffer_res[0],
+			device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+			supported_formats_handle,
+			SupportedFormatsList,
+			SupportedFormatsList,
+			device_data_sdp,
+			dd,
+			0
+		);
 
-	FUNCTIONS::getAndParse_DEAFULT<PSERVICE_VERSION, SERVICE_VERSION::VV>(
-		device_data_sdp->buffer_res[0],
-		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-		service_version_handle,
-		ServiceVersion,
-		ServiceVersion,
-		device_data_sdp,
-		dd,
-		0
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_OBEX.ServiceVersion == 1)
+		FUNCTIONS::getAndParse_DEAFULT<PSERVICE_VERSION, SERVICE_VERSION::VV>(
+			device_data_sdp->buffer_res[0],
+			device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+			service_version_handle,
+			ServiceVersion,
+			ServiceVersion,
+			device_data_sdp,
+			dd,
+			0
 		);
 }
 
@@ -120,37 +128,36 @@ void SDP::OBEX::OBEX_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
 	printDefaultData(dd);
 	
-	if (goepl2cappsm_handle != NULL && 
-		(dd.sdp_settings.print == 1 || dd.sdp_settings.print_service.print_OBEX_attributes.print_goepl2cappsm == 1
-	))
-		goepl2cappsm_handle->print<SDP::MAP::GOEPL2CAPPSM_S::VV>(goepl2cappsm_handle->VALUE, dd);
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_OBEX.Goepl2cappsm == 1)
+		if (goepl2cappsm_handle != NULL && (dd.sdp_settings.print == 1 || dd.sdp_settings.print_service.print_OBEX_attributes.print_goepl2cappsm == 1))
+			goepl2cappsm_handle->print<SDP::MAP::GOEPL2CAPPSM_S::VV>(goepl2cappsm_handle->VALUE, dd);
 		
-	if (supported_formats_handle != NULL && 
-		(dd.sdp_settings.print == 1 || dd.sdp_settings.print_service.print_OBEX_attributes.print_supported_formats == 1
-	))
-		supported_formats_handle->print<SUPPORTED_FORMATS_S::VV>(supported_formats_handle->VALUE, dd);
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_OBEX.SupportedFormats == 1)
+		if (supported_formats_handle != NULL && (dd.sdp_settings.print == 1 || dd.sdp_settings.print_service.print_OBEX_attributes.print_supported_formats == 1))
+			supported_formats_handle->print<SUPPORTED_FORMATS_S::VV>(supported_formats_handle->VALUE, dd);
 		
-	if (service_version_handle != NULL && 
-		(dd.sdp_settings.print == 1 || dd.sdp_settings.print_service.print_OBEX_attributes.print_service_version == 1
-	))
-		service_version_handle->print<SERVICE_VERSION_S::VV>(service_version_handle->VALUE, dd);
-	
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_OBEX.ServiceVersion == 1)
+		if (service_version_handle != NULL && (dd.sdp_settings.print == 1 || dd.sdp_settings.print_service.print_OBEX_attributes.print_service_version == 1))
+			service_version_handle->print<SERVICE_VERSION_S::VV>(service_version_handle->VALUE, dd);
 }
 
-SDP::OBEX::POBEX_EXPORT SDP::OBEX::OBEX_class::export_ALL_ATTR()
+SDP::OBEX::POBEX_EXPORT SDP::OBEX::OBEX_class::export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
 	exp = new OBEX_EXPORT();
 
-	exp->default_export = export_default_ATTR();
+	exp->default_export = export_default_ATTR(dd);
 
-	if (goepl2cappsm_handle != NULL)
-		exp->goepl2cappsm_handle_export = goepl2cappsm_handle;
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_OBEX.Goepl2cappsm == 1)
+		if (goepl2cappsm_handle != NULL)
+			exp->goepl2cappsm_handle_export = goepl2cappsm_handle;
 
-	if (service_version_handle != NULL)
-		exp->service_version_handle_export = service_version_handle;
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_OBEX.SupportedFormats == 1)
+		if (supported_formats_handle != NULL)
+			exp->supported_formats_handle_export = supported_formats_handle;
 
-	if (supported_formats_handle != NULL)
-		exp->supported_formats_handle_export = supported_formats_handle;
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_OBEX.ServiceVersion == 1)
+		if (service_version_handle != NULL)
+			exp->service_version_handle_export = service_version_handle;
 
 	return exp;
 }

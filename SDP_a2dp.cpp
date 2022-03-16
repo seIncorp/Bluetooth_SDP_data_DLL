@@ -23,9 +23,9 @@ void SDP::A2DP::parse_SUPPORTED_FEATURES_A2DP(PSUPPORTED_FEATURES handle)
 /* CLASS A2DP_all_attributes functions */
 
 
-SDP::A2DP::A2DP_class::A2DP_class()
+SDP::A2DP::A2DP_class::A2DP_class(IOCTL_S::DEFAULT_DATA dd)
 {
-	setDefaultObjects();
+	setDefaultObjects(dd);
 
 	provider_name_handle = new PROVIDER_NAME();
 	supported_features_handle = new SUPPORTED_FEATURES();
@@ -68,11 +68,11 @@ void SDP::A2DP::A2DP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 		supported_features_handle->print<SUPPORTED_FEATURES_S::VV>(supported_features_handle->VALUE, dd);
 }
 
-SDP::A2DP::PA2DP_EXPORT SDP::A2DP::A2DP_class::export_ALL_ATTR()
+SDP::A2DP::PA2DP_EXPORT SDP::A2DP::A2DP_class::export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
 	exp = new A2DP_EXPORT();
 
-	exp->default_export = export_default_ATTR();
+	exp->default_export = export_default_ATTR(dd);
 
 	if (supported_features_handle != NULL)
 		exp->supported_features_handle_export = supported_features_handle;

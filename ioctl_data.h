@@ -598,16 +598,29 @@ namespace IOCTL_S
 			/* SPECIAL ATTR. */
 
 			/* PNPINFO */
-			int PnpInfo;
+			struct att_search_PNPINFO
+			{
+				int PnpInfo;
+			};
+			att_search_PNPINFO att_PNPINFO;
 
 			/* PBAP */
-			int Goepl2cappsm;
-			int SupportedRepositories;
-			int SupportedFeatures;
+			struct att_search_PBAP
+			{
+				int Goepl2cappsm;
+				int SupportedRepositories;
+				int SupportedFeatures;
+			};
+			att_search_PBAP att_PBAP;
 			
 			/* OBEX */
-			int SupportedFormats;
-			int ServiceVersion;
+			struct att_search_OBEX
+			{
+				int Goepl2cappsm;
+				int SupportedFormats;
+				int ServiceVersion;
+			};
+			att_search_OBEX att_OBEX;
 			
 			/* NAP */
 			int SecurityDescription;
@@ -621,6 +634,11 @@ namespace IOCTL_S
 			int Network;
 			
 			/* AVRCP */
+			struct att_search_AVRCP
+			{
+				int SupportedFeatures;
+			};
+			att_search_AVRCP att_AVRCP;
 			
 			/* A2DP */
 			

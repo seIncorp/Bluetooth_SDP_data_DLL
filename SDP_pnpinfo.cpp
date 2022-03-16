@@ -14,7 +14,7 @@ SDP::PNPINFO::PNPINFO_class::PNPINFO_class()
 
 void SDP::PNPINFO::PNPINFO_class::call_ALL_ATTR(ULONG recordHandle, HANDLE_SDP_TYPE aa, IOCTL_S::DEFAULT_DATA dd)
 {
-	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.PnpInfo == 1)
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_PNPINFO.PnpInfo == 1)
 	{
 		BYTE bssr_response[5000]{ 0 };
 

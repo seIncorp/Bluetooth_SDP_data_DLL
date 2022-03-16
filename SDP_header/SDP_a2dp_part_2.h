@@ -14,12 +14,12 @@ namespace SDP
 
 			PA2DP_EXPORT exp;
 
-			A2DP_class();
+			A2DP_class(IOCTL_S::DEFAULT_DATA dd);
 
 			void call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 			void print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
 
-			PA2DP_EXPORT export_ALL_ATTR();
+			PA2DP_EXPORT export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
 
 			
 		private:

@@ -20,7 +20,7 @@ namespace SDP
 
 			int nap_flag;
 
-			NAP_PANU_class(int nap = 1);
+			NAP_PANU_class(IOCTL_S::DEFAULT_DATA dd, int nap = 1);
 
 			void call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 			void print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
@@ -31,7 +31,7 @@ namespace SDP
 			void call_NetAccessType(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 			void call_MaxNetAccessrate(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 
-			PNAP_EXPORT export_ALL_ATTR();
+			PNAP_EXPORT export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
 
 
 		private:

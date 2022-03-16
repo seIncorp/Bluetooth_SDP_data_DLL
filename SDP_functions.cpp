@@ -368,42 +368,42 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 		if (device_data_sdp->current_used_service == SDP::Message_Access_Server)
 		{
 			// DONE!
-			SDP::MAP::MAP_class test_aa = SDP::MAP::MAP_class();
+			SDP::MAP::MAP_class test_aa = SDP::MAP::MAP_class(*dd);
 
 			test_aa.call_ALL_ATTR(device_data_sdp, *dd);
 			test_aa.print_ALL_ATTR(*dd);
 
-			dd->exported_data.map_export = (BYTE*)test_aa.export_ALL_ATTR();
+			dd->exported_data.map_export = (BYTE*)test_aa.export_ALL_ATTR(*dd);
 		}
 
 		if (device_data_sdp->current_used_service == SDP::_NAP)
 		{
 			// DONE!
-			SDP::NAP::NAP_PANU_class test_vv = SDP::NAP::NAP_PANU_class(1);
+			SDP::NAP::NAP_PANU_class test_vv = SDP::NAP::NAP_PANU_class(*dd, 1);
 			test_vv.call_ALL_ATTR(device_data_sdp, *dd);
 			test_vv.print_ALL_ATTR(*dd);
 
-			dd->exported_data.nap_export = (BYTE*)test_vv.export_ALL_ATTR();
+			dd->exported_data.nap_export = (BYTE*)test_vv.export_ALL_ATTR(*dd);
 		}
 
 		if (device_data_sdp->current_used_service == SDP::Phonebook_Access_PSE)
 		{
 			// DONE!
-			SDP::PBAP::PBAP_class test_bb = SDP::PBAP::PBAP_class();
+			SDP::PBAP::PBAP_class test_bb = SDP::PBAP::PBAP_class(*dd);
 			test_bb.call_ALL_ATTR(device_data_sdp, *dd);
 			test_bb.print_ALL_ATTR(*dd);
 
-			dd->exported_data.pbap_export = (BYTE*)test_bb.export_ALL_ATTR();
+			dd->exported_data.pbap_export = (BYTE*)test_bb.export_ALL_ATTR(*dd);
 		}
 
 		if (device_data_sdp->current_used_service == SDP::OBEXObjectPush)
 		{
 			// DONE!
-			SDP::OBEX::OBEX_class test_bb = SDP::OBEX::OBEX_class();
+			SDP::OBEX::OBEX_class test_bb = SDP::OBEX::OBEX_class(*dd);
 			test_bb.call_ALL_ATTR(device_data_sdp, *dd);
 			test_bb.print_ALL_ATTR(*dd);
 
-			dd->exported_data.obex_export = (BYTE*)test_bb.export_ALL_ATTR();
+			dd->exported_data.obex_export = (BYTE*)test_bb.export_ALL_ATTR(*dd);
 		}
 
 		if (device_data_sdp->current_used_service == SDP::Handsfree ||
@@ -412,11 +412,11 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 		{
 			dd->temp_service = device_data_sdp->current_used_service;
 			// DONE!
-			SDP::HFP::HFP_class test_bb = SDP::HFP::HFP_class();
+			SDP::HFP::HFP_class test_bb = SDP::HFP::HFP_class(*dd);
 			test_bb.call_ALL_ATTR(device_data_sdp, *dd);
 			test_bb.print_ALL_ATTR(*dd);
 
-			dd->exported_data.hfp_export = (BYTE*)test_bb.export_ALL_ATTR();
+			dd->exported_data.hfp_export = (BYTE*)test_bb.export_ALL_ATTR(*dd);
 		}
 
 		if (device_data_sdp->current_used_service == SDP::PnPInformation)
@@ -432,11 +432,11 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 		if (device_data_sdp->current_used_service == SDP::AudioSource)
 		{
 			// DONE!
-			SDP::A2DP::A2DP_class test_bb = SDP::A2DP::A2DP_class();
+			SDP::A2DP::A2DP_class test_bb = SDP::A2DP::A2DP_class(*dd);
 			test_bb.call_ALL_ATTR(device_data_sdp, *dd);
 			test_bb.print_ALL_ATTR(*dd);
 
-			dd->exported_data.a2dp_export = (BYTE*)test_bb.export_ALL_ATTR();
+			dd->exported_data.a2dp_export = (BYTE*)test_bb.export_ALL_ATTR(*dd);
 		}
 
 		if (device_data_sdp->current_used_service == SDP::A_V_RemoteControl ||
@@ -445,10 +445,10 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 			)
 		{
 			// DONE!
-			SDP::AVRCP::AVRCP_class test_bb = SDP::AVRCP::AVRCP_class();
+			SDP::AVRCP::AVRCP_class test_bb = SDP::AVRCP::AVRCP_class(*dd);
 			test_bb.call_ALL_ATTR(device_data_sdp, *dd);
 			
-			dd->exported_data.avrcp_export = (BYTE *)test_bb.export_ALL_ATTR();
+			dd->exported_data.avrcp_export = (BYTE *)test_bb.export_ALL_ATTR(*dd);
 
 			dd->temp_class_id = test_bb.class_id_handle->VALUE.classes[0].value;
 			test_bb.print_ALL_ATTR(*dd);
@@ -460,11 +460,11 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 			)
 		{
 			// DONE!
-			SDP::HSP::HSP_class test_bb = SDP::HSP::HSP_class();
+			SDP::HSP::HSP_class test_bb = SDP::HSP::HSP_class(*dd);
 			test_bb.call_ALL_ATTR(device_data_sdp, *dd);
 			test_bb.print_ALL_ATTR(*dd);
 
-			dd->exported_data.hsp_export = (BYTE*)test_bb.export_ALL_ATTR();
+			dd->exported_data.hsp_export = (BYTE*)test_bb.export_ALL_ATTR(*dd);
 		}
 	}
 }

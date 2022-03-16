@@ -202,10 +202,10 @@ void SDP::MAP::parse_MAP_SUPPORTED_FEATURES_MAP(PMAP_SUPPORTED_FEATURES handle)
 /* CLASS MAP_all_attributes functions */
 
 
-SDP::MAP::MAP_class::MAP_class()
+SDP::MAP::MAP_class::MAP_class(IOCTL_S::DEFAULT_DATA dd)
 {
 	// set all objects
-	setDefaultObjects();
+	setDefaultObjects(dd);
 
 	goepl2cappsm_handle = new GOEPL2CAPPSM();
 	supported_message_types_handle = new SUPPORTED_MESSAGE_TYPES();
@@ -287,11 +287,11 @@ void SDP::MAP::MAP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 		map_supported_features_handle->print<MAP_SUPPORTED_FEATURES_S::VV>(map_supported_features_handle->VALUE, dd);
 }
 
-SDP::MAP::PMAP_EXPORT SDP::MAP::MAP_class::export_ALL_ATTR()
+SDP::MAP::PMAP_EXPORT SDP::MAP::MAP_class::export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
 	exp = new MAP_EXPORT();
 
-	exp->default_export = export_default_ATTR();
+	exp->default_export = export_default_ATTR(dd);
 
 	if(goepl2cappsm_handle != NULL)
 		exp->goepl2cappsm_handle_export = goepl2cappsm_handle;

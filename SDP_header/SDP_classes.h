@@ -18,7 +18,7 @@ namespace SDP
 
 
 		/* default functions (all att) */
-		void setDefaultObjects();
+		void setDefaultObjects(IOCTL_S::DEFAULT_DATA dd);
 		void callDefaultAttributes(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 		void printDefaultData(IOCTL_S::DEFAULT_DATA dd);
 
@@ -29,7 +29,7 @@ namespace SDP
 		void call_ServiceName(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 		void call_BluetoothProfileDescriptorList(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 
-		PDEFAULT_EXPORT export_default_ATTR();
+		PDEFAULT_EXPORT export_default_ATTR(IOCTL_S::DEFAULT_DATA dd);
 
 	private:
 

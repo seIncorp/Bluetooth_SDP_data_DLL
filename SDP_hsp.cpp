@@ -14,9 +14,9 @@ void SDP::HSP::parse_REMOTE_AUDIO_VOLUME_CONTROL_HSP(PREMOTE_AUDIO_VOLUME_CONTRO
 /* CLASS HSP_all_attributes functions */
 
 
-SDP::HSP::HSP_class::HSP_class()
+SDP::HSP::HSP_class::HSP_class(IOCTL_S::DEFAULT_DATA dd)
 {
-	setDefaultObjects();
+	setDefaultObjects(dd);
 
 	remote_audio_volume_control_handle = new REMOTE_AUDIO_VOLUME_CONTROL();
 }
@@ -48,11 +48,11 @@ void SDP::HSP::HSP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 		remote_audio_volume_control_handle->print<REMOTE_AUDIO_VOLUME_CONTROL_S::VV>(remote_audio_volume_control_handle->VALUE, dd);
 }
 
-SDP::HSP::PHSP_EXPORT SDP::HSP::HSP_class::export_ALL_ATTR()
+SDP::HSP::PHSP_EXPORT SDP::HSP::HSP_class::export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
 	exp = new HSP_EXPORT();
 
-	exp->default_export = export_default_ATTR();
+	exp->default_export = export_default_ATTR(dd);
 
 	if (remote_audio_volume_control_handle != NULL)
 		exp->remote_audio_volume_control_handle_export = remote_audio_volume_control_handle;

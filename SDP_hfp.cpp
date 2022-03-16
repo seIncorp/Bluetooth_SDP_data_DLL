@@ -30,9 +30,9 @@ void SDP::HFP::parse_SUPPORTED_FEATURES_HFP(PSUPPORTED_FEATURES handle)
 /*********************************************************************************************************************/
 /* CLASS HFP_all_attributes functions */
 
-SDP::HFP::HFP_class::HFP_class()
+SDP::HFP::HFP_class::HFP_class(IOCTL_S::DEFAULT_DATA dd)
 {
-	setDefaultObjects();
+	setDefaultObjects(dd);
 
 	network_handle = new NETWORK();
 	supported_features_handle = new SUPPORTED_FEATURES();
@@ -91,11 +91,11 @@ void SDP::HFP::HFP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 	
 }
 
-SDP::HFP::PHFP_EXPORT SDP::HFP::HFP_class::export_ALL_ATTR()
+SDP::HFP::PHFP_EXPORT SDP::HFP::HFP_class::export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
 	exp = new HFP_EXPORT();
 
-	exp->default_export = export_default_ATTR();
+	exp->default_export = export_default_ATTR(dd);
 
 	if (network_handle != NULL)
 		exp->network_handle_export = network_handle;

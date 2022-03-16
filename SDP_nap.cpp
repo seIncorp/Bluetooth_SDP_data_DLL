@@ -131,10 +131,10 @@ void SDP::NAP::parse_MAX_NET_ACCESS_RATE_PAN(PMAX_NET_ACCESS_RATE handle)
 
 
 
-SDP::NAP::NAP_PANU_class::NAP_PANU_class(int nap)
+SDP::NAP::NAP_PANU_class::NAP_PANU_class(IOCTL_S::DEFAULT_DATA dd, int nap)
 {
 	// set all objects
-	setDefaultObjects();
+	setDefaultObjects(dd);
 
 
 	language_base_attribute_id_list_handle = new LANGUAGE_BASE_ATTRIBUTE_ID_LIST();
@@ -267,11 +267,11 @@ void SDP::NAP::NAP_PANU_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 
 
 
-SDP::NAP::PNAP_EXPORT SDP::NAP::NAP_PANU_class::export_ALL_ATTR()
+SDP::NAP::PNAP_EXPORT SDP::NAP::NAP_PANU_class::export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
 	exp = new NAP_EXPORT();
 
-	exp->default_export = export_default_ATTR();
+	exp->default_export = export_default_ATTR(dd);
 
 	if (security_description_handle != NULL)
 		exp->security_description_handle_export = security_description_handle;

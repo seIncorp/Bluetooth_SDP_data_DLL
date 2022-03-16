@@ -16,7 +16,7 @@ namespace SDP
 
 			PHFP_EXPORT exp;
 
-			HFP_class();
+			HFP_class(IOCTL_S::DEFAULT_DATA dd);
 
 			void call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 			void print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
@@ -24,7 +24,7 @@ namespace SDP
 			void call_Network(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 			void call_SupportedFeatures(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 
-			PHFP_EXPORT export_ALL_ATTR();
+			PHFP_EXPORT export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
 
 		private:
 			SHORT att_AG_array[7]{
