@@ -39,38 +39,41 @@ void SDP::PBAP::PBAP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCT
 {
 	callDefaultAttributes(device_data_sdp, dd);
 
-	FUNCTIONS::getAndParse_DEAFULT<SDP::MAP::PGOEPL2CAPPSM, SDP::MAP::GOEPL2CAPPSM::VV>(
-		device_data_sdp->buffer_res[0],
-		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-		goepl2cappsm_handle,
-		SDP::MAP::GoepL2capPsm,
-		SDP::MAP::GoepL2capPsm,
-		device_data_sdp,
-		dd,
-		0
-	);
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.Goepl2cappsm == 1)
+		FUNCTIONS::getAndParse_DEAFULT<SDP::MAP::PGOEPL2CAPPSM, SDP::MAP::GOEPL2CAPPSM::VV>(
+			device_data_sdp->buffer_res[0],
+			device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+			goepl2cappsm_handle,
+			SDP::MAP::GoepL2capPsm,
+			SDP::MAP::GoepL2capPsm,
+			device_data_sdp,
+			dd,
+			0
+		);
 
-	FUNCTIONS::getAndParse_DEAFULT<PSUPPORTED_REPOSITORIES, SUPPORTED_REPOSITORIES::VV>(
-		device_data_sdp->buffer_res[0],
-		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-		supported_repositories_handle,
-		SupportedRepositories,
-		SupportedRepositories,
-		device_data_sdp,
-		dd,
-		0
-	);
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.SupportedRepositories == 1)
+		FUNCTIONS::getAndParse_DEAFULT<PSUPPORTED_REPOSITORIES, SUPPORTED_REPOSITORIES::VV>(
+			device_data_sdp->buffer_res[0],
+			device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+			supported_repositories_handle,
+			SupportedRepositories,
+			SupportedRepositories,
+			device_data_sdp,
+			dd,
+			0
+		);
 
-	FUNCTIONS::getAndParse_DEAFULT<PPBAP_SUPPORTED_FEATURES, PBAP_SUPPORTED_FEATURES::VV>(
-		device_data_sdp->buffer_res[0],
-		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-		pbap_supported_features_handle,
-		PbapSupportedFeatures,
-		PbapSupportedFeatures,
-		device_data_sdp,
-		dd,
-		0
-	);
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.SupportedFeatures == 1)
+		FUNCTIONS::getAndParse_DEAFULT<PPBAP_SUPPORTED_FEATURES, PBAP_SUPPORTED_FEATURES::VV>(
+			device_data_sdp->buffer_res[0],
+			device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+			pbap_supported_features_handle,
+			PbapSupportedFeatures,
+			PbapSupportedFeatures,
+			device_data_sdp,
+			dd,
+			0
+		);
 }
 
 void SDP::PBAP::PBAP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)

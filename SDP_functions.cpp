@@ -406,8 +406,11 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, I
 			dd->exported_data.obex_export = (BYTE*)test_bb.export_ALL_ATTR();
 		}
 
-		if (device_data_sdp->current_used_service == SDP::Handsfree)
+		if (device_data_sdp->current_used_service == SDP::Handsfree ||
+			device_data_sdp->current_used_service == SDP::HandsfreeAudioGateway
+		)
 		{
+			dd->temp_service = device_data_sdp->current_used_service;
 			// DONE!
 			SDP::HFP::HFP_class test_bb = SDP::HFP::HFP_class();
 			test_bb.call_ALL_ATTR(device_data_sdp, *dd);

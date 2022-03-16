@@ -18,6 +18,9 @@ void SDP::HFP::parse_SUPPORTED_FEATURES_HFP(PSUPPORTED_FEATURES handle)
 	temp <<= 8;
 	temp |= handle->VALUE.value[1];
 
+	//printf("1--DEBUGLE: %X\n", temp);
+
+
 	handle->VALUE.supported_features_value = temp;
 	handle->VALUE.sfds = new SDP::HFP::SUPPORTED_FEATURES_DATA_S(temp);
 }
@@ -74,11 +77,18 @@ void SDP::HFP::HFP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_
 void SDP::HFP::HFP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
 	printDefaultData(dd);
-	if (dd.sdp_settings.print == 1)
-	{
+
+	
+	if (network_handle != NULL && 
+		(dd.sdp_settings.print == 1 || dd.sdp_settings.print_service.print_HFP_attributes.print_network == 1
+	))
 		network_handle->print<NETWORK::VV>(network_handle->VALUE, dd);
+
+	if (supported_features_handle != NULL &&
+		(dd.sdp_settings.print == 1 || dd.sdp_settings.print_service.print_HFP_attributes.print_supported_features == 1
+	))
 		supported_features_handle->print<SUPPORTED_FEATURES::VV>(supported_features_handle->VALUE, dd);
-	}
+	
 }
 
 SDP::HFP::PHFP_EXPORT SDP::HFP::HFP_class::export_ALL_ATTR()

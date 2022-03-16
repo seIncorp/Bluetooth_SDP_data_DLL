@@ -15,6 +15,9 @@ namespace SDP
 			const std::type_info& a10 = typeid(NETWORK_S*);
 			const std::type_info& a11 = typeid(SUPPORTED_FEATURES_S*);
 
+			//printf("0--DEBUGLE: %X\n", 0x01);
+
+
 			// Network
 			if (type == a10)
 			{
@@ -24,6 +27,7 @@ namespace SDP
 			// SupportedFeatures
 			if (type == a11)
 			{
+				//printf("0.1--DEBUGLE: %X\n", 0x01);
 				parse_SUPPORTED_FEATURES_HFP((PSUPPORTED_FEATURES) handle);
 			}
 		}

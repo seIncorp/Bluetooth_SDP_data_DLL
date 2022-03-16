@@ -85,11 +85,20 @@ void SDP::DEFAULT_class::call_BluetoothProfileDescriptorList(DEVICE_DATA_SDP* de
 
 void SDP::DEFAULT_class::callDefaultAttributes(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
 {
-	call_ServiceRecordHandle(device_data_sdp, dd);
-	call_ServiceClassIDList(device_data_sdp, dd);
-	call_ProtocolDescriptorList(device_data_sdp, dd);
-	call_ServiceName(device_data_sdp, dd);
-	call_BluetoothProfileDescriptorList(device_data_sdp, dd);
+	if(dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.ServiceRecord == 1)
+		call_ServiceRecordHandle(device_data_sdp, dd);
+	
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.ServiceClassIDList == 1)
+		call_ServiceClassIDList(device_data_sdp, dd);
+	
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.ProtocolDescriptorList == 1)
+		call_ProtocolDescriptorList(device_data_sdp, dd);
+	
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.ServiceName == 1)
+		call_ServiceName(device_data_sdp, dd);
+	
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.BluetoothProfileDescriptorList == 1)
+		call_BluetoothProfileDescriptorList(device_data_sdp, dd);
 }
 
 void SDP::DEFAULT_class::printDefaultData(IOCTL_S::DEFAULT_DATA dd)

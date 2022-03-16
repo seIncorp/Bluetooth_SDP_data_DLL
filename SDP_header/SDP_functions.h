@@ -244,7 +244,9 @@ namespace SDP
 				SDP::OBEX::parse_by_type_sub_function<C>(type, handle, current_used_service);
 			}
 
-			if (current_used_service == SDP::Handsfree)
+			if (current_used_service == SDP::Handsfree ||
+				current_used_service == SDP::HandsfreeAudioGateway
+			)
 			{
 				SDP::HFP::parse_by_type_sub_function<C>(type, handle, current_used_service);
 			}

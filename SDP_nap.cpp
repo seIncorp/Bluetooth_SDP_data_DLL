@@ -246,17 +246,23 @@ void SDP::NAP::NAP_PANU_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
 	
 	printDefaultData(dd);
-	if (dd.sdp_settings.print == 1)
-	{
+	
+	if (security_description_handle != NULL && 
+		(dd.sdp_settings.print == 1 || dd.sdp_settings.print_service.print_NAP_attributes.print_security_description == 1
+	))
 		security_description_handle->print<SECURITY_DESCRIPTION_S::VV>(security_description_handle->VALUE, dd);
 
+	if (net_access_type_handle != NULL && 
+		(dd.sdp_settings.print == 1 || dd.sdp_settings.print_service.print_NAP_attributes.print_net_access_type == 1) && 
+		nap_flag == 1
+	)
+		net_access_type_handle->print<NET_ACCESS_TYPE_S::VV>(net_access_type_handle->VALUE, dd);
 
-		if (nap_flag == 1)
-		{
-			net_access_type_handle->print<NET_ACCESS_TYPE_S::VV>(net_access_type_handle->VALUE, dd);
-			max_net_access_rate_handle->print<MAX_NET_ACCESS_RATE_S::VV>(max_net_access_rate_handle->VALUE, dd);
-		}
-	}
+	if (max_net_access_rate_handle != NULL && 
+		(dd.sdp_settings.print == 1 || dd.sdp_settings.print_service.print_NAP_attributes.print_max_net_access_rate == 1) && 
+		nap_flag == 1
+	)
+		max_net_access_rate_handle->print<MAX_NET_ACCESS_RATE_S::VV>(max_net_access_rate_handle->VALUE, dd);
 }
 
 

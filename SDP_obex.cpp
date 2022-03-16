@@ -119,12 +119,22 @@ void SDP::OBEX::OBEX_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCT
 void SDP::OBEX::OBEX_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 {
 	printDefaultData(dd);
-	if (dd.sdp_settings.print == 1)
-	{
+	
+	if (goepl2cappsm_handle != NULL && 
+		(dd.sdp_settings.print == 1 || dd.sdp_settings.print_service.print_OBEX_attributes.print_goepl2cappsm == 1
+	))
 		goepl2cappsm_handle->print<SDP::MAP::GOEPL2CAPPSM_S::VV>(goepl2cappsm_handle->VALUE, dd);
+		
+	if (supported_formats_handle != NULL && 
+		(dd.sdp_settings.print == 1 || dd.sdp_settings.print_service.print_OBEX_attributes.print_supported_formats == 1
+	))
 		supported_formats_handle->print<SUPPORTED_FORMATS_S::VV>(supported_formats_handle->VALUE, dd);
+		
+	if (service_version_handle != NULL && 
+		(dd.sdp_settings.print == 1 || dd.sdp_settings.print_service.print_OBEX_attributes.print_service_version == 1
+	))
 		service_version_handle->print<SERVICE_VERSION_S::VV>(service_version_handle->VALUE, dd);
-	}
+	
 }
 
 SDP::OBEX::POBEX_EXPORT SDP::OBEX::OBEX_class::export_ALL_ATTR()
