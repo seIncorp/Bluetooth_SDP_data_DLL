@@ -90,6 +90,53 @@ void SDP::DEFAULT_class::call_BluetoothProfileDescriptorList(DEVICE_DATA_SDP* de
 	);
 }
 
+void SDP::DEFAULT_class::call_ProviderName(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+{
+	FUNCTIONS::getAndParse_DEAFULT<PPROVIDER_NAME, PROVIDER_NAME::VV>(
+		device_data_sdp->buffer_res[0],
+		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+		provider_name_handle,
+		SDP::ProviderName,
+		SDP::ProviderName,
+		device_data_sdp,
+		dd,
+		0
+		);
+}
+
+void SDP::DEFAULT_class::call_LanguageBaseAttributeIDList(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+{
+	FUNCTIONS::getAndParse_DEAFULT<PLANGUAGE_BASE_ATTRIBUTE_ID_LIST, LANGUAGE_BASE_ATTRIBUTE_ID_LIST::VV>(
+		device_data_sdp->buffer_res[0],
+		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+		language_base_attribute_id_list_handle,
+		SDP::LanguageBaseAttributeIDList,
+		SDP::LanguageBaseAttributeIDList,
+		device_data_sdp,
+		dd,
+		0
+	);
+}
+
+void SDP::DEFAULT_class::call_ServiceDescription(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+{
+	FUNCTIONS::getAndParse_DEAFULT<PSERVICE_DESCRIPTION, SERVICE_DESCRIPTION::VV>(
+		device_data_sdp->buffer_res[0],
+		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+		service_description_handle,
+		SDP::ServiceDescription,
+		SDP::ServiceDescription,
+		device_data_sdp,
+		dd,
+		0
+	);
+}
+
+
+
+
+
+
 
 
 void SDP::DEFAULT_class::callDefaultAttributes(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)

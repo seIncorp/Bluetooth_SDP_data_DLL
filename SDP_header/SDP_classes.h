@@ -28,6 +28,10 @@ namespace SDP
 		void call_ProtocolDescriptorList(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 		void call_ServiceName(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 		void call_BluetoothProfileDescriptorList(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+		void call_ProviderName(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+		void call_LanguageBaseAttributeIDList(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+		void call_ServiceDescription(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+
 
 		PDEFAULT_EXPORT export_default_ATTR(IOCTL_S::DEFAULT_DATA dd);
 

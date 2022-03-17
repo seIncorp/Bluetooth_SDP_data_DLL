@@ -24,6 +24,8 @@ namespace SDP
 
 			PAVRCP_EXPORT export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
 
+			void call_SupportedFeatures(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+
 
 		private:
 			SHORT avrcp_att_array[8]{

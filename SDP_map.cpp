@@ -220,57 +220,78 @@ SDP::MAP::MAP_class::MAP_class(IOCTL_S::DEFAULT_DATA dd)
 		map_supported_features_handle = new MAP_SUPPORTED_FEATURES();
 }
 
+void SDP::MAP::MAP_class::call_GoepL2capPsm(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+{
+	FUNCTIONS::getAndParse_DEAFULT<PGOEPL2CAPPSM, GOEPL2CAPPSM::VV>(
+		device_data_sdp->buffer_res[0],
+		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+		goepl2cappsm_handle,
+		SDP::MAP::GoepL2capPsm,
+		SDP::MAP::GoepL2capPsm,
+		device_data_sdp,
+		dd,
+		0
+	);
+}
+
+void SDP::MAP::MAP_class::call_SupportedMessageTypes(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+{
+	FUNCTIONS::getAndParse_DEAFULT<PSUPPORTED_MESSAGE_TYPES, SUPPORTED_MESSAGE_TYPES::VV>(
+		device_data_sdp->buffer_res[0],
+		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+		supported_message_types_handle,
+		SDP::MAP::SupportedMessageTypes,
+		SDP::MAP::SupportedMessageTypes,
+		device_data_sdp,
+		dd,
+		0
+	);
+}
+
+void SDP::MAP::MAP_class::call_MASInstanceID(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+{
+	FUNCTIONS::getAndParse_DEAFULT<PMAS_INSTANCE_ID, MAS_INSTANCE_ID::VV>(
+		device_data_sdp->buffer_res[0],
+		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+		mas_instance_id_handle,
+		SDP::MAP::MASInstanceID,
+		SDP::MAP::MASInstanceID,
+		device_data_sdp,
+		dd,
+		0
+	);
+}
+
+void SDP::MAP::MAP_class::call_MapSupportedFeatures(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+{
+	FUNCTIONS::getAndParse_DEAFULT<PMAP_SUPPORTED_FEATURES, MAP_SUPPORTED_FEATURES::VV>(
+		device_data_sdp->buffer_res[0],
+		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+		map_supported_features_handle,
+		SDP::MAP::MapSupportedFeatures,
+		SDP::MAP::MapSupportedFeatures,
+		device_data_sdp,
+		dd,
+		0
+	);
+}
+
+
 void SDP::MAP::MAP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
 {
 	callDefaultAttributes(device_data_sdp, dd);
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_MAP.Goepl2cappsm == 1)
-		FUNCTIONS::getAndParse_DEAFULT<PGOEPL2CAPPSM, GOEPL2CAPPSM::VV>(
-			device_data_sdp->buffer_res[0],
-			device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-			goepl2cappsm_handle,
-			SDP::MAP::GoepL2capPsm,
-			SDP::MAP::GoepL2capPsm,
-			device_data_sdp,
-			dd,
-			0
-		);
+		call_GoepL2capPsm(device_data_sdp, dd);
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_MAP.SupportedMessageTypes == 1)
-		FUNCTIONS::getAndParse_DEAFULT<PSUPPORTED_MESSAGE_TYPES, SUPPORTED_MESSAGE_TYPES::VV>(
-			device_data_sdp->buffer_res[0],
-			device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-			supported_message_types_handle,
-			SDP::MAP::SupportedMessageTypes,
-			SDP::MAP::SupportedMessageTypes,
-			device_data_sdp,
-			dd,
-			0
-		);
+		call_SupportedMessageTypes(device_data_sdp, dd);
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_MAP.MasInstanceId == 1)
-		FUNCTIONS::getAndParse_DEAFULT<PMAS_INSTANCE_ID, MAS_INSTANCE_ID::VV>(
-			device_data_sdp->buffer_res[0],
-			device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-			mas_instance_id_handle,
-			SDP::MAP::MASInstanceID,
-			SDP::MAP::MASInstanceID,
-			device_data_sdp,
-			dd,
-			0
-		);
+		call_MASInstanceID(device_data_sdp, dd);
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_MAP.MapSupportedFeatures == 1)
-		FUNCTIONS::getAndParse_DEAFULT<PMAP_SUPPORTED_FEATURES, MAP_SUPPORTED_FEATURES::VV>(
-			device_data_sdp->buffer_res[0],
-			device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-			map_supported_features_handle,
-			SDP::MAP::MapSupportedFeatures,
-			SDP::MAP::MapSupportedFeatures,
-			device_data_sdp,
-			dd,
-			0
-		);
+		call_MapSupportedFeatures(device_data_sdp, dd);
 }
 
 void SDP::MAP::MAP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)

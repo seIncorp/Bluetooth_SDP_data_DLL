@@ -13,8 +13,9 @@
 	- BUG: check why app crash when use and call set_all_SDP_service_for_search() with SDPsearch() [FIXED: NOT USING GenericAudio service]
 	- ADD: record attribute and not to use default directly
 	- ADD: dodaj se za print only one za outside print function (trenutno se vse sprinta)
-	- ADD: dodaj se da se klice samo vnaprej dolocene parametere od dolocenega servica
-
+	- IMPROVE: da ce ima en service vec klicev za parametre naj se naredi eno defult func za vse te klice
+	
+	- ADD: dodaj se da se klice samo vnaprej dolocene parametere od dolocenega servica	<-- DONE!!!
 	- ADD: dodaj se za HandsfreeAudioGateway service	<-- DONE!!!
 	- ADD: dodaj se za razlikovanje Handsfree in HandsfreeAG izpis featurjev	<-- DONE!!!
 	- DO: popravi in uredi izpis PROTOCOL DESCRIPTOR LIST	<-- DONE!!!
@@ -632,10 +633,19 @@ namespace IOCTL_S
 			att_search_NAP att_NAP;
 			
 			/* HSP */
-			int RemoteAudioVolumeControl;
+			struct att_search_HSP
+			{
+				int RemoteAudioVolumeControl;
+			};
+			att_search_HSP att_HSP;
 			
 			/* HFP */
-			int Network;
+			struct att_search_HFP
+			{
+				int Network;
+				int SupportedFeatures;
+			};
+			att_search_HFP att_HFP;
 			
 			/* AVRCP */
 			struct att_search_AVRCP
@@ -645,11 +655,11 @@ namespace IOCTL_S
 			att_search_AVRCP att_AVRCP;
 			
 			/* A2DP */
-			
-			///* MAP */
-			//int SupportedMessageTypes;
-			//int MasInstanceId;
-			//int MapSupportedFeatures;
+			struct att_search_A2DP
+			{
+				int SupportedFeatures;
+			};
+			att_search_A2DP att_A2DP;
 
 			/* MAP */
 			struct att_search_MAP

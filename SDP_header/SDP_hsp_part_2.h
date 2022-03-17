@@ -22,6 +22,8 @@ namespace SDP
 
 			PHSP_EXPORT export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
 
+			void call_RemoteAudioVolumeControl(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+
 		private:
 			SHORT att_array[6]{
 				ServiceRecordHandle,

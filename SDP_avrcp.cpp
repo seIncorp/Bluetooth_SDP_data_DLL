@@ -43,6 +43,22 @@ SDP::AVRCP::AVRCP_class::AVRCP_class(IOCTL_S::DEFAULT_DATA dd)
 		supported_features_handle = new SUPPORTED_FEATURES();
 }
 
+
+void SDP::AVRCP::AVRCP_class::call_SupportedFeatures(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+{
+	FUNCTIONS::getAndParse_DEAFULT<PSUPPORTED_FEATURES, SUPPORTED_FEATURES::VV>(
+		device_data_sdp->buffer_res[0],
+		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+		supported_features_handle,
+		SupportedFeatures,
+		SupportedFeatures,
+		device_data_sdp,
+		dd,
+		0
+	);
+}
+
+
 void SDP::AVRCP::AVRCP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
 {
 	callDefaultAttributes(device_data_sdp, dd);
@@ -55,28 +71,10 @@ void SDP::AVRCP::AVRCP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IO
 	}
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.ProviderName == 1)
-		FUNCTIONS::getAndParse_DEAFULT<PPROVIDER_NAME, PROVIDER_NAME::VV>(
-			device_data_sdp->buffer_res[0],
-			device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-			provider_name_handle,
-			SDP::ProviderName,
-			SDP::ProviderName,
-			device_data_sdp,
-			dd,
-			0
-		);
+		call_ProviderName(device_data_sdp, dd);
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_AVRCP.SupportedFeatures == 1)
-		FUNCTIONS::getAndParse_DEAFULT<PSUPPORTED_FEATURES, SUPPORTED_FEATURES::VV>(
-			device_data_sdp->buffer_res[0],
-			device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-			supported_features_handle,
-			SupportedFeatures,
-			SupportedFeatures,
-			device_data_sdp,
-			dd,
-			0
-		);
+		call_SupportedFeatures(device_data_sdp, dd);
 
 	// TODO: preveri ali se to sploh rabi!!!
 	dds = device_data_sdp;

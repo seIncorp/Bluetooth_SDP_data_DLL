@@ -23,6 +23,10 @@ namespace SDP
 
 			POBEX_EXPORT export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
 
+			void call_GoepL2capPsm(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+			void call_SupportedFormatsList(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+			void call_ServiceVersion(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+
 
 		private:
 			SHORT att_array[8]{
