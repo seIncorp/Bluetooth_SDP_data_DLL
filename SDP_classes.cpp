@@ -4,7 +4,7 @@
 void SDP::DEFAULT_class::setDefaultObjects(IOCTL_S::DEFAULT_DATA dd)
 {
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.ServiceRecord == 1)
-		record_handle = new DEFAULT_OBJECT();
+		record_handle = new SERVICE_RECORD();
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.ServiceClassIDList == 1)
 		class_id_handle = new SERVICE_CLASS_ID_LIST();
@@ -22,7 +22,7 @@ void SDP::DEFAULT_class::setDefaultObjects(IOCTL_S::DEFAULT_DATA dd)
 
 void SDP::DEFAULT_class::call_ServiceRecordHandle(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
 {
-	FUNCTIONS::getAndParse_DEAFULT<PDEFAULT_OBJECT, DEFAULT_OBJECT_S::VV>(
+	FUNCTIONS::getAndParse_DEAFULT<PSERVICE_RECORD, SERVICE_RECORD_S::VV>(
 		device_data_sdp->buffer_res[0],
 		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
 		record_handle,

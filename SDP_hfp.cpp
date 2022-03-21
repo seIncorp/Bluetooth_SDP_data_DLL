@@ -4,7 +4,6 @@
 /*********************************************************************************************************************/
 /* HFP SPECIFIC */
 
-
 void SDP::HFP::parse_NETWORK_HFP(PNETWORK handle)
 {
 
@@ -41,43 +40,49 @@ SDP::HFP::HFP_class::HFP_class(IOCTL_S::DEFAULT_DATA dd)
 		supported_features_handle = new SUPPORTED_FEATURES();
 }
 
-void SDP::HFP::HFP_class::call_Network(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
-{
-	FUNCTIONS::getAndParse_DEAFULT<PNETWORK, NETWORK::VV>(
-		device_data_sdp->buffer_res[0],
-		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-		network_handle,
-		Network,
-		Network,
-		device_data_sdp,
-		dd,
-		0
-	);
-}
-
-void SDP::HFP::HFP_class::call_SupportedFeatures(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
-{
-	FUNCTIONS::getAndParse_DEAFULT<PSUPPORTED_FEATURES, SUPPORTED_FEATURES::VV>(
-		device_data_sdp->buffer_res[0],
-		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-		supported_features_handle,
-		SupportedFeatures,
-		SupportedFeatures,
-		device_data_sdp,
-		dd,
-		0
-	);
-}
+//void SDP::HFP::HFP_class::call_Network(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+//{
+//	FUNCTIONS::getAndParse_DEAFULT<PNETWORK, NETWORK::VV>(
+//		device_data_sdp->buffer_res[0],
+//		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+//		network_handle,
+//		Network,
+//		Network,
+//		device_data_sdp,
+//		dd,
+//		0
+//	);
+//}
+//
+//void SDP::HFP::HFP_class::call_SupportedFeatures(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+//{
+//	FUNCTIONS::getAndParse_DEAFULT<PSUPPORTED_FEATURES, SUPPORTED_FEATURES::VV>(
+//		device_data_sdp->buffer_res[0],
+//		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+//		supported_features_handle,
+//		SupportedFeatures,
+//		SupportedFeatures,
+//		device_data_sdp,
+//		dd,
+//		0
+//	);
+//}
 
 void SDP::HFP::HFP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
 {
 	callDefaultAttributes(device_data_sdp, dd);
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_HFP.Network == 1)
-		call_Network(device_data_sdp, dd);
+	{
+		//call_Network(device_data_sdp, dd);
+		call_attr_def<PNETWORK, NETWORK::VV>(device_data_sdp, dd, network_handle, Network);
+	}
 	
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_HFP.SupportedFeatures == 1)
-		call_SupportedFeatures(device_data_sdp, dd);
+	{
+		//call_SupportedFeatures(device_data_sdp, dd);
+		call_attr_def<PSUPPORTED_FEATURES, SUPPORTED_FEATURES::VV>(device_data_sdp, dd, supported_features_handle, SupportedFeatures);
+	}
 }
 
 void SDP::HFP::HFP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)

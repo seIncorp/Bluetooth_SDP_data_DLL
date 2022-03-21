@@ -5,7 +5,7 @@ namespace SDP
 	{
 	public:
 		/* default */
-		PDEFAULT_OBJECT record_handle;
+		PSERVICE_RECORD record_handle;
 		PSERVICE_CLASS_ID_LIST class_id_handle;
 		PPROTOCOL_DESCRIPTOR_LIST protocol_descriptor_list_handle;
 		PSERVICE_NAME service_name_handle;

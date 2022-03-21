@@ -11,10 +11,15 @@
 /*
 	TODO:
 	- BUG: check why app crash when use and call set_all_SDP_service_for_search() with SDPsearch() [FIXED: NOT USING GenericAudio service]
-	- ADD: record attribute and not to use default directly
-	- ADD: dodaj se za print only one za outside print function (trenutno se vse sprinta)
-	- IMPROVE: da ce ima en service vec klicev za parametre naj se naredi eno defult func za vse te klice
-	
+	- CHECK: zakaj za PBAP->PGOEPL2CAPPSM vrne debug samo 0x00
+	- CHECK: preveri ali res niè ne vrne PBAP->PGOEPL2CAPPSM
+	- IMPROVE: dodaj da se samo izpise da ni nicesar, ce device nic ne vrne za attr.
+
+
+	- ADD: record attribute and not to use default directly	<-- DONE!!!
+	- IMPROVE: da ce ima en service vec klicev za parametre naj se naredi eno defult func za vse te klice	<-- DONE!!!
+	- ADD: dodaj se za reset attr_search_for_service to 0	<-- DONE!!!
+	- ADD: dodaj se za print only one za outside print function (trenutno se vse sprinta)	<-- DONE!!!
 	- ADD: dodaj se da se klice samo vnaprej dolocene parametere od dolocenega servica	<-- DONE!!!
 	- ADD: dodaj se za HandsfreeAudioGateway service	<-- DONE!!!
 	- ADD: dodaj se za razlikovanje Handsfree in HandsfreeAG izpis featurjev	<-- DONE!!!
@@ -51,6 +56,7 @@
 #define ATTR_NAME_19	"SUPPORTED REPOSITORIES: \n"
 #define ATTR_NAME_20	"PBAP SUPPORTED FEATURES: \n"
 #define ATTR_NAME_21	"INFO: \n"
+#define ATTR_NAME_22	"DEFAULT DATA: \n"
 
 
 
@@ -551,266 +557,274 @@ namespace BTH_DEVICES
 /************************************************************************/
 /* ACCESS POINT TO DLL */
 
-namespace IOCTL_S
+namespace IOCTL_DATA_STRUCTURES_S
 {
-
-
-	/* MAIN structure */
-	struct SDP_DATA_API DEFAULT_DATA
+	struct SDP_services_for_search
 	{
-		struct SDP_services_for_search
+		BYTE Headset;
+		BYTE Headset_Audio_Gateway;
+		BYTE AudioSource;
+		BYTE GenericAudio;
+		//BYTE AudioSink;
+		BYTE Handsfree;
+		BYTE HandsfreeAudioGateway;
+		BYTE OBEXObjectPush;
+		//BYTE OBEXFileTransfer;
+		BYTE A_V_RemoteControl;
+		BYTE A_V_RemoteControlTarget;
+		BYTE A_V_RemoteControlController;
+		BYTE PANU;
+		BYTE _NAP;
+		BYTE Phonebook_Access_PSE;
+		//BYTE Phonebook_Access;
+		BYTE Message_Access_Server;
+		//BYTE Message_Access_Profile;
+		BYTE PnPInformation;
+	};
+
+	struct ATTRIBUTES_SEARCH_FOR_SERVICE
+	{
+		int all;	// if this is true bellow flags are override
+
+		/* DEFAULT ATTR. */
+		int ServiceRecord;
+		int ServiceClassIDList;
+		int ProtocolDescriptorList;
+		int ServiceName;
+		int BluetoothProfileDescriptorList;
+		int ProviderName;
+		int LanguageBaseAttributeIdList;
+		int ServiceDescription;
+
+		/***********************************************/
+		/* SPECIAL ATTR. */
+
+		/* PNPINFO */
+		struct att_search_PNPINFO
 		{
-			BYTE Headset;
-			BYTE Headset_Audio_Gateway;
-			BYTE AudioSource;
-			BYTE GenericAudio;
-			//BYTE AudioSink;
-			BYTE Handsfree;
-			BYTE HandsfreeAudioGateway;
-			BYTE OBEXObjectPush;
-			//BYTE OBEXFileTransfer;
-			BYTE A_V_RemoteControl;
-			BYTE A_V_RemoteControlTarget;
-			BYTE A_V_RemoteControlController;
-			BYTE PANU;
-			BYTE _NAP;
-			BYTE Phonebook_Access_PSE;
-			//BYTE Phonebook_Access;
-			BYTE Message_Access_Server;
-			//BYTE Message_Access_Profile;
-			BYTE PnPInformation;
+			int PnpInfo;
 		};
+		att_search_PNPINFO att_PNPINFO;
 
-		struct ATTRIBUTES_SEARCH_FOR_SERVICE
+		/* PBAP */
+		struct att_search_PBAP
 		{
-			int all;
+			int Goepl2cappsm;
+			int SupportedRepositories;
+			int SupportedFeatures;
+		};
+		att_search_PBAP att_PBAP;
 
+		/* OBEX */
+		struct att_search_OBEX
+		{
+			int Goepl2cappsm;
+			int SupportedFormats;
+			int ServiceVersion;
+		};
+		att_search_OBEX att_OBEX;
+
+		/* NAP */
+		struct att_search_NAP
+		{
+			int SecurityDescription;
+			int NetAccessType;
+			int MaxNetAccessRate;
+		};
+		att_search_NAP att_NAP;
+
+		/* HSP */
+		struct att_search_HSP
+		{
+			int RemoteAudioVolumeControl;
+		};
+		att_search_HSP att_HSP;
+
+		/* HFP */
+		struct att_search_HFP
+		{
+			int Network;
+			int SupportedFeatures;
+		};
+		att_search_HFP att_HFP;
+
+		/* AVRCP */
+		struct att_search_AVRCP
+		{
+			int SupportedFeatures;
+		};
+		att_search_AVRCP att_AVRCP;
+
+		/* A2DP */
+		struct att_search_A2DP
+		{
+			int SupportedFeatures;
+		};
+		att_search_A2DP att_A2DP;
+
+		/* MAP */
+		struct att_search_MAP
+		{
+			int Goepl2cappsm;
+			int SupportedMessageTypes;
+			int MasInstanceId;
+			int MapSupportedFeatures;
+		};
+		att_search_MAP att_MAP;
+	};
+
+	struct SDP_settings
+	{
+		int debug;
+		int print;
+		int print_info;
+		int print_with_outside_funct;
+
+		struct SDP_print_service
+		{
 			/* DEFAULT ATTR. */
-			int ServiceRecord;
-			int ServiceClassIDList;
-			int ProtocolDescriptorList;
-			int ServiceName;
-			int BluetoothProfileDescriptorList;
-			int ProviderName;
-			int LanguageBaseAttributeIdList;
-			int ServiceDescription;
+			int print_service_record;
+			int print_service_class_id_list;
+			int print_protocol_descriptor_list;
+			int print_service_name;
+			int print_provider_name;
+			int print_bluetooth_profile_descriptor_list;
+			int print_language_base_attribute_id_list;
+			int print_service_description;
+			//int print_service_availability;
 
 			/***********************************************/
 			/* SPECIAL ATTR. */
 
 			/* PNPINFO */
-			struct att_search_PNPINFO
+			struct print_PNPINFO
 			{
-				int PnpInfo;
+				int print_pnp_info;
 			};
-			att_search_PNPINFO att_PNPINFO;
+			print_PNPINFO print_PNPINFO_attributes;
 
 			/* PBAP */
-			struct att_search_PBAP
+			struct print_PBAP
 			{
-				int Goepl2cappsm;
-				int SupportedRepositories;
-				int SupportedFeatures;
+				int print_goepl2cappsm;
+				int print_supported_repositories;
+				int print_pbap_supported_features;
 			};
-			att_search_PBAP att_PBAP;
-			
+			print_PBAP print_PBAP_attributes;
+
 			/* OBEX */
-			struct att_search_OBEX
+			struct print_OBEX
 			{
-				int Goepl2cappsm;
-				int SupportedFormats;
-				int ServiceVersion;
+				int print_goepl2cappsm;
+				int print_supported_formats;
+				int print_service_version;
 			};
-			att_search_OBEX att_OBEX;
+			print_OBEX print_OBEX_attributes;
 
 			/* NAP */
-			struct att_search_NAP
+			struct print_NAP
 			{
-				int SecurityDescription;
-				int NetAccessType;
-				int MaxNetAccessRate;
+				int print_security_description;
+				int print_net_access_type;
+				int print_max_net_access_rate;
 			};
-			att_search_NAP att_NAP;
-			
+			print_NAP print_NAP_attributes;
+
 			/* HSP */
-			struct att_search_HSP
+			struct print_HSP
 			{
-				int RemoteAudioVolumeControl;
+				int print_remote_audio_volume_control;
 			};
-			att_search_HSP att_HSP;
-			
+			print_HSP print_HSP_attributes;
+
 			/* HFP */
-			struct att_search_HFP
+			struct print_HFP
 			{
-				int Network;
-				int SupportedFeatures;
+				int print_network;
+				int print_supported_features;
 			};
-			att_search_HFP att_HFP;
-			
+			print_HFP print_HFP_attributes;
+
 			/* AVRCP */
-			struct att_search_AVRCP
+			struct print_AVRCP
 			{
-				int SupportedFeatures;
+				int print_supported_features;
 			};
-			att_search_AVRCP att_AVRCP;
-			
+			print_AVRCP print_AVRCP_attributes;
+
 			/* A2DP */
-			struct att_search_A2DP
+			struct print_A2DP
 			{
-				int SupportedFeatures;
+				int print_supported_features;
 			};
-			att_search_A2DP att_A2DP;
+			print_A2DP print_A2DP_attributes;
 
 			/* MAP */
-			struct att_search_MAP
+			struct print_MAP
 			{
-				int Goepl2cappsm;
-				int SupportedMessageTypes;
-				int MasInstanceId;
-				int MapSupportedFeatures;
+				int print_goepl2cappsm;
+				int print_supported_message_types;
+				int print_mas_instance_id;
+				int print_map_supported_features;
 			};
-			att_search_MAP att_MAP;
+			print_MAP print_MAP_attributes;
+
 		};
 
-		struct SDP_exported_data
-		{
-			// SDP services
-			BYTE* default_export;
-			BYTE* a2dp_export;
-			BYTE* avrcp_export;
-			BYTE* hfp_export;
-			BYTE* hsp_export;
-			BYTE* map_export;
-			BYTE* nap_export;
-			BYTE* obex_export;
-			BYTE* pbap_export;
-			BYTE* pnpinfo_export;
+		SDP_print_service print_service;
+	};
 
-			// cached bluetooth devices
-			BTH_DEVICES::SEARCHED_CACHED_DEVICES_S* devices;
+	struct SDP_exported_data
+	{
+		// SDP services
+		BYTE* default_export;
+		BYTE* a2dp_export;
+		BYTE* avrcp_export;
+		BYTE* hfp_export;
+		BYTE* hsp_export;
+		BYTE* map_export;
+		BYTE* nap_export;
+		BYTE* obex_export;
+		BYTE* pbap_export;
+		BYTE* pnpinfo_export;
 
-			// local radio data
-			BTH_DEVICES::LOCAL_RADIO_DEVICE_DATA_S* local_device_radio;
-		};
+		// cached bluetooth devices
+		BTH_DEVICES::SEARCHED_CACHED_DEVICES_S* devices;
 
-		struct SDP_settings
-		{
-			int debug;
-			int print;
-			int print_info;
-			int print_with_outside_funct;
+		// local radio data
+		BTH_DEVICES::LOCAL_RADIO_DEVICE_DATA_S* local_device_radio;
+	};
+}
 
-			struct SDP_print_service
-			{
-				/* DEFAULT ATTR. */
-				int print_service_record;
-				int print_service_class_id_list;
-				int print_protocol_descriptor_list;
-				int print_service_name;
-				int print_provider_name;
-				int print_bluetooth_profile_descriptor_list;
-				int print_language_base_attribute_id_list;
-				int print_service_description;
-				//int print_service_availability;
-
-				/***********************************************/
-				/* SPECIAL ATTR. */
-				
-				/* PNPINFO */
-				struct print_PNPINFO
-				{
-					int print_pnp_info;
-				};
-				print_PNPINFO print_PNPINFO_attributes;
-
-				/* PBAP */
-				struct print_PBAP
-				{
-					int print_goepl2cappsm;
-					int print_supported_repositories;
-					int print_pbap_supported_features;
-				};
-				print_PBAP print_PBAP_attributes;
-
-				/* OBEX */
-				struct print_OBEX
-				{
-					int print_goepl2cappsm;
-					int print_supported_formats;
-					int print_service_version;
-				};
-				print_OBEX print_OBEX_attributes;
-
-				/* NAP */
-				struct print_NAP
-				{
-					int print_security_description;
-					int print_net_access_type;
-					int print_max_net_access_rate;
-				};
-				print_NAP print_NAP_attributes;
-
-				/* HSP */
-				struct print_HSP
-				{
-					int print_remote_audio_volume_control;
-				};
-				print_HSP print_HSP_attributes;
-
-				/* HFP */
-				struct print_HFP
-				{
-					int print_network;
-					int print_supported_features;
-				};
-				print_HFP print_HFP_attributes;
-
-				/* AVRCP */
-				struct print_AVRCP
-				{
-					int print_supported_features;
-				};
-				print_AVRCP print_AVRCP_attributes;
-
-				/* A2DP */
-				struct print_A2DP
-				{
-					int print_supported_features;
-				};
-				print_A2DP print_A2DP_attributes;
-
-				/* MAP */
-				struct print_MAP
-				{
-					int print_goepl2cappsm;
-					int print_supported_message_types;
-					int print_mas_instance_id;
-					int print_map_supported_features;
-				};
-				print_MAP print_MAP_attributes;
-
-			};
-
-			SDP_print_service print_service;
-		};
-
+namespace IOCTL_S
+{
+	/* MAIN structure */
+	struct SDP_DATA_API DEFAULT_DATA
+	{
 		HANDLE hDevice;
 		BOOL bResult;
 		DWORD junk;
 		SHORT service_class_id_in_use;
-		SDP_services_for_search services_for_search;
-		SDP_exported_data exported_data;
-		SDP_settings sdp_settings;
-		ATTRIBUTES_SEARCH_FOR_SERVICE attr_search_for_service;
+		IOCTL_DATA_STRUCTURES_S::SDP_services_for_search services_for_search;
+		IOCTL_DATA_STRUCTURES_S::SDP_exported_data exported_data;
+		IOCTL_DATA_STRUCTURES_S::SDP_settings sdp_settings;
+		IOCTL_DATA_STRUCTURES_S::ATTRIBUTES_SEARCH_FOR_SERVICE attr_search_for_service;
 
 		void reset_SDP_service_for_search();
 		void set_all_SDP_service_for_search();
 
-
+		void reset_attr_search_for_service();
+	
 		// currently only for x64, does not work for x86
 		// pointer to outside print function
 		void (*outside_print_function) (std::string text, ...);
 		BYTE* data_outside_print_function;
+
+		
+
+		
+
+		//TEST_FUNC_S bla;
 
 		SHORT temp_class_id;	//only for AVRCP!!!!
 		SHORT temp_service;		// only for HFP!!!!
@@ -820,15 +834,8 @@ namespace IOCTL_S
 		char* author;
 	};
 
-
-
-	
-
 	/* LOCAL functions */
-
 	int str2ba(const char* straddr, BTH_ADDR* btaddr);
-
-
 
 	/* CONNECTION AND DISCONNECTION functions */
 	SDP_DATA_API int connectToDevice(const wchar_t* name, DEFAULT_DATA* dd);
@@ -840,8 +847,6 @@ namespace IOCTL_S
 	SDP_DATA_API void getLocalBthInfo(DEFAULT_DATA* dd, int print = 1);
 
 	SDP_DATA_API void printErrorMessage(DWORD id);
-
-	
 };
 
 
@@ -1115,6 +1120,41 @@ namespace SDP
 			if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 			{
 				dd.outside_print_function(DELIMITER_PRINT);
+				dd.outside_print_function(ATTR_NAME_22);
+
+				printATTR_ELEMENT(dd);
+
+				printVALUE_ELEMENT(v, dd);
+
+			}
+			else
+			{
+				printf(DELIMITER_PRINT);
+				printf(ATTR_NAME_22);
+				printATTR_ELEMENT(dd);
+
+				printVALUE_ELEMENT(v, dd);
+
+				//printf("\n");
+			}
+		}
+
+	} DEFAULT_OBJECT, * PDEFAULT_OBJECT;
+
+	typedef struct SERVICE_RECORD_S : DEFAULT_OBJECT
+	{
+		struct VV : VALUE
+		{
+
+			
+		} VALUE;
+
+		template<class T>
+		void print(T v, IOCTL_S::DEFAULT_DATA dd)
+		{
+			if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
+			{
+				dd.outside_print_function(DELIMITER_PRINT);
 				dd.outside_print_function(ATTR_NAME_0);
 
 				printATTR_ELEMENT(dd);
@@ -1140,14 +1180,24 @@ namespace SDP
 				printf(DELIMITER_PRINT);
 				printf(ATTR_NAME_0);
 				printATTR_ELEMENT(dd);
-
 				printVALUE_ELEMENT(v, dd);
+
+				DWORD temp = 0x00;
+
+				temp |= v.value[0];
+				temp <<= 8;
+				temp |= v.value[1];
+				temp <<= 8;
+				temp |= v.value[2];
+				temp <<= 8;
+				temp |= v.value[3];
+				printf( "Record handle: 0x%08X\n", temp);
 
 				printf("\n");
 			}
 		}
 
-	} DEFAULT_OBJECT, * PDEFAULT_OBJECT;
+	} SERVICE_RECORD, * PSERVICE_RECORD;
 
 	typedef struct SERVICE_CLASS_ID_LIST_S : DEFAULT_OBJECT
 	{
@@ -1693,7 +1743,7 @@ namespace SDP
 
 	typedef struct DEFAULT_EXPORT_S
 	{
-		PDEFAULT_OBJECT record_handle_export;
+		PSERVICE_RECORD record_handle_export;
 		PSERVICE_CLASS_ID_LIST class_id_handle_export;
 		PPROTOCOL_DESCRIPTOR_LIST protocol_descriptor_list_handle_export;
 		PSERVICE_NAME service_name_handle_export;
@@ -2699,7 +2749,9 @@ namespace SDP
 
 		typedef struct SERVICE_VERSION_S : DEFAULT_OBJECT
 		{
-			// TODO: ko bo default object urejene tako da bo zares default bo v redu, trenutno pa javi kot record handle!!!
+			
+			// TODO: naredi do konca, ko bos imel example
+
 		} SERVICE_VERSION, * PSERVICE_VERSION;
 
 		typedef struct SUPPORTED_FORMATS_S : DEFAULT_OBJECT

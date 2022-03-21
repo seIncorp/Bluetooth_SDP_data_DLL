@@ -46,7 +46,47 @@ void IOCTL_S::DEFAULT_DATA::set_all_SDP_service_for_search()
 	services_for_search.GenericAudio = 0x01;
 }
 
+void IOCTL_S::DEFAULT_DATA::reset_attr_search_for_service()
+{
+	attr_search_for_service.all = 0;
 
+	attr_search_for_service.ServiceRecord = 0;
+	attr_search_for_service.ServiceClassIDList = 0;
+	attr_search_for_service.ProtocolDescriptorList = 0;
+	attr_search_for_service.ServiceName = 0;
+	attr_search_for_service.BluetoothProfileDescriptorList = 0;
+	attr_search_for_service.ProviderName = 0;
+	attr_search_for_service.LanguageBaseAttributeIdList = 0;
+	attr_search_for_service.ServiceDescription = 0;
+
+	attr_search_for_service.att_PNPINFO.PnpInfo = 0;
+
+	attr_search_for_service.att_PBAP.Goepl2cappsm = 0;
+	attr_search_for_service.att_PBAP.SupportedRepositories = 0;
+	attr_search_for_service.att_PBAP.SupportedFeatures = 0;
+	
+	attr_search_for_service.att_OBEX.Goepl2cappsm = 0;
+	attr_search_for_service.att_OBEX.SupportedFormats = 0;
+	attr_search_for_service.att_OBEX.ServiceVersion = 0;
+
+	attr_search_for_service.att_NAP.SecurityDescription = 0;
+	attr_search_for_service.att_NAP.NetAccessType = 0;
+	attr_search_for_service.att_NAP.MaxNetAccessRate = 0;
+
+	attr_search_for_service.att_HSP.RemoteAudioVolumeControl = 0;
+
+	attr_search_for_service.att_HFP.Network = 0;
+	attr_search_for_service.att_HFP.SupportedFeatures = 0;
+
+	attr_search_for_service.att_AVRCP.SupportedFeatures = 0;
+
+	attr_search_for_service.att_A2DP.SupportedFeatures = 0;
+
+	attr_search_for_service.att_MAP.Goepl2cappsm = 0;
+	attr_search_for_service.att_MAP.SupportedMessageTypes = 0;
+	attr_search_for_service.att_MAP.MasInstanceId = 0;
+	attr_search_for_service.att_MAP.MapSupportedFeatures = 0;
+}
 
 
 

@@ -84,65 +84,24 @@ SDP::OBEX::OBEX_class::OBEX_class(IOCTL_S::DEFAULT_DATA dd)
 }
 
 
-
-
-void SDP::OBEX::OBEX_class::call_GoepL2capPsm(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
-{
-	FUNCTIONS::getAndParse_DEAFULT<SDP::MAP::PGOEPL2CAPPSM, SDP::MAP::GOEPL2CAPPSM::VV>(
-		device_data_sdp->buffer_res[0],
-		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-		goepl2cappsm_handle,
-		GoepL2capPsm,
-		GoepL2capPsm,
-		device_data_sdp,
-		dd,
-		0
-	);
-}
-
-void SDP::OBEX::OBEX_class::call_SupportedFormatsList(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
-{
-	FUNCTIONS::getAndParse_DEAFULT<PSUPPORTED_FORMATS, SUPPORTED_FORMATS::VV>(
-		device_data_sdp->buffer_res[0],
-		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-		supported_formats_handle,
-		SupportedFormatsList,
-		SupportedFormatsList,
-		device_data_sdp,
-		dd,
-		0
-	);
-}
-
-void SDP::OBEX::OBEX_class::call_ServiceVersion(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
-{
-	FUNCTIONS::getAndParse_DEAFULT<PSERVICE_VERSION, SERVICE_VERSION::VV>(
-		device_data_sdp->buffer_res[0],
-		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-		service_version_handle,
-		ServiceVersion,
-		ServiceVersion,
-		device_data_sdp,
-		dd,
-		0
-	);
-}
-
-
-
-
 void SDP::OBEX::OBEX_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
 {
 	callDefaultAttributes(device_data_sdp, dd);
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_OBEX.Goepl2cappsm == 1)
-		call_GoepL2capPsm(device_data_sdp, dd);
+	{
+		call_attr_def<SDP::MAP::PGOEPL2CAPPSM, SDP::MAP::GOEPL2CAPPSM::VV>(device_data_sdp, dd, goepl2cappsm_handle, GoepL2capPsm);
+	}
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_OBEX.SupportedFormats == 1)
-		call_SupportedFormatsList(device_data_sdp, dd);
+	{
+		call_attr_def<PSUPPORTED_FORMATS, SUPPORTED_FORMATS::VV>(device_data_sdp, dd, supported_formats_handle, SupportedFormatsList);
+	}
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_OBEX.ServiceVersion == 1)
-		call_ServiceVersion(device_data_sdp, dd);
+	{
+		call_attr_def<PSERVICE_VERSION, SERVICE_VERSION::VV>(device_data_sdp, dd, service_version_handle, ServiceVersion);
+	}
 }
 
 void SDP::OBEX::OBEX_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)

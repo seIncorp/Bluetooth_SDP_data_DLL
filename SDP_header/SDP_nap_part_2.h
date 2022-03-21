@@ -25,11 +25,26 @@ namespace SDP
 			void call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 			void print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
 
-			void call_SecurityDescription(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-			void call_NetAccessType(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-			void call_MaxNetAccessrate(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+			//void call_SecurityDescription(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+			//void call_NetAccessType(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+			//void call_MaxNetAccessrate(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 
 			PNAP_EXPORT export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
+
+			template<class A, class B>
+			void call_attr_def(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd, A handle, SHORT attr)
+			{
+				FUNCTIONS::getAndParse_DEAFULT<A, B>(
+					device_data_sdp->buffer_res[0],
+					device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+					handle,
+					attr,
+					attr,
+					device_data_sdp,
+					dd,
+					0
+					);
+			}
 
 
 		private:

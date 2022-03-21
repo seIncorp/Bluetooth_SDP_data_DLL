@@ -285,16 +285,25 @@ namespace SDP
 
 			if (test)
 			{
+				/*printf("0-- DEBUGLE:  %x\n", bssr_response[0]);
+
+				for (int cc = 0; cc < 5000; cc++)
+					printf("%X ", bssr_response[cc]);
+				printf("\n");*/
+
+				
 				if (dd.sdp_settings.debug == 1)
 				{
 					printf("IOCTL_BTH_SDP_ATTRIBUTE_SEARCH --> OK\n");
 					printResponse(bssr_response);
 				}
 
+				//printf("2.1-- DEBUGLE:  %x\n", 11);
+
 				int position = set_save_ATTRIBUTE_ELEMENT<C, BYTE[]>(handle, bssr_response, 5000);
 				position = set_save_VALUE_ELEMENT<C, BYTE[]>(handle, bssr_response, 5000, position);
 
-				//printf("0-- DEBUGLE:  %x\n", *handle->VALUE.element);
+				//printf("2.2-- DEBUGLE:  %x\n", *handle->VALUE.element);
 
 
 				const std::type_info& a1 = typeid(C);

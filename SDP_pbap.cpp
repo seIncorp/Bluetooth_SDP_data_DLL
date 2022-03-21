@@ -31,7 +31,10 @@ SDP::PBAP::PBAP_class::PBAP_class(IOCTL_S::DEFAULT_DATA dd)
 	setDefaultObjects(dd);
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_PBAP.Goepl2cappsm == 1)
+	{
 		goepl2cappsm_handle = new SDP::MAP::GOEPL2CAPPSM();
+		
+	}
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_PBAP.SupportedRepositories == 1)
 		supported_repositories_handle = new SUPPORTED_REPOSITORIES();
@@ -42,62 +45,26 @@ SDP::PBAP::PBAP_class::PBAP_class(IOCTL_S::DEFAULT_DATA dd)
 
 
 
-void SDP::PBAP::PBAP_class::call_GoepL2capPsm(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
-{
-	FUNCTIONS::getAndParse_DEAFULT<SDP::MAP::PGOEPL2CAPPSM, SDP::MAP::GOEPL2CAPPSM::VV>(
-		device_data_sdp->buffer_res[0],
-		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-		goepl2cappsm_handle,
-		SDP::MAP::GoepL2capPsm,
-		SDP::MAP::GoepL2capPsm,
-		device_data_sdp,
-		dd,
-		0
-	);
-}
-
-void SDP::PBAP::PBAP_class::call_SupportedRepositories(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
-{
-	FUNCTIONS::getAndParse_DEAFULT<PSUPPORTED_REPOSITORIES, SUPPORTED_REPOSITORIES::VV>(
-		device_data_sdp->buffer_res[0],
-		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-		supported_repositories_handle,
-		SupportedRepositories,
-		SupportedRepositories,
-		device_data_sdp,
-		dd,
-		0
-	);
-}
-
-void SDP::PBAP::PBAP_class::call_PbapSupportedFeatures(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
-{
-	FUNCTIONS::getAndParse_DEAFULT<PPBAP_SUPPORTED_FEATURES, PBAP_SUPPORTED_FEATURES::VV>(
-		device_data_sdp->buffer_res[0],
-		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-		pbap_supported_features_handle,
-		PbapSupportedFeatures,
-		PbapSupportedFeatures,
-		device_data_sdp,
-		dd,
-		0
-	);
-}
-
-
 
 void SDP::PBAP::PBAP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
 {
 	callDefaultAttributes(device_data_sdp, dd);
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_PBAP.Goepl2cappsm == 1)
-		call_GoepL2capPsm(device_data_sdp, dd);
+	{
+		goepl2cappsm_handle->VALUE.GoepL2CapPsm_value = 0x00;
+		call_attr_def<SDP::MAP::PGOEPL2CAPPSM, SDP::MAP::GOEPL2CAPPSM::VV>(device_data_sdp, dd, goepl2cappsm_handle, GoepL2capPsm);
+	}
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_PBAP.SupportedRepositories == 1)
-		call_SupportedRepositories(device_data_sdp, dd);
+	{
+		call_attr_def<PSUPPORTED_REPOSITORIES, SUPPORTED_REPOSITORIES::VV>(device_data_sdp, dd, supported_repositories_handle, SupportedRepositories);
+	}
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_PBAP.SupportedFeatures == 1)
-		call_PbapSupportedFeatures(device_data_sdp, dd);
+	{
+		call_attr_def<PPBAP_SUPPORTED_FEATURES, PBAP_SUPPORTED_FEATURES::VV>(device_data_sdp, dd, pbap_supported_features_handle, PbapSupportedFeatures);
+	}
 }
 
 void SDP::PBAP::PBAP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
