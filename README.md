@@ -88,6 +88,17 @@ DLL have next functions:
 > all flags in SDP_services_for_search structure are set to 0x00 value [false]
 - set_all_SDP_service_for_search()
 > all flags in SDP_services_for_search structure are set to 0x01 value [true]
+- reset_attr_search_for_service()
+> all attributes are reseted to 0 (FALSE)
+- outside_print_function
+> here you can add function pointer of your own function to print where you want
+
+## Definition of outside print function
+- void (*outside_print_function) (std::string text)
+> return type is void
+
+
+> arg -> std::string type
 
 ## Settings of dll
 #### Printing
@@ -104,24 +115,40 @@ DLL have next functions:
 > here you enable printing with your own function saved in outside_print_function parameter
 #### Attributes Searching
 - all
+> set every attribute to TRUE (NOTE: override other flags)
 - Default and service specific attributes
+> here you can enable/disable searching for attributes (NOTE: only if all flag is disabled)
 #### Service Searching
+> here you can enable/disable service to search (NOTE: disabled by default)
 
 ## Main structures
 - DEFAULT_DATA
 > Containe all next structures and functions
-- SDP_services_for_search
+- services_for_search
 > here you can enable/disable which service will be searched on remote device
-- SDP_exported_data
+- exported_data
 > here you get exported all data from: 
 > - searched service/services
 > - cached bluetooth remote devices
 > - data of local radio/device
-- SDP_settings
+- sdp_settings
 > here you can enable/disable:
 > - debug (DEFAULT: disabled)
 > - print data (NOTE: printing all attributes of the service) (DEFAULT: disabled)
 > - printf_info (DEFAULT: disabled)
 > - printing only selected attribute from searched device (NOTE: only if print is disabled) (DEFAULT: disabled)
+- attr_search_for_service
+> here you can enable/disable every attribute in service to search it
 
-# Exmples 
+# Examples 
+## Notes (applies to all examples):
+For every use you must:
+1. before any call define default data structure
+> IOCTL_S::DEFAULT_DATA dd;
+2. Connect to local bluetooth radio
+> int connected = IOCTL_S::connectToDevice(L"\\\\?\\GLOBALROOT\\Device\\USBPDO-5", &dd);
+3. Disconnection from local radio (NOTE: it must be done this at the end of everything)
+> IOCTL_S::closeConnectionToDevice(&dd);
+## SDP example
+## getBthDeviceInfo example
+## getLocalBthInfo example
