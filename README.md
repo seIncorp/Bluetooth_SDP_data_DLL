@@ -150,5 +150,93 @@ For every use you must:
 3. Disconnection from local radio (NOTE: it must be done this at the end of everything)
 > IOCTL_S::closeConnectionToDevice(&dd);
 ## SDP example
+1. use steps from Notes (step 1 and 2)
+2. Settings
+```
+// example of outside function (user defined)
+void test(std::string text, ...)
+{
+  std::cout << "> " << text << std::endl;
+}
+
+dd.outside_print_function = test;				      // saving to function pointer, dll will use this pointer
+dd.sdp_settings.print_with_outside_funct = 1;	// enabling this pointer function
+
+// printing all searched device attributes
+dd.sdp_settings.print = 1;		
+
+// printing debug data (responses in bytes)
+dd.sdp_settings.debug = 1;		
+
+// enabling to print goepl2cappsm attribute for MAP service (NOTE: used only when MAP service is searched)
+dd.sdp_settings.print_service.print_MAP_attributes.print_goepl2cappsm = 1;	
+
+// enabling to print service_record of current searched service (NOTE: only if dd.sdp_settings.print is disabled)
+dd.sdp_settings.print_service.print_service_record = 1; 
+
+// enable all services for searching
+dd.set_all_SDP_service_for_search();	
+
+// those two functions are recommended if you are not using set_all_SDP_service_for_search or dd.attr_search_for_service.all
+dd.reset_SDP_service_for_search();		// reseting to false all services for searching
+dd.reset_attr_search_for_service();		// reseting to false all attributes for searching
+
+// enabling to search goepl2cappsm attribute for MAP service (NOTE: used only when MAP service is searched)
+dd.attr_search_for_service.att_MAP.Goepl2cappsm = 1;	
+
+// enabling to search service_record of current enabled service
+dd.attr_search_for_service.ServiceRecord = 1;			
+
+// enabling AudioSource service for searching
+dd.services_for_search.AudioSource = 0x01;		
+```
+3. calling SDPsearch after all settings are ready
+```
+// bluetooth device address
+char add[] = "A8:B8:6E:E7:5A:B6";
+
+// calling SDPsearch function
+IOCTL_S::SDPsearch(&dd, add);
+```
+4. retriving exported data from searched services/attributes
+```
+//	For example service name of Audio source
+SDP::A2DP::A2DP_EXPORT* ex = (SDP::A2DP::A2DP_EXPORT_S*)dd.exported_data.a2dp_export;
+printf("--> %s\n", ex->default_export->service_name_handle_export->VALUE.service_name);
+```
+5. use last step from Notes
 ## getBthDeviceInfo example
+1. use steps from Notes (step 1 and 2)
+2. call
+```
+// currently all devices will be printed
+IOCTL_S::getBthDeviceInfo(&dd);	
+
+// currently all devices will not be printed
+IOCTL_S::getBthDeviceInfo(&dd, 0);		
+```
+3. retriving of exported data
+```
+// retriving and printing number of devices
+printf("---> num: %d\n", dd.exported_data.devices->numOfDevices);	
+
+// for loop of all devices and retriving and printing device name
+for (int n = 0; n < dd.exported_data.devices->numOfDevices; n++)	
+  printf("%s\n", dd.exported_data.devices->devices.at(n).getName());
+```
+4. use last step from Notes
 ## getLocalBthInfo example
+1. use steps from Notes (step 1 and 2)
+2. call
+```
+// by default print is TRUE
+IOCTL_S::getLocalBthInfo(&dd);		
+
+// printing is disabled
+IOCTL_S::getLocalBthInfo(&dd, 0);		
+```
+3. retriving of exported data
+```
+printf("--> %s\n", dd.exported_data.local_device_radio->device->name);
+```
+4. use last step from Notes
