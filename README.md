@@ -240,3 +240,8 @@ IOCTL_S::getLocalBthInfo(&dd, 0);
 printf("--> %s\n", dd.exported_data.local_device_radio->device->name);
 ```
 4. use last step from Notes
+
+# TODOs
+- export to JSON (as string and as file)
+- export to XML (as string and as file)
+- fixing bugs
