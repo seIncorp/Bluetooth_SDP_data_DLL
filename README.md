@@ -90,6 +90,7 @@ DLL have next functions:
 > all flags in SDP_services_for_search structure are set to 0x01 value [true]
 
 ## Settings of dll
+#### Printing
 - debug
 > if you set this to 1 you will get printed raw data from bluetooth response
 - print
@@ -99,6 +100,12 @@ DLL have next functions:
 > print events when is app connected to radio, remote device, disconnected from remote device, local radio
 - print_service flags
 > here you can enable/disable printing of particular attribute of the searched service (NOTE: only if print is disabled!!)
+- print_with_outside_funct
+> here you enable printing with your own function saved in outside_print_function parameter
+#### Attributes Searching
+- all
+- Default and service specific attributes
+#### Service Searching
 
 ## Main structures
 - DEFAULT_DATA
