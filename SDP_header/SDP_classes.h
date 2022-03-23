@@ -23,14 +23,26 @@ namespace SDP
 		void printDefaultData(IOCTL_S::DEFAULT_DATA dd);
 
 		/* default functions (one att at time) */
-		void call_ServiceRecordHandle(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-		void call_ServiceClassIDList(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-		void call_ProtocolDescriptorList(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-		void call_ServiceName(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-		void call_BluetoothProfileDescriptorList(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+		// those functions will call default, for simplicity of use, because only few services use this
 		void call_ProviderName(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 		void call_LanguageBaseAttributeIDList(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 		void call_ServiceDescription(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+		
+		template<class A, class B>
+		void call_DEAFULT_default_attr(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd, A handle, SHORT attr)
+		{
+			FUNCTIONS::getAndParse_DEAFULT<A, B>(
+				device_data_sdp->buffer_res[0],
+				device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+				handle,
+				attr,
+				attr,
+				device_data_sdp,
+				dd,
+				0
+			);
+		}
+
 
 
 		PDEFAULT_EXPORT export_default_ATTR(IOCTL_S::DEFAULT_DATA dd);

@@ -28,12 +28,6 @@ namespace SDP
 
 				PMAP_EXPORT export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
 
-				//void call_GoepL2capPsm(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-				//void call_SupportedMessageTypes(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-				//void call_MASInstanceID(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-				//void call_MapSupportedFeatures(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-
-
 				template<class A, class B>
 				void call_attr_def(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd, A handle, SHORT attr)
 				{

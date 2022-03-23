@@ -14,6 +14,9 @@
 	- CHECK: zakaj za PBAP->PGOEPL2CAPPSM vrne debug samo 0x00
 	- CHECK: preveri ali res niè ne vrne PBAP->PGOEPL2CAPPSM
 	- IMPROVE: dodaj da se samo izpise da ni nicesar, ce device nic ne vrne za attr.
+	- ADD: dodaj se za dinamicno iskanje naprav
+	- ADD: dodaj opcijo za export json kot string in kot file
+	- ADD: dodaj opcijo za export xml kot string in kot file
 
 
 	- ADD: record attribute and not to use default directly	<-- DONE!!!
@@ -506,20 +509,15 @@ namespace BTH_DEVICES
 
 	typedef struct LOCAL_RADIO_DEVICE_DATA_S
 	{
-		LOCAL_RADIO_DEVICE_DATA_S(
-			ULONG flags,
-			USHORT hciRevision,
-			UCHAR hciVersion)
-			:
-			flags_{ flags },
-			HCI_minor_version_{ hciRevision },
-			HCI_major_version_{ hciVersion }
+		LOCAL_RADIO_DEVICE_DATA_S(ULONG flags, USHORT hciRevision, UCHAR hciVersion)
+			: flags_{ flags }, HCI_minor_version_{ hciRevision }, HCI_major_version_{ hciVersion }
 		{
 
 		};
 
 		void print()
 		{
+			
 			printf("LOCAL DEVICE and RADIO DATA:\n");
 			printf("\tFlags: %X\n", flags_);
 			printf("\tVersion: %lu.%lu (Major.Minor version HCI)\n",
@@ -528,6 +526,7 @@ namespace BTH_DEVICES
 			);
 			device->print();
 			radio->print();
+			
 		}
 
 		ULONG flags_;
@@ -817,14 +816,10 @@ namespace IOCTL_S
 	
 		// currently only for x64, does not work for x86
 		// pointer to outside print function
-		void (*outside_print_function) (std::string text, ...);
+		//void (*outside_print_function) (std::string text, ...);
+		void (*outside_print_function) (std::string text);
 		BYTE* data_outside_print_function;
 
-		
-
-		
-
-		//TEST_FUNC_S bla;
 
 		SHORT temp_class_id;	//only for AVRCP!!!!
 		SHORT temp_service;		// only for HFP!!!!
@@ -833,6 +828,7 @@ namespace IOCTL_S
 		double vesrion;
 		char* author;
 	};
+
 
 	/* LOCAL functions */
 	int str2ba(const char* straddr, BTH_ADDR* btaddr);
@@ -2425,42 +2421,42 @@ namespace SDP
 
 				if (repo->a0)
 				{
-					temp += "EC and/or NR function\n";
+					temp.append("EC and/or NR function\n");
 				}
 
 				if (repo->a1)
 				{
-					temp += "Call waiting or three-way calling\n";
+					temp.append("Call waiting or three-way calling\n");
 				}
 
 				if (repo->a2)
 				{
-					temp += "CLI presentation capability\n";
+					temp.append("CLI presentation capability\n");
 				}
 
 				if (repo->a3)
 				{
-					temp += "Voice recognition activation\n";
+					temp.append("Voice recognition activation\n");
 				}
 
 				if (repo->a4)
 				{
-					temp += "Remote volume control\n";
+					temp.append("Remote volume control\n");
 				}
 
 				if (repo->a5)
 				{
-					temp += "Wide band speech\n";
+					temp.append("Wide band speech\n");
 				}
 
 				if (repo->a6)
 				{
-					temp += "Enhanced Voice Recognition Status\n";
+					temp.append("Enhanced Voice Recognition Status\n");
 				}
 
 				if (repo->a7)
 				{
-					temp += "Voice Recognition Text\n";
+					temp.append("Voice Recognition Text\n");
 				}
 
 				return temp;
@@ -2484,10 +2480,8 @@ namespace SDP
 					sprintf_s(test, "Network: %s\n", v.value[0] == 0x01 ? "Ability to reject a call" : "No ability to reject a call");
 					dd.outside_print_function(test);
 
-					//printf("Network: %s\n", v.value[0] == 0x01 ? "Ability to reject a call" : "No ability to reject a call");
 					sprintf_s(test, "\n");
 					dd.outside_print_function(test);
-					//printf("\n");
 				}
 				else
 				{
@@ -2849,22 +2843,22 @@ namespace SDP
 
 				if (repo->a0)
 				{
-					temp += "Local Phonebook\n";
+					temp.append("Local Phonebook\n");
 				}
 
 				if (repo->a1)
 				{
-					temp += "SIM card\n";
+					temp.append("SIM card\n");
 				}
 
 				if (repo->a2)
 				{
-					temp += "Speed dial\n";
+					temp.append("Speed dial\n");
 				}
 
 				if (repo->a3)
 				{
-					temp += "Favorites\n";
+					temp.append("Favorites\n");
 				}
 
 				return temp;
@@ -3047,6 +3041,7 @@ namespace SDP
 	}
 
 }
+
 
 
 

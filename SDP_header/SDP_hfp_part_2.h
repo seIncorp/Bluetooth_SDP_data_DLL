@@ -21,9 +21,6 @@ namespace SDP
 			void call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 			void print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
 
-			//void call_Network(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-			//void call_SupportedFeatures(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-
 			PHFP_EXPORT export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
 
 
@@ -39,7 +36,7 @@ namespace SDP
 					device_data_sdp,
 					dd,
 					0
-					);
+				);
 			}
 
 

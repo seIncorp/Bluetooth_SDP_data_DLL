@@ -23,10 +23,6 @@ namespace SDP
 
 			POBEX_EXPORT export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
 
-			//void call_GoepL2capPsm(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-			//void call_SupportedFormatsList(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-			//void call_ServiceVersion(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-
 			template<class A, class B>
 			void call_attr_def(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd, A handle, SHORT attr)
 			{
@@ -39,7 +35,7 @@ namespace SDP
 					device_data_sdp,
 					dd,
 					0
-					);
+				);
 			}
 
 

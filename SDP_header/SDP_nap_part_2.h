@@ -25,10 +25,6 @@ namespace SDP
 			void call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
 			void print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
 
-			//void call_SecurityDescription(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-			//void call_NetAccessType(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-			//void call_MaxNetAccessrate(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-
 			PNAP_EXPORT export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
 
 			template<class A, class B>
@@ -43,7 +39,7 @@ namespace SDP
 					device_data_sdp,
 					dd,
 					0
-					);
+				);
 			}
 
 

@@ -92,6 +92,7 @@ void IOCTL_S::DEFAULT_DATA::reset_attr_search_for_service()
 
 void IOCTL_S::printErrorMessage(DWORD id)
 {
+	// TODO: naredi se za outside function
 	if (id != 0x00)
 		switch (id)
 		{
@@ -153,9 +154,8 @@ int IOCTL_S::connectToDevice(const wchar_t* name, DEFAULT_DATA* dd)
 {
 	
 	dd->hDevice = CreateFileW(
-		name,//DEFAULT_DEVICE,							// drive to open
-		//GENERIC_READ | GENERIC_WRITE,			// no access to the drive
-		FILE_READ_DATA | FILE_WRITE_DATA,			// no access to the drive
+		name,									// drive to open
+		FILE_READ_DATA | FILE_WRITE_DATA,		// no access to the drive
 		FILE_SHARE_READ | FILE_SHARE_WRITE,		// share mode
 		NULL,									// default security attributes
 		OPEN_EXISTING,							// disposition
@@ -285,8 +285,15 @@ void IOCTL_S::getLocalBthInfo(DEFAULT_DATA* dd, int print)
 		dd->exported_data.local_device_radio->radio = new BTH_DEVICES::RADIO_DATA{ bri->lmpSupportedFeatures ,bri->mfg,bri->lmpSubversion, bri->lmpVersion };
 
 		// TODO: preveri tezavo s prikazom zunaj
+		
+		
 		if(print == 1)
 			dd->exported_data.local_device_radio->print();
+
+		if (dd->outside_print_function != NULL && dd->sdp_settings.print_with_outside_funct == 1)
+		{
+			// TODO: naredi se za outside func
+		}
 	}
 }
 
@@ -295,6 +302,8 @@ void IOCTL_S::getLocalBthInfo(DEFAULT_DATA* dd, int print)
 
 int IOCTL_S::SDPsearch(DEFAULT_DATA* dd, char address[])	// TODO: preimenuj v pravo ime
 {
+	
+	
 	/********************************************************************/
 	/* INIT */
 
@@ -312,9 +321,6 @@ int IOCTL_S::SDPsearch(DEFAULT_DATA* dd, char address[])	// TODO: preimenuj v pr
 
 		/******************************************/
 		/* SERVICE SEARCH */
-
-		// TODO: naredi se za ostale service (trenutno je samo za enega)
-
 
 		if (dd->services_for_search.Headset == 0x01)
 		{

@@ -162,51 +162,6 @@ SDP::NAP::NAP_PANU_class::NAP_PANU_class(IOCTL_S::DEFAULT_DATA dd, int nap)
 }
 
 
-
-
-//void SDP::NAP::NAP_PANU_class::call_SecurityDescription(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
-//{
-//	FUNCTIONS::getAndParse_DEAFULT<PSECURITY_DESCRIPTION, SECURITY_DESCRIPTION::VV>(
-//		device_data_sdp->buffer_res[0],
-//		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-//		security_description_handle,
-//		SDP::NAP::SecurityDescription,
-//		SDP::NAP::SecurityDescription,
-//		device_data_sdp,
-//		dd,
-//		0
-//	);
-//}
-//
-//void SDP::NAP::NAP_PANU_class::call_NetAccessType(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
-//{
-//	FUNCTIONS::getAndParse_DEAFULT<PNET_ACCESS_TYPE, NET_ACCESS_TYPE::VV>(
-//		device_data_sdp->buffer_res[0],
-//		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-//		net_access_type_handle,
-//		SDP::NAP::NetAccessType,
-//		SDP::NAP::NetAccessType,
-//		device_data_sdp,
-//		dd,
-//		0
-//	);
-//}
-//
-//void SDP::NAP::NAP_PANU_class::call_MaxNetAccessrate(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
-//{
-//	FUNCTIONS::getAndParse_DEAFULT<PMAX_NET_ACCESS_RATE, MAX_NET_ACCESS_RATE::VV>(
-//		device_data_sdp->buffer_res[0],
-//		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
-//		max_net_access_rate_handle,
-//		SDP::NAP::MaxNetAccessrate,
-//		SDP::NAP::MaxNetAccessrate,
-//		device_data_sdp,
-//		dd,
-//		0
-//	);
-//}
-
-
 void SDP::NAP::NAP_PANU_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
 {
 	callDefaultAttributes(device_data_sdp, dd);
@@ -219,7 +174,6 @@ void SDP::NAP::NAP_PANU_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, I
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_NAP.SecurityDescription == 1)
 	{
-		//call_SecurityDescription(device_data_sdp, dd);
 		call_attr_def<PSECURITY_DESCRIPTION, SECURITY_DESCRIPTION::VV>(device_data_sdp, dd, security_description_handle, SecurityDescription);
 	}
 	
@@ -227,13 +181,11 @@ void SDP::NAP::NAP_PANU_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, I
 	{
 		if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_NAP.NetAccessType == 1)
 		{
-			//call_NetAccessType(device_data_sdp, dd);
 			call_attr_def<PNET_ACCESS_TYPE, NET_ACCESS_TYPE::VV>(device_data_sdp, dd, net_access_type_handle, NetAccessType);
 		}
 
 		if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_NAP.MaxNetAccessRate == 1)
 		{
-			//call_MaxNetAccessrate(device_data_sdp, dd);
 			call_attr_def<PMAX_NET_ACCESS_RATE, MAX_NET_ACCESS_RATE::VV>(device_data_sdp, dd, max_net_access_rate_handle, MaxNetAccessrate);
 		}
 	}

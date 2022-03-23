@@ -89,15 +89,9 @@ namespace SDP
 			SDP::PATTRIBUTE_ID_ELEMENT record_handle_element_2 = new SDP::ATTRIBUTE_ID_ELEMENT();
 			record_handle_element_2 = (SDP::PATTRIBUTE_ID_ELEMENT)(res + position);
 
-			//id_handle->VALUE.element = record_handle_element_2;
 			id_handle->VALUE.element = new SDP::ATTRIBUTE_ID_ELEMENT();
-			//id_handle->VALUE.element = (SDP::PATTRIBUTE_ID_ELEMENT)(res + position);
 			id_handle->VALUE.element->element.size = record_handle_element_2->element.size;
 			id_handle->VALUE.element->element.type = record_handle_element_2->element.type;
-
-			//printf("-- DEBUGLE:  %x\n", *id_handle->VALUE.element);
-			//printf("-- DEBUGLE:  %x\n", id_handle->VALUE.element->element.size);
-			//printf("-- DEBUGLE:  %x\n", id_handle->VALUE.element->element.type);
 
 			int temp_size_VALUE = SDP::SUB_FUNCTIONS::getElementSize(
 										id_handle->VALUE.element->element.size, 
@@ -108,18 +102,11 @@ namespace SDP
 			{
 				id_handle->VALUE.additional_bits_for_size = temp_size_VALUE;
 
-				//printf("-- DEBUGLE:  %x\n", id_handle->VALUE.additional_bits_for_size);
-
-
 				if (id_handle->VALUE.additional_bits_for_size = 1)
 				{
 					position++;
 					id_handle->VALUE.size_bytes = *(res + position);
 
-					//printf("-- DEBUGLE:  %x\n", id_handle->VALUE.size_bytes);
-
-
-					//id_handle->VALUE.value = (BYTE*)malloc(id_handle->VALUE.size_bytes * sizeof(BYTE));
 					id_handle->VALUE.value = new BYTE[*(res + position)]();
 
 					memset(id_handle->VALUE.value, 0x00, *(res + position));
@@ -137,7 +124,6 @@ namespace SDP
 				id_handle->VALUE.size_bytes = temp_size_VALUE;
 				position++;
 
-				//id_handle->VALUE.value = (BYTE*)malloc(id_handle->VALUE.size_bytes * sizeof(BYTE));
 				id_handle->VALUE.value = new BYTE[id_handle->VALUE.size_bytes]();
 				memset(id_handle->VALUE.value, 0x00, id_handle->VALUE.size_bytes);
 				for (int b = 0; b < id_handle->VALUE.size_bytes; b++)
@@ -179,7 +165,7 @@ namespace SDP
 			// ServiceRecordHandle
 			if (type == a2)
 			{
-
+				// TODO: naredi se za service record
 			}
 
 			// ServiceClassIDList
@@ -285,32 +271,18 @@ namespace SDP
 
 			if (test)
 			{
-				/*printf("0-- DEBUGLE:  %x\n", bssr_response[0]);
-
-				for (int cc = 0; cc < 5000; cc++)
-					printf("%X ", bssr_response[cc]);
-				printf("\n");*/
-
-				
 				if (dd.sdp_settings.debug == 1)
 				{
 					printf("IOCTL_BTH_SDP_ATTRIBUTE_SEARCH --> OK\n");
 					printResponse(bssr_response);
 				}
 
-				//printf("2.1-- DEBUGLE:  %x\n", 11);
-
 				int position = set_save_ATTRIBUTE_ELEMENT<C, BYTE[]>(handle, bssr_response, 5000);
 				position = set_save_VALUE_ELEMENT<C, BYTE[]>(handle, bssr_response, 5000, position);
-
-				//printf("2.2-- DEBUGLE:  %x\n", *handle->VALUE.element);
-
 
 				const std::type_info& a1 = typeid(C);
 				
 				parse_by_type<C>(a1, handle, device_data_sdp->current_used_service, dd);
-
-				//printf("0.0-- DEBUGLE:  %x\n", *handle->VALUE.element);
 
 				if (print == 1)
 					handle->print<D>(handle->VALUE, dd);
