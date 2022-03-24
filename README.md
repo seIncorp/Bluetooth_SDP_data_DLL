@@ -7,6 +7,7 @@ This DLL does not use any Windows Bluetooth api (bluetoothapis.h).
 - Windows 10
 - Windows 7 (not tested yet)
 - Bluetooth USB dongle or integrated Bluetooth radio (laptop)
+- Currently you can use only x64 version of DLL (REASON: empty pointer to function)
 
 # How to get/open project and building it
 1. download this project from Github
@@ -20,6 +21,21 @@ This DLL does not use any Windows Bluetooth api (bluetoothapis.h).
 OR
 
 1. you can download all three builded files from Github (IN PROGRESS...)
+
+# Prebuilded files
+You can download prebuilded release and debug files:
+## Release version (x64, x86)
+1. location
+2. files
+## Debug version (x64, x86)
+1. location
+2. files
+
+# Structures definitions
+Here you can get details explanations of used structures of exported data.
+- [Devices](devices.md)
+- [Local Device Radio](local_device_radio.md)
+- [Service exported](map_export.md)
 
 # How to use it
 ## Included headers and libraries for using dll
@@ -245,3 +261,4 @@ printf("--> %s\n", dd.exported_data.local_device_radio->device->name);
 - export to JSON (as string and as file)
 - export to XML (as string and as file)
 - fixing bugs
+

@@ -509,8 +509,8 @@ namespace BTH_DEVICES
 
 	typedef struct LOCAL_RADIO_DEVICE_DATA_S
 	{
-		LOCAL_RADIO_DEVICE_DATA_S(ULONG flags, USHORT hciRevision, UCHAR hciVersion)
-			: flags_{ flags }, HCI_minor_version_{ hciRevision }, HCI_major_version_{ hciVersion }
+		LOCAL_RADIO_DEVICE_DATA_S(ULONG f, USHORT hciR, UCHAR hciV)
+			: flags{ f }, HCI_minor_version{ hciR }, HCI_major_version{ hciV }
 		{
 
 		};
@@ -519,19 +519,19 @@ namespace BTH_DEVICES
 		{
 			
 			printf("LOCAL DEVICE and RADIO DATA:\n");
-			printf("\tFlags: %X\n", flags_);
+			printf("\tFlags: %X\n", flags);
 			printf("\tVersion: %lu.%lu (Major.Minor version HCI)\n",
-				HCI_major_version_,
-				HCI_minor_version_
+				HCI_major_version,
+				HCI_minor_version
 			);
 			device->print();
 			radio->print();
 			
 		}
 
-		ULONG flags_;
-		USHORT HCI_minor_version_;
-		UCHAR HCI_major_version_;
+		ULONG flags;
+		USHORT HCI_minor_version;
+		UCHAR HCI_major_version;
 
 		PDEVICE_DATA device;
 		PRADIO_DATA radio;
@@ -1137,11 +1137,14 @@ namespace SDP
 
 	} DEFAULT_OBJECT, * PDEFAULT_OBJECT;
 
+
+
+
 	typedef struct SERVICE_RECORD_S : DEFAULT_OBJECT
 	{
 		struct VV : VALUE
 		{
-
+			// TODO: dodaj parameter za shranjevanje podatka, za lazji export
 			
 		} VALUE;
 
