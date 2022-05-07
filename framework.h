@@ -20,6 +20,8 @@
 #include <winioctl.h>
 #include <bthioctl.h>
 #include <functional>
+#include <fstream>
+#include <sstream>
 
 #include <cstdarg>
 

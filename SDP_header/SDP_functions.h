@@ -8,36 +8,36 @@ namespace SDP
 		namespace SDP_INIT_CONNECT
 		{
 			/* SET, CONNECT, DISCONNECT FROM SDP DEVICE */
-			void init_for_IOCTL_BTH_SDP_CONNECT(char add[], DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-			int call_IOCTL_BTH_SDP_CONNECT(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+			int init_for_IOCTL_BTH_SDP_CONNECT(char add[], DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd);
+			int call_IOCTL_BTH_SDP_CONNECT(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd);
 		};
 
 		namespace SDP_SERVICE_SEARCH
 		{
-			void init_for_IOCTL_BTH_SDP_SERVICE_SEARCH(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-			int call_IOCTL_BTH_SDP_SERVICE_SEARCH(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+			void init_for_IOCTL_BTH_SDP_SERVICE_SEARCH(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd);
+			int call_IOCTL_BTH_SDP_SERVICE_SEARCH(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd);
 		};
 
 		namespace SDP_ATTRIBUTE_SEARCH
 		{
-			BOOL call_IOCTL_BTH_SDP_ATTRIBUTE_SEARCH(BTH_SDP_ATTRIBUTE_SEARCH_REQUEST* bsasr, BYTE bssr_response[], int res_length, IOCTL_S::DEFAULT_DATA dd);
-			BOOL set_and_call_BTH_SDP_ATTRIBUTE_SEARCH(ULONG recordHandle, HANDLE_SDP_TYPE aa, USHORT minAttr, USHORT maxAttr, BYTE res[], int res_length, IOCTL_S::DEFAULT_DATA dd);
+			BOOL call_IOCTL_BTH_SDP_ATTRIBUTE_SEARCH(BTH_SDP_ATTRIBUTE_SEARCH_REQUEST* bsasr, BYTE bssr_response[], int res_length, IOCTL_S::DEFAULT_DATA& dd);
+			BOOL set_and_call_BTH_SDP_ATTRIBUTE_SEARCH(ULONG recordHandle, HANDLE_SDP_TYPE aa, USHORT minAttr, USHORT maxAttr, BYTE res[], int res_length, IOCTL_S::DEFAULT_DATA& dd);
 		};
 
 		namespace SDP_INIT_DISCONNECT
 		{
-			void init_for_IOCTL_BTH_SDP_DISCONNECT(DEVICE_DATA_SDP* device_data_sdp);
-			int call_IOCTL_BTH_SDP_DISCONNECT(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+			int init_for_IOCTL_BTH_SDP_DISCONNECT(DEVICE_DATA_SDP& device_data_sdp);
+			int call_IOCTL_BTH_SDP_DISCONNECT(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd);
 		};
 
 
-		void call_and_search_service(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA* dd);
+		void call_and_search_service(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd);
 
 
 		void printResponse(BYTE bssr_response[]);
 
 
-		int getAndParse_SERVICE_AVAILABILITY(ULONG recordHandle, HANDLE_SDP_TYPE aa, IOCTL_S::DEFAULT_DATA dd);
+		int getAndParse_SERVICE_AVAILABILITY(ULONG recordHandle, HANDLE_SDP_TYPE aa, IOCTL_S::DEFAULT_DATA& dd);
 
 	
 		template<class A, class B>
@@ -140,8 +140,8 @@ namespace SDP
 
 
 		void parse_SERVICE_CLASS_ID_LIST(PSERVICE_CLASS_ID_LIST handle);
-		void parse_PROTOCOL_DESCRIPTOR_LIST(PPROTOCOL_DESCRIPTOR_LIST handle, IOCTL_S::DEFAULT_DATA dd);
-		void parse_SERVICE_NAME(PSERVICE_NAME handle);
+		void parse_PROTOCOL_DESCRIPTOR_LIST(PPROTOCOL_DESCRIPTOR_LIST handle, IOCTL_S::DEFAULT_DATA& dd);
+		void parse_SERVICE_NAME(SERVICE_NAME& handle);
 		void parse_PROVIDER_NAME(PPROVIDER_NAME handle);
 		void parse_BLUETOOTH_PROFILE_DESCRIPTOR_LIST(PBLUETOOTH_PROFILE_DESCRIPTOR_LIST handle);
 		void parse_LANGUAGE_BASE_ATTRIBUTE_ID_LIST(PLANGUAGE_BASE_ATTRIBUTE_ID_LIST handle);
@@ -150,7 +150,7 @@ namespace SDP
 
 
 		template<class C>
-		void parse_by_type(const std::type_info& type, C handle, SHORT current_used_service, IOCTL_S::DEFAULT_DATA dd)
+		void parse_by_type(const std::type_info& type, C handle, SHORT current_used_service, IOCTL_S::DEFAULT_DATA& dd)
 		{
 			const std::type_info& a2 = typeid(DEFAULT_OBJECT_S*);
 			const std::type_info& a3 = typeid(SERVICE_CLASS_ID_LIST_S*);
@@ -183,7 +183,9 @@ namespace SDP
 			// ServiceName
 			if (type == a5)
 			{
-				parse_SERVICE_NAME((PSERVICE_NAME)handle);
+				//printf("5. --> DO SEM!!!\n");
+				parse_SERVICE_NAME((SERVICE_NAME&)*handle);
+				//printf("8.2 --> DO SEM!!!\n");
 			}
 
 			// ProviderName
@@ -260,15 +262,24 @@ namespace SDP
 		}
 
 		template<class C, class D>
-		int getAndParse_DEAFULT(ULONG recordHandle, HANDLE_SDP_TYPE aa, C handle, USHORT minAttr, USHORT maxAttr, DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd, int print = 1)
+		int getAndParse_DEAFULT(ULONG recordHandle, 
+			HANDLE_SDP_TYPE aa, 
+			C handle, 
+			USHORT minAttr, 
+			USHORT maxAttr, 
+			DEVICE_DATA_SDP& device_data_sdp, 
+			IOCTL_S::DEFAULT_DATA& dd, 
+			int print_local
+		)
 		{
 			if(dd.sdp_settings.debug == 1)
 				printf("\n\n*** getAndParse_DEAFULT ***\n");
 
 			BYTE bssr_response[5000]{ 0 };		// TODO: premisli
 
+			//printf("3. --> DO SEM!!!\n");
 			BOOL test = SDP::FUNCTIONS::SDP_ATTRIBUTE_SEARCH::set_and_call_BTH_SDP_ATTRIBUTE_SEARCH(recordHandle, aa, minAttr, maxAttr, bssr_response, 5000, dd);
-
+			//printf("4. --> DO SEM!!!\n");
 			if (test)
 			{
 				if (dd.sdp_settings.debug == 1)
@@ -282,11 +293,18 @@ namespace SDP
 
 				const std::type_info& a1 = typeid(C);
 				
-				parse_by_type<C>(a1, handle, device_data_sdp->current_used_service, dd);
+				parse_by_type<C>(a1, handle, device_data_sdp.current_used_service, dd);
+				//printf("8.3 --> DO SEM!!!\n");
 
-				if (print == 1)
+
+				//if (print_local == 1)
+				/*if (dd.sdp_settings.debug == 1)
+				{
+					printf("9.1 --> DO SEM!!!\n");
 					handle->print<D>(handle->VALUE, dd);
 
+					printf("11. --> DO SEM!!!\n");
+				}*/
 				return 1;
 			}
 

@@ -29,7 +29,7 @@ void SDP::HFP::parse_SUPPORTED_FEATURES_HFP(PSUPPORTED_FEATURES handle)
 /*********************************************************************************************************************/
 /* CLASS HFP_all_attributes functions */
 
-SDP::HFP::HFP_class::HFP_class(IOCTL_S::DEFAULT_DATA dd)
+SDP::HFP::HFP_class::HFP_class(IOCTL_S::DEFAULT_DATA& dd)
 {
 	setDefaultObjects(dd);
 
@@ -41,7 +41,7 @@ SDP::HFP::HFP_class::HFP_class(IOCTL_S::DEFAULT_DATA dd)
 }
 
 
-void SDP::HFP::HFP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+void SDP::HFP::HFP_class::call_ALL_ATTR(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd)
 {
 	callDefaultAttributes(device_data_sdp, dd);
 
@@ -56,7 +56,7 @@ void SDP::HFP::HFP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_
 	}
 }
 
-void SDP::HFP::HFP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
+void SDP::HFP::HFP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA& dd)
 {
 	printDefaultData(dd);
 
@@ -70,7 +70,7 @@ void SDP::HFP::HFP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 	
 }
 
-SDP::HFP::PHFP_EXPORT SDP::HFP::HFP_class::export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
+SDP::HFP::PHFP_EXPORT SDP::HFP::HFP_class::export_ALL_ATTR(IOCTL_S::DEFAULT_DATA& dd)
 {
 	exp = new HFP_EXPORT();
 

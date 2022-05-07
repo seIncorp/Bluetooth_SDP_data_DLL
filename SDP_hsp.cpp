@@ -14,7 +14,7 @@ void SDP::HSP::parse_REMOTE_AUDIO_VOLUME_CONTROL_HSP(PREMOTE_AUDIO_VOLUME_CONTRO
 /* CLASS HSP_all_attributes functions */
 
 
-SDP::HSP::HSP_class::HSP_class(IOCTL_S::DEFAULT_DATA dd)
+SDP::HSP::HSP_class::HSP_class(IOCTL_S::DEFAULT_DATA& dd)
 {
 	setDefaultObjects(dd);
 
@@ -22,11 +22,11 @@ SDP::HSP::HSP_class::HSP_class(IOCTL_S::DEFAULT_DATA dd)
 		remote_audio_volume_control_handle = new REMOTE_AUDIO_VOLUME_CONTROL();
 }
 
-void SDP::HSP::HSP_class::call_RemoteAudioVolumeControl(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+void SDP::HSP::HSP_class::call_RemoteAudioVolumeControl(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd)
 {
 	FUNCTIONS::getAndParse_DEAFULT<PREMOTE_AUDIO_VOLUME_CONTROL, REMOTE_AUDIO_VOLUME_CONTROL::VV>(
-		device_data_sdp->buffer_res[0],
-		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+		device_data_sdp.buffer_res[0],
+		device_data_sdp.bsc->HANDLE_SDP_FIELD_NAME,
 		remote_audio_volume_control_handle,
 		RemoteAudioVolumeControl,
 		RemoteAudioVolumeControl,
@@ -36,7 +36,7 @@ void SDP::HSP::HSP_class::call_RemoteAudioVolumeControl(DEVICE_DATA_SDP* device_
 	);
 }
 
-void SDP::HSP::HSP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+void SDP::HSP::HSP_class::call_ALL_ATTR(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd)
 {
 	callDefaultAttributes(device_data_sdp, dd);
 
@@ -44,7 +44,7 @@ void SDP::HSP::HSP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_
 		call_RemoteAudioVolumeControl(device_data_sdp, dd);
 }
 
-void SDP::HSP::HSP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
+void SDP::HSP::HSP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA& dd)
 {
 	printDefaultData(dd);
 
@@ -53,7 +53,7 @@ void SDP::HSP::HSP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 			remote_audio_volume_control_handle->print<REMOTE_AUDIO_VOLUME_CONTROL_S::VV>(remote_audio_volume_control_handle->VALUE, dd);
 }
 
-SDP::HSP::PHSP_EXPORT SDP::HSP::HSP_class::export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
+SDP::HSP::PHSP_EXPORT SDP::HSP::HSP_class::export_ALL_ATTR(IOCTL_S::DEFAULT_DATA& dd)
 {
 	exp = new HSP_EXPORT();
 

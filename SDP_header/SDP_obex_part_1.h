@@ -33,7 +33,7 @@ namespace SDP
 			// GoepL2capPsm
 			if (type == a12)
 			{
-				SDP::MAP::parse_GOEPL2CAPPSM_MAP((SDP::MAP::PGOEPL2CAPPSM) handle);
+				SDP::MAP::parse_GOEPL2CAPPSM_MAP(((SDP::MAP::GOEPL2CAPPSM&) *handle));
 			}
 		}
 	};

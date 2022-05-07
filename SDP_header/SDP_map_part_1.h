@@ -4,10 +4,10 @@ namespace SDP
 {
 	namespace MAP
 	{
-		void parse_GOEPL2CAPPSM_MAP(PGOEPL2CAPPSM handle);
-		void parse_SUPPORTED_MESSAGE_TYPES_MAP(PSUPPORTED_MESSAGE_TYPES handle);
-		void parse_MAS_INSTANCE_ID_MAP(PMAS_INSTANCE_ID handle);
-		void parse_MAP_SUPPORTED_FEATURES_MAP(PMAP_SUPPORTED_FEATURES handle);
+		void parse_GOEPL2CAPPSM_MAP(GOEPL2CAPPSM& handle);
+		void parse_SUPPORTED_MESSAGE_TYPES_MAP(SUPPORTED_MESSAGE_TYPES& handle);
+		void parse_MAS_INSTANCE_ID_MAP(MAS_INSTANCE_ID& handle);
+		void parse_MAP_SUPPORTED_FEATURES_MAP(MAP_SUPPORTED_FEATURES& handle);
 
 
 		template<class C>
@@ -21,25 +21,25 @@ namespace SDP
 			// GoepL2capPsm
 			if (type == a10)
 			{
-				parse_GOEPL2CAPPSM_MAP((PGOEPL2CAPPSM)handle);
+				parse_GOEPL2CAPPSM_MAP((GOEPL2CAPPSM&)*handle);
 			}
 
 			// SupportedMessageTypes
 			if (type == a11)
 			{
-				parse_SUPPORTED_MESSAGE_TYPES_MAP((PSUPPORTED_MESSAGE_TYPES)handle);
+				parse_SUPPORTED_MESSAGE_TYPES_MAP((SUPPORTED_MESSAGE_TYPES&)*handle);
 			}
 
 			// MASInstanceID
 			if (type == a12)
 			{
-				parse_MAS_INSTANCE_ID_MAP((PMAS_INSTANCE_ID)handle);
+				parse_MAS_INSTANCE_ID_MAP((MAS_INSTANCE_ID&)*handle);
 			}
 
 			// MapSupportedFeatures
 			if (type == a13)
 			{
-				parse_MAP_SUPPORTED_FEATURES_MAP((PMAP_SUPPORTED_FEATURES)handle);
+				parse_MAP_SUPPORTED_FEATURES_MAP((MAP_SUPPORTED_FEATURES&)*handle);
 			}
 		}
 	}

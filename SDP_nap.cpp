@@ -131,15 +131,15 @@ void SDP::NAP::parse_MAX_NET_ACCESS_RATE_PAN(PMAX_NET_ACCESS_RATE handle)
 
 
 
-SDP::NAP::NAP_PANU_class::NAP_PANU_class(IOCTL_S::DEFAULT_DATA dd, int nap)
+SDP::NAP::NAP_PANU_class::NAP_PANU_class(IOCTL_S::DEFAULT_DATA& dd, int nap)
 {
 	// set all objects
 	setDefaultObjects(dd);
 
-	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.LanguageBaseAttributeIdList == 1)
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_DEFAULT.LanguageBaseAttributeIdList == 1)
 		language_base_attribute_id_list_handle = new LANGUAGE_BASE_ATTRIBUTE_ID_LIST();
 
-	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.ServiceDescription == 1)
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_DEFAULT.ServiceDescription == 1)
 		service_description_handle = new SERVICE_DESCRIPTION();
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_NAP.SecurityDescription == 1)
@@ -162,14 +162,14 @@ SDP::NAP::NAP_PANU_class::NAP_PANU_class(IOCTL_S::DEFAULT_DATA dd, int nap)
 }
 
 
-void SDP::NAP::NAP_PANU_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+void SDP::NAP::NAP_PANU_class::call_ALL_ATTR(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd)
 {
 	callDefaultAttributes(device_data_sdp, dd);
 
-	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.LanguageBaseAttributeIdList == 1)
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_DEFAULT.LanguageBaseAttributeIdList == 1)
 		call_LanguageBaseAttributeIDList(device_data_sdp, dd);
 
-	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.ServiceDescription == 1)
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_DEFAULT.ServiceDescription == 1)
 		call_ServiceDescription(device_data_sdp, dd);
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_NAP.SecurityDescription == 1)
@@ -191,7 +191,7 @@ void SDP::NAP::NAP_PANU_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, I
 	}
 }
 
-void SDP::NAP::NAP_PANU_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
+void SDP::NAP::NAP_PANU_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA& dd)
 {
 	
 	printDefaultData(dd);
@@ -211,7 +211,7 @@ void SDP::NAP::NAP_PANU_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 
 
 
-SDP::NAP::PNAP_EXPORT SDP::NAP::NAP_PANU_class::export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
+SDP::NAP::PNAP_EXPORT SDP::NAP::NAP_PANU_class::export_ALL_ATTR(IOCTL_S::DEFAULT_DATA& dd)
 {
 	exp = new NAP_EXPORT();
 

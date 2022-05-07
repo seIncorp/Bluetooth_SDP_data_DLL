@@ -18,22 +18,24 @@ namespace SDP
 
 
 		/* default functions (all att) */
-		void setDefaultObjects(IOCTL_S::DEFAULT_DATA dd);
-		void callDefaultAttributes(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-		void printDefaultData(IOCTL_S::DEFAULT_DATA dd);
+		void setDefaultObjects(IOCTL_S::DEFAULT_DATA& dd);
+		void callDefaultAttributes(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd);
+		void printDefaultData(IOCTL_S::DEFAULT_DATA& dd);
 
 		/* default functions (one att at time) */
 		// those functions will call default, for simplicity of use, because only few services use this
-		void call_ProviderName(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-		void call_LanguageBaseAttributeIDList(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-		void call_ServiceDescription(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+		void call_ProviderName(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd);
+		void call_LanguageBaseAttributeIDList(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd);
+		void call_ServiceDescription(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd);
 		
 		template<class A, class B>
-		void call_DEAFULT_default_attr(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd, A handle, SHORT attr)
+		void call_DEAFULT_default_attr(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd, A handle, SHORT attr)
 		{
+			//printf("2. --> DO SEM!!!\n");
+			
 			FUNCTIONS::getAndParse_DEAFULT<A, B>(
-				device_data_sdp->buffer_res[0],
-				device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+				device_data_sdp.buffer_res[0],
+				device_data_sdp.bsc->HANDLE_SDP_FIELD_NAME,
 				handle,
 				attr,
 				attr,
@@ -45,7 +47,7 @@ namespace SDP
 
 
 
-		PDEFAULT_EXPORT export_default_ATTR(IOCTL_S::DEFAULT_DATA dd);
+		PDEFAULT_EXPORT export_default_ATTR(IOCTL_S::DEFAULT_DATA& dd);
 
 	private:
 

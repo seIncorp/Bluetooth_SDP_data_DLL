@@ -27,18 +27,18 @@ SDP::A2DP::A2DP_class::A2DP_class(IOCTL_S::DEFAULT_DATA dd)
 {
 	setDefaultObjects(dd);
 
-	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.ProviderName == 1)
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_DEFAULT.ProviderName == 1)
 		provider_name_handle = new PROVIDER_NAME();
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_A2DP.SupportedFeatures == 1)
 		supported_features_handle = new SUPPORTED_FEATURES();
 }
 
-void SDP::A2DP::A2DP_class::call_SupportedFeatures(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+void SDP::A2DP::A2DP_class::call_SupportedFeatures(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd)
 {
 	FUNCTIONS::getAndParse_DEAFULT<PSUPPORTED_FEATURES, SUPPORTED_FEATURES::VV>(
-		device_data_sdp->buffer_res[0],
-		device_data_sdp->bsc->HANDLE_SDP_FIELD_NAME,
+		device_data_sdp.buffer_res[0],
+		device_data_sdp.bsc->HANDLE_SDP_FIELD_NAME,
 		supported_features_handle,
 		SupportedFeatures,
 		SupportedFeatures,
@@ -49,18 +49,18 @@ void SDP::A2DP::A2DP_class::call_SupportedFeatures(DEVICE_DATA_SDP* device_data_
 }
 
 
-void SDP::A2DP::A2DP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+void SDP::A2DP::A2DP_class::call_ALL_ATTR(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd)
 {
 	callDefaultAttributes(device_data_sdp, dd);
 
-	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.ProviderName == 1)
+	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_DEFAULT.ProviderName == 1)
 		call_ProviderName(device_data_sdp, dd);
 
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_A2DP.SupportedFeatures == 1)
 		call_SupportedFeatures(device_data_sdp, dd);
 }
 
-void SDP::A2DP::A2DP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
+void SDP::A2DP::A2DP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA& dd)
 {
 	printDefaultData(dd);
 
@@ -69,7 +69,7 @@ void SDP::A2DP::A2DP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 			supported_features_handle->print<SUPPORTED_FEATURES_S::VV>(supported_features_handle->VALUE, dd);
 }
 
-SDP::A2DP::PA2DP_EXPORT SDP::A2DP::A2DP_class::export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
+SDP::A2DP::PA2DP_EXPORT SDP::A2DP::A2DP_class::export_ALL_ATTR(IOCTL_S::DEFAULT_DATA& dd)
 {
 	exp = new A2DP_EXPORT();
 

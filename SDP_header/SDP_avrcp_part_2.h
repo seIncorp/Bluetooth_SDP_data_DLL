@@ -17,14 +17,14 @@ namespace SDP
 
 			PAVRCP_EXPORT exp;
 
-			AVRCP_class(IOCTL_S::DEFAULT_DATA dd);
+			AVRCP_class(IOCTL_S::DEFAULT_DATA& dd);
 
-			void call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-			void print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
+			void call_ALL_ATTR(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd);
+			void print_ALL_ATTR(IOCTL_S::DEFAULT_DATA& dd);
 
-			PAVRCP_EXPORT export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
+			PAVRCP_EXPORT export_ALL_ATTR(IOCTL_S::DEFAULT_DATA& dd);
 
-			void call_SupportedFeatures(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+			void call_SupportedFeatures(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd);
 
 
 		private:

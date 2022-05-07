@@ -18,8 +18,9 @@ namespace SDP
 			PNPINFO_class();
 
 
-			void call_ALL_ATTR(ULONG recordHandle, HANDLE_SDP_TYPE aa, IOCTL_S::DEFAULT_DATA dd);
-			void print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
+			void call_ATTR(SHORT attr,ULONG recordHandle, HANDLE_SDP_TYPE aa, IOCTL_S::DEFAULT_DATA& dd);
+			void call_ALL_ATTR(ULONG recordHandle, HANDLE_SDP_TYPE aa, IOCTL_S::DEFAULT_DATA& dd);
+			void print_ALL_ATTR(IOCTL_S::DEFAULT_DATA& dd);
 
 		};
 	};

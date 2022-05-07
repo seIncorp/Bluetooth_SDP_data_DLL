@@ -15,14 +15,14 @@ namespace SDP
 
 			PHSP_EXPORT exp;
 
-			HSP_class(IOCTL_S::DEFAULT_DATA dd);
+			HSP_class(IOCTL_S::DEFAULT_DATA& dd);
 
-			void call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
-			void print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
+			void call_ALL_ATTR(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd);
+			void print_ALL_ATTR(IOCTL_S::DEFAULT_DATA& dd);
 
-			PHSP_EXPORT export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd);
+			PHSP_EXPORT export_ALL_ATTR(IOCTL_S::DEFAULT_DATA& dd);
 
-			void call_RemoteAudioVolumeControl(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd);
+			void call_RemoteAudioVolumeControl(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd);
 
 		private:
 			SHORT att_array[6]{

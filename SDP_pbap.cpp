@@ -23,7 +23,7 @@ void SDP::PBAP::parse_PBAP_SUPPORTED_FEATURES_PBAP(PPBAP_SUPPORTED_FEATURES hand
 /* CLASS PBAP_all_attributes functions */
 
 
-SDP::PBAP::PBAP_class::PBAP_class(IOCTL_S::DEFAULT_DATA dd)
+SDP::PBAP::PBAP_class::PBAP_class(IOCTL_S::DEFAULT_DATA& dd)
 {
 	// set all objects
 	setDefaultObjects(dd);
@@ -44,7 +44,7 @@ SDP::PBAP::PBAP_class::PBAP_class(IOCTL_S::DEFAULT_DATA dd)
 
 
 
-void SDP::PBAP::PBAP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCTL_S::DEFAULT_DATA dd)
+void SDP::PBAP::PBAP_class::call_ALL_ATTR(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd)
 {
 	callDefaultAttributes(device_data_sdp, dd);
 
@@ -65,7 +65,7 @@ void SDP::PBAP::PBAP_class::call_ALL_ATTR(DEVICE_DATA_SDP* device_data_sdp, IOCT
 	}
 }
 
-void SDP::PBAP::PBAP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
+void SDP::PBAP::PBAP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA& dd)
 {
 	printDefaultData(dd);
 
@@ -83,7 +83,7 @@ void SDP::PBAP::PBAP_class::print_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
 	
 }
 
-SDP::PBAP::PPBAP_EXPORT SDP::PBAP::PBAP_class::export_ALL_ATTR(IOCTL_S::DEFAULT_DATA dd)
+SDP::PBAP::PPBAP_EXPORT SDP::PBAP::PBAP_class::export_ALL_ATTR(IOCTL_S::DEFAULT_DATA& dd)
 {
 	exp = new PBAP_EXPORT();
 

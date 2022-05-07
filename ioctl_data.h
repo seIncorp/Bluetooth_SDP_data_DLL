@@ -17,6 +17,12 @@
 	- ADD: dodaj se za dinamicno iskanje naprav
 	- ADD: dodaj opcijo za export json kot string in kot file
 	- ADD: dodaj opcijo za export xml kot string in kot file
+	- ADD: DOM like API
+	- ADD: add for Node.js support
+	- CHECK: kateri servici so v uporabi in jih omogoci za searchanje
+	- ADD: dodaj se moznost za vec razlicnih vrst file-ov za import data (npr.: cvs, exel, xml, json, ...)
+	- ADD: dodaj vec debug level-ov za izpis
+	- CHANGE: iz by value passing daj raje refence v vseh print functions of service
 
 
 	- ADD: record attribute and not to use default directly	<-- DONE!!!
@@ -30,6 +36,26 @@
 	- ADD: dodaj logiko debug, print, itd. za  PNPINFO	<-- DONE!!!
 	- IMPROVE: all specific attributes change printing from print all to printall/print one only, same as for default	<-- DONE!!!
 
+
+
+
+	TODO FROM C++/CLI:
+	- DODAJ: da se v DEFAULT struct shrani tudi string od attr_element value, trenutno se samo klice v printATTR_ELEMENT -> getElementTypeString, tako da trenutno ni mozno exportat ta podatek
+	- POPRAVI: glede search all services, da se res vsi poiscejo ali pa pac odstrani to
+	- POPRAVI: izpis vseh praznih vrstic
+	- DODAJ: shranjevanje text-a iz razlicnih servicov, ker trenutno se samo izpise
+	- POPRAVI: v native popravi text izpis za A_V_RemoteControlController
+	- DODAJ: se za PANU service
+
+
+	- UREDI: da se lahko za pnpinfo searcha za vsak podatek posebej, ker trenutno se vse searcha	<-- DONE!!!
+	- UREDI: da ce je error, da se shrani v temp id in text in poslje na CLI->.NET	<-- DONE !!
+	- DODAJ: ERROR_BAD_NETPATH --> 0x35	<-- DONE !!
+	- DODAJ: ERROR_INVALID_HANDLE --> 0x6	<-- DONE !!
+	- UREDI: da IOCTL_S::closeConnectionToDevice vraca 1 ali 0, odvisno ali je ok ali failed	<-- DONE !!
+	- UREDI: da SDP::FUNCTIONS::SDP_INIT_CONNECT::init_for_IOCTL_BTH_SDP_CONNECT vraca 1 ali 0, odvisno ali je ok ali failed	<-- DONE !!
+	- UREDI: da SDP::FUNCTIONS::SDP_INIT_DISCONNECT::init_for_IOCTL_BTH_SDP_DISCONNECT vraca 1 ali 0, odvisno ali je ok ali failed	<-- DONE !!
+	- UREDI: da IOCTL_S::getLocalBthInfo vraca 1 ali 0, odvisno ali je ok ali failed	<-- DONE !!
 
 */
 
@@ -60,6 +86,7 @@
 #define ATTR_NAME_20	"PBAP SUPPORTED FEATURES: \n"
 #define ATTR_NAME_21	"INFO: \n"
 #define ATTR_NAME_22	"DEFAULT DATA: \n"
+#define ATTR_NAME_23	"SERVICE VERSION: \n"
 
 
 
@@ -586,14 +613,18 @@ namespace IOCTL_DATA_STRUCTURES_S
 		int all;	// if this is true bellow flags are override
 
 		/* DEFAULT ATTR. */
-		int ServiceRecord;
-		int ServiceClassIDList;
-		int ProtocolDescriptorList;
-		int ServiceName;
-		int BluetoothProfileDescriptorList;
-		int ProviderName;
-		int LanguageBaseAttributeIdList;
-		int ServiceDescription;
+		struct att_search_DEFAULT
+		{
+			int ServiceRecord;
+			int ServiceClassIDList;
+			int ProtocolDescriptorList;
+			int ServiceName;
+			int BluetoothProfileDescriptorList;
+			int ProviderName;
+			int LanguageBaseAttributeIdList;
+			int ServiceDescription;
+		};
+		att_search_DEFAULT att_DEFAULT;
 
 		/***********************************************/
 		/* SPECIAL ATTR. */
@@ -601,7 +632,17 @@ namespace IOCTL_DATA_STRUCTURES_S
 		/* PNPINFO */
 		struct att_search_PNPINFO
 		{
+			// for all attributes
 			int PnpInfo;
+
+			int SpecificationID;
+			int VendorID;
+			int ProductID;
+			int Version;
+			int PrimaryRecord;
+			int VendorIDSource;
+			int ClientExecutableURL;
+			int DocumentationURL;
 		};
 		att_search_PNPINFO att_PNPINFO;
 
@@ -698,7 +739,18 @@ namespace IOCTL_DATA_STRUCTURES_S
 			/* PNPINFO */
 			struct print_PNPINFO
 			{
-				int print_pnp_info;
+				// for all attributes
+				int PnpInfo;
+
+				int SpecificationID;
+				int VendorID;
+				int ProductID;
+				int Version;
+				int PrimaryRecord;
+				int VendorIDSource;
+				int ClientExecutableURL;
+				int DocumentationURL;
+
 			};
 			print_PNPINFO print_PNPINFO_attributes;
 
@@ -778,9 +830,18 @@ namespace IOCTL_DATA_STRUCTURES_S
 		// SDP services
 		BYTE* default_export;
 		BYTE* a2dp_export;
-		BYTE* avrcp_export;
-		BYTE* hfp_export;
-		BYTE* hsp_export;
+
+		BYTE* avrcp_export_avrc;
+		BYTE* avrcp_export_avrct;
+		BYTE* avrcp_export_avrcc;
+
+		BYTE* hfp_export_Handsfree;
+		BYTE* hfp_export_HandsfreeAG;
+
+		BYTE* hsp_export_headset;
+		BYTE* hsp_export_headsetAG;
+		//BYTE* hsp_export_headset_1131;
+
 		BYTE* map_export;
 		BYTE* nap_export;
 		BYTE* obex_export;
@@ -793,6 +854,22 @@ namespace IOCTL_DATA_STRUCTURES_S
 		// local radio data
 		BTH_DEVICES::LOCAL_RADIO_DEVICE_DATA_S* local_device_radio;
 	};
+
+	struct returned_ERROR
+	{
+		int error_occurred_flag;
+		short id;
+		std::string name;
+	};
+
+	struct vendor_ID_s
+	{
+		int decimal;
+		short hexadecimal;
+		std::string company;
+	};
+
+	
 }
 
 namespace IOCTL_S
@@ -800,6 +877,7 @@ namespace IOCTL_S
 	/* MAIN structure */
 	struct SDP_DATA_API DEFAULT_DATA
 	{
+		// TODO: razmisli ce bi sploh se te structure kazale navzven ali bi samo preko funkcij
 		HANDLE hDevice;
 		BOOL bResult;
 		DWORD junk;
@@ -809,11 +887,46 @@ namespace IOCTL_S
 		IOCTL_DATA_STRUCTURES_S::SDP_settings sdp_settings;
 		IOCTL_DATA_STRUCTURES_S::ATTRIBUTES_SEARCH_FOR_SERVICE attr_search_for_service;
 
-		void reset_SDP_service_for_search();
-		void set_all_SDP_service_for_search();
+		IOCTL_DATA_STRUCTURES_S::returned_ERROR* error;
 
-		void reset_attr_search_for_service();
+		
+		// SETTINGS functions
+		void set_all_SDP_service_for_search();
+		void set_SDP_service_for_search(unsigned int service, int onOff);
+
+
+		void set_all_attr_search_for_service();
+
+		void set_all_default_attr_search_for_service(int onOff);
+		void set_all_special_attr_search_for_service(unsigned int service, int onOff);
+		
+		void set_default_attr_search_for_service(unsigned int attr, int onOff);
+		void set_special_attr_search_for_service(unsigned int service, unsigned int attr, int onOff);
+		
+
+
+		// RESETINGS functions
+		void reset_all_SDP_service_for_search();
+		
+		void reset_all_attr_search_for_service();
+		
+
+		// PRINTINGS functions
+		void set_all_default_attr_service_PRINT(int onOff);
+		void set_all_special_attr_service_PRINT(unsigned int service, int onOff);
+
+		void set_default_attr_service_PRINT(unsigned int attr, int onOff);
+		void set_special_attr_service_PRINT(unsigned int service, unsigned int attr, int onOff);
+
+
+
 	
+		// OTHERS
+		void fill_vendors_list();
+		std::vector<IOCTL_DATA_STRUCTURES_S::vendor_ID_s*> *vendors_list;
+		
+
+		// TODO: add check if OS is 64 or 32bit
 		// currently only for x64, does not work for x86
 		// pointer to outside print function
 		//void (*outside_print_function) (std::string text, ...);
@@ -827,22 +940,25 @@ namespace IOCTL_S
 	private:
 		double vesrion;
 		char* author;
+
+		
+		
 	};
 
 
 	/* LOCAL functions */
-	int str2ba(const char* straddr, BTH_ADDR* btaddr);
+	int str2ba(const char* straddr, BTH_ADDR& btaddr);
 
 	/* CONNECTION AND DISCONNECTION functions */
-	SDP_DATA_API int connectToDevice(const wchar_t* name, DEFAULT_DATA* dd);
-	SDP_DATA_API void closeConnectionToDevice(DEFAULT_DATA* dd);
+	SDP_DATA_API int connectToDevice(const wchar_t* name, DEFAULT_DATA& dd);
+	SDP_DATA_API int closeConnectionToDevice(DEFAULT_DATA& dd);
 
 	/* SEARCH AND RETRIVING DATA functions */
-	SDP_DATA_API int SDPsearch(DEFAULT_DATA* dd, char address[]);
-	SDP_DATA_API int getBthDeviceInfo(DEFAULT_DATA* dd, int print = 1);
-	SDP_DATA_API void getLocalBthInfo(DEFAULT_DATA* dd, int print = 1);
+	SDP_DATA_API int SDPsearch(DEFAULT_DATA& dd, char address[]);
+	SDP_DATA_API int getBthDeviceInfo(DEFAULT_DATA& dd, int print = 1);
+	SDP_DATA_API int getLocalBthInfo(DEFAULT_DATA& dd, int print = 1);
 
-	SDP_DATA_API void printErrorMessage(DWORD id);
+	SDP_DATA_API void printErrorMessage(DWORD id, DEFAULT_DATA& dd);
 };
 
 
@@ -868,7 +984,7 @@ namespace SDP
 	{
 		ATTRIBUTE_ID_ELEMENT* element;			// pointer to ATTRIBUTE_ID_ELEMENT
 		int additional_bits_flag;				// depricated
-		SHORT value;								// UUID of class
+		SHORT value;							// UUID of class
 
 	} SERVICE_CLASS, * PSERVICE_CLASS;
 
@@ -1542,6 +1658,8 @@ namespace SDP
 		template<class T>
 		void print(T v, IOCTL_S::DEFAULT_DATA dd)
 		{
+			//printf("9. --> DO SEM!!!\n");
+			
 			if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 			{
 				dd.outside_print_function(DELIMITER_PRINT);
@@ -1562,6 +1680,7 @@ namespace SDP
 				printATTR_ELEMENT(dd);
 				printVALUE_ELEMENT(v, dd);
 
+				
 				printf("Service name: %s\n", v.service_name);
 				printf("\n");
 			}
@@ -1832,7 +1951,7 @@ namespace SDP
 
 
 		std::string getMessageTypesString(SUPPORTED_FEATURES_MESSAGES_S* sfm);
-		std::string getSupportedFeaturesString(SUPPORTED_FEATURES_MESSAGES_S* sfm);
+		std::string getSupportedFeaturesString(SUPPORTED_FEATURES_MESSAGES_S& sfm);
 
 		typedef struct GOEPL2CAPPSM_S : DEFAULT_OBJECT
 		{
@@ -1843,7 +1962,7 @@ namespace SDP
 			} VALUE;
 
 			template<class T>
-			void print(T v, IOCTL_S::DEFAULT_DATA dd)
+			void print(T v, IOCTL_S::DEFAULT_DATA& dd)
 			{
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
@@ -1883,7 +2002,7 @@ namespace SDP
 			} VALUE;
 
 			template<class T>
-			void print(T v, IOCTL_S::DEFAULT_DATA dd)
+			void print(T v, IOCTL_S::DEFAULT_DATA& dd)
 			{
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
@@ -1924,7 +2043,7 @@ namespace SDP
 			} VALUE;
 
 			template<class T>
-			void print(T v, IOCTL_S::DEFAULT_DATA dd)
+			void print(T v, IOCTL_S::DEFAULT_DATA& dd)
 			{
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
@@ -1963,7 +2082,7 @@ namespace SDP
 			} VALUE;
 
 			template<class T>
-			void print(T v, IOCTL_S::DEFAULT_DATA dd)
+			void print(T v, IOCTL_S::DEFAULT_DATA& dd)
 			{
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
@@ -1974,7 +2093,7 @@ namespace SDP
 					printVALUE_ELEMENT(v, dd);
 
 					std::string temp_s = "Features: \n";
-					temp_s.append(getSupportedFeaturesString(v.sfm));
+					temp_s.append(getSupportedFeaturesString(*v.sfm));
 					temp_s.append("\n");
 					dd.outside_print_function(temp_s);
 				}
@@ -1986,7 +2105,7 @@ namespace SDP
 					printATTR_ELEMENT(dd);
 					printVALUE_ELEMENT(v, dd);
 
-					printf("Features: \n%s\n", getSupportedFeaturesString(v.sfm).c_str());
+					printf("Features: \n%s\n", getSupportedFeaturesString(*v.sfm).c_str());
 					printf("\n");
 				}
 			}
@@ -2006,7 +2125,7 @@ namespace SDP
 		} MAP_EXPORT, * PMAP_EXPORT;
 
 	}
-
+	 
 	namespace A2DP
 	{
 		struct SUPPORTED_FEATURES_DATA_S
@@ -2069,7 +2188,7 @@ namespace SDP
 			} VALUE;
 
 			template<class T>
-			void print(T v, IOCTL_S::DEFAULT_DATA dd)
+			void print(T v, IOCTL_S::DEFAULT_DATA& dd)
 			{
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
@@ -2278,7 +2397,7 @@ namespace SDP
 			} VALUE;
 
 			template<class T>
-			void print(T v, IOCTL_S::DEFAULT_DATA dd)
+			void print(T v, IOCTL_S::DEFAULT_DATA& dd)
 			{
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
@@ -2469,7 +2588,7 @@ namespace SDP
 		typedef struct NETWORK_S : DEFAULT_OBJECT
 		{
 			template<class T>
-			void print(T v, IOCTL_S::DEFAULT_DATA dd)
+			void print(T v, IOCTL_S::DEFAULT_DATA& dd)
 			{
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
@@ -2513,7 +2632,7 @@ namespace SDP
 			} VALUE;
 
 			template<class T>
-			void print(T v, IOCTL_S::DEFAULT_DATA dd)
+			void print(T v, IOCTL_S::DEFAULT_DATA& dd)
 			{
 				
 				
@@ -2577,7 +2696,7 @@ namespace SDP
 		typedef struct REMOTE_AUDIO_VOLUME_CONTROL_S : DEFAULT_OBJECT
 		{
 			template<class T>
-			void print(T v, IOCTL_S::DEFAULT_DATA dd)
+			void print(T v, IOCTL_S::DEFAULT_DATA& dd)
 			{
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
@@ -2625,7 +2744,7 @@ namespace SDP
 			} VALUE;
 
 			template<class T>
-			void print(T v, IOCTL_S::DEFAULT_DATA dd)
+			void print(T v, IOCTL_S::DEFAULT_DATA& dd)
 			{
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
@@ -2662,7 +2781,7 @@ namespace SDP
 			} VALUE;
 
 			template<class T>
-			void print(T v, IOCTL_S::DEFAULT_DATA dd)
+			void print(T v, IOCTL_S::DEFAULT_DATA& dd)
 			{
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
@@ -2700,7 +2819,7 @@ namespace SDP
 			} VALUE;
 
 			template<class T>
-			void print(T v, IOCTL_S::DEFAULT_DATA dd)
+			void print(T v, IOCTL_S::DEFAULT_DATA& dd)
 			{
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
@@ -2761,7 +2880,7 @@ namespace SDP
 			} VALUE;
 
 			template<class T>
-			void print(T v, IOCTL_S::DEFAULT_DATA dd)
+			void print(T v, IOCTL_S::DEFAULT_DATA& dd)
 			{
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
@@ -2878,7 +2997,7 @@ namespace SDP
 			} VALUE;
 
 			template<class T>
-			void print(T v, IOCTL_S::DEFAULT_DATA dd)
+			void print(T v, IOCTL_S::DEFAULT_DATA& dd)
 			{
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
@@ -2910,7 +3029,7 @@ namespace SDP
 		{
 			// TODO: print values
 			template<class T>
-			void print(T v, IOCTL_S::DEFAULT_DATA dd)
+			void print(T v, IOCTL_S::DEFAULT_DATA& dd)
 			{
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
@@ -2946,26 +3065,49 @@ namespace SDP
 
 	namespace PNPINFO
 	{
+		struct Specification_ID
+		{
+			SHORT value;
+			BYTE major_number;
+			BYTE minor_number;
+		};
+
+		struct Version_data
+		{
+			int major_version;
+			int minor_version;
+			int sub_minor_version;
+		};
+		
 		typedef struct INFO_S : DEFAULT_OBJECT
 		{
-			SHORT SpecificationID;
-			SHORT VendorID;
+			Specification_ID SpecificationID;
+			SHORT VendorID_vector_location;
 			SHORT ProductID;
-			SHORT Version;
+			Version_data Version;
+
+
 			BOOL PrimaryRecord;
 			SHORT VendorIDSource;
 
 			template<class A>
-			void setIDdata(SHORT id, A data)
+			void setIDdata(SHORT id, A data, IOCTL_S::DEFAULT_DATA& dd)
 			{
 				switch (id)
 				{
 					case ATTRIBUTE_ID_DEVICE_SDP::SpecificationID:
-						this->SpecificationID = data;
+						
+						this->SpecificationID.value = data;
+						
+						this->SpecificationID.major_number |= data >> 8;
+						this->SpecificationID.minor_number |= (data & 0xFF);
 					break;
 
 					case ATTRIBUTE_ID_DEVICE_SDP::VendorID:
-						this->VendorID = data;
+
+						for (int i = 0; i < dd.vendors_list->size(); i++)
+							if (dd.vendors_list->at(i)->hexadecimal == data)
+								this->VendorID_vector_location = i;
 					break;
 
 					case ATTRIBUTE_ID_DEVICE_SDP::ProductID:
@@ -2973,25 +3115,57 @@ namespace SDP
 					break;
 
 					case ATTRIBUTE_ID_DEVICE_SDP::Version:
-						this->Version = data;
+
+						//data = 0x5567;
+						this->Version.sub_minor_version = 0;
+						this->Version.sub_minor_version |= (data & 0xF);
+
+						this->Version.minor_version = 0;
+						this->Version.minor_version |= ((data >> 4) & 0xF);
+
+						this->Version.major_version = 0;
+						this->Version.major_version |= (data >> 8);
 					break;
 
 					case ATTRIBUTE_ID_DEVICE_SDP::PrimaryRecord:
 						this->PrimaryRecord = data;
+
+						// TOOD: izpisi ali je true ali false
 					break;
 
 					case ATTRIBUTE_ID_DEVICE_SDP::VendorIDSource:
 						this->VendorIDSource = data;
+
+						// TODO: izpisi kje je definirana vendor id value
 					break;
 				}
 			}
 
 
+			void print_SpecificationID()
+			{
+				printf("Specification ID: 0x%04X [0x%02X.0x%02X]\n", 
+					this->SpecificationID.value, 
+					this->SpecificationID.major_number, 
+					this->SpecificationID.minor_number
+				);
+			}
+
+			void print_VendorID(IOCTL_S::DEFAULT_DATA& dd)
+			{
+				printf("Vendor ID:\n\tID: [0x%04X] [%d]\n\tCompany: ", 
+					dd.vendors_list->at(this->VendorID_vector_location)->hexadecimal,
+					dd.vendors_list->at(this->VendorID_vector_location)->decimal
+				);
+				std::cout << dd.vendors_list->at(this->VendorID_vector_location)->company << std::endl;
+			}
+
 			template<class T>
-			void print(T v, IOCTL_S::DEFAULT_DATA dd)
+			void print(T v, IOCTL_S::DEFAULT_DATA& dd)
 			{
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
+					// TODO: naredi tako kot je v printanju brez funkcije
 					dd.outside_print_function(DELIMITER_PRINT);
 					dd.outside_print_function(ATTR_NAME_21);
 
@@ -3002,7 +3176,8 @@ namespace SDP
 					sprintf_s(test, "Specification ID: 0x%04X\n", this->SpecificationID);
 					dd.outside_print_function(test);
 
-					sprintf_s(test, "Vendor ID: 0x%04X\n", this->VendorID);
+					//sprintf_s(test, "Vendor ID: 0x%04X\n", this->VendorID);
+					sprintf_s(test, "Vendor ID: 0x%04X\n", this->VendorID_vector_location);
 					dd.outside_print_function(test);
 
 					sprintf_s(test, "Product ID: 0x%04X\n", this->ProductID);
@@ -3011,7 +3186,7 @@ namespace SDP
 					sprintf_s(test, "Version: 0x%04X\n", this->Version);
 					dd.outside_print_function(test);
 
-					sprintf_s(test, "Primary Record: 0x%02X\n", this->PrimaryRecord);
+					sprintf_s(test, "Primary Record: [0x%02X] [%s]\n", this->PrimaryRecord == 0x01, this->PrimaryRecord == 0x01 ? "TRUE" : "FALSE");
 					dd.outside_print_function(test);
 
 					sprintf_s(test, "Vendor ID Source: 0x%04X\n", this->VendorIDSource);
@@ -3019,18 +3194,80 @@ namespace SDP
 				}
 				else
 				{
-					printf(DELIMITER_PRINT);
-					printf(ATTR_NAME_21);
+					if (dd.attr_search_for_service.all == 1 || 
+						dd.attr_search_for_service.att_PNPINFO.PnpInfo == 1 || 
+						dd.attr_search_for_service.att_PNPINFO.SpecificationID == 1 || 
+						dd.attr_search_for_service.att_PNPINFO.VendorID == 1 || 
+						dd.attr_search_for_service.att_PNPINFO.ProductID == 1 || 
+						dd.attr_search_for_service.att_PNPINFO.Version == 1 || 
+						dd.attr_search_for_service.att_PNPINFO.PrimaryRecord == 1 || 
+						dd.attr_search_for_service.att_PNPINFO.VendorIDSource == 1
+					)
+					{
+						if (dd.sdp_settings.print == 1 || 
+							dd.sdp_settings.print_service.print_PNPINFO_attributes.PnpInfo == 1 ||
+							dd.sdp_settings.print_service.print_PNPINFO_attributes.SpecificationID == 1 ||
+							dd.sdp_settings.print_service.print_PNPINFO_attributes.VendorID == 1 ||
+							dd.sdp_settings.print_service.print_PNPINFO_attributes.ProductID == 1 ||
+							dd.sdp_settings.print_service.print_PNPINFO_attributes.Version == 1 ||
+							dd.sdp_settings.print_service.print_PNPINFO_attributes.PrimaryRecord == 1 ||
+							dd.sdp_settings.print_service.print_PNPINFO_attributes.VendorIDSource == 1
+							// TODO: dodaj se za dva ostala parametra
+						)
+						{
+							printf(DELIMITER_PRINT);
+							printf(ATTR_NAME_21);
 
-					printATTR_ELEMENT(dd);
-					printVALUE_ELEMENT(v, dd);
+							printATTR_ELEMENT(dd);
+							printVALUE_ELEMENT(v, dd);
+						}
+					}
 
-					printf("Specification ID: 0x%04X\n", this->SpecificationID);
-					printf("Vendor ID: 0x%04X\n", this->VendorID);
-					printf("Product ID: 0x%04X\n", this->ProductID);
-					printf("Version: 0x%04X\n", this->Version);
-					printf("Primary Record: 0x%02X\n", this->PrimaryRecord);
-					printf("Vendor ID Source: 0x%04X\n", this->VendorIDSource);
+					if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_PNPINFO.PnpInfo == 1 || dd.attr_search_for_service.att_PNPINFO.SpecificationID == 1)
+						if (dd.sdp_settings.print == 1 || 
+							dd.sdp_settings.print_service.print_PNPINFO_attributes.PnpInfo == 1 || 
+							dd.sdp_settings.print_service.print_PNPINFO_attributes.SpecificationID == 1
+						)
+							print_SpecificationID();
+					
+					if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_PNPINFO.PnpInfo == 1 || dd.attr_search_for_service.att_PNPINFO.VendorID == 1)
+						if (dd.sdp_settings.print == 1 ||
+							dd.sdp_settings.print_service.print_PNPINFO_attributes.PnpInfo == 1 ||
+							dd.sdp_settings.print_service.print_PNPINFO_attributes.VendorID == 1
+							)
+							print_VendorID(dd);
+
+					if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_PNPINFO.PnpInfo == 1 || dd.attr_search_for_service.att_PNPINFO.ProductID == 1)
+						if (dd.sdp_settings.print == 1 ||
+							dd.sdp_settings.print_service.print_PNPINFO_attributes.PnpInfo == 1 ||
+							dd.sdp_settings.print_service.print_PNPINFO_attributes.ProductID == 1
+							)
+							printf("Product ID: 0x%04X\n", this->ProductID);
+
+					if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_PNPINFO.PnpInfo == 1 || dd.attr_search_for_service.att_PNPINFO.Version == 1)
+						if (dd.sdp_settings.print == 1 ||
+							dd.sdp_settings.print_service.print_PNPINFO_attributes.PnpInfo == 1 ||
+							dd.sdp_settings.print_service.print_PNPINFO_attributes.Version == 1
+							)
+							printf("Version: %02X.%X.%X\n", 
+								this->Version.major_version,
+								this->Version.minor_version,
+								this->Version.sub_minor_version
+							);
+
+					if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_PNPINFO.PnpInfo == 1 || dd.attr_search_for_service.att_PNPINFO.PrimaryRecord == 1)
+						if (dd.sdp_settings.print == 1 ||
+							dd.sdp_settings.print_service.print_PNPINFO_attributes.PnpInfo == 1 ||
+							dd.sdp_settings.print_service.print_PNPINFO_attributes.PrimaryRecord == 1
+							)
+							printf("Primary Record: 0x%02X\n", this->PrimaryRecord);
+
+					if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_PNPINFO.PnpInfo == 1 || dd.attr_search_for_service.att_PNPINFO.VendorIDSource == 1)
+						if (dd.sdp_settings.print == 1 ||
+							dd.sdp_settings.print_service.print_PNPINFO_attributes.PnpInfo == 1 ||
+							dd.sdp_settings.print_service.print_PNPINFO_attributes.VendorIDSource == 1
+							)
+							printf("Vendor ID Source: 0x%04X\n", this->VendorIDSource);
 				}
 			}
 
