@@ -377,28 +377,16 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP& device_data_sdp, I
 
 		if (device_data_sdp.current_used_service == SDP::Message_Access_Server)
 		{
-			// DONE!
 			SDP::MAP::MAP_class test_aa = SDP::MAP::MAP_class(dd);
-
-			/*if (dd.sdp_settings.print_info == 1)
-				printf("*-* *-* 1. do sem!!!!\n");*/
 
 			test_aa.call_ALL_ATTR(device_data_sdp, dd);
 			test_aa.print_ALL_ATTR(dd);
 
-			/*if (dd.sdp_settings.print_info == 1)
-				printf("*-* *-* 2. do sem!!!!\n");*/
-
-			//printf("*-* *-* 2.1 do sem!!!! <-- %s\n", test_aa.service_name_handle->VALUE.service_name );
-
 			dd.exported_data.map_export = (BYTE*)test_aa.export_ALL_ATTR(dd);
-
-			//printf("*-* *-* 2.2 do sem!!!! <-- %s\n", ((SDP::MAP::MAP_EXPORT_S*)dd.exported_data.map_export)->default_export->service_name_handle_export->VALUE.service_name );
 		}
 
 		if (device_data_sdp.current_used_service == SDP::_NAP)
 		{
-			// DONE!
 			SDP::NAP::NAP_PANU_class test_vv = SDP::NAP::NAP_PANU_class(dd, 1);
 			test_vv.call_ALL_ATTR(device_data_sdp, dd);
 			test_vv.print_ALL_ATTR(dd);
@@ -408,7 +396,6 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP& device_data_sdp, I
 
 		if (device_data_sdp.current_used_service == SDP::Phonebook_Access_PSE)
 		{
-			// DONE!
 			SDP::PBAP::PBAP_class test_bb = SDP::PBAP::PBAP_class(dd);
 			test_bb.call_ALL_ATTR(device_data_sdp, dd);
 			test_bb.print_ALL_ATTR(dd);
@@ -418,7 +405,6 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP& device_data_sdp, I
 
 		if (device_data_sdp.current_used_service == SDP::OBEXObjectPush)
 		{
-			// DONE!
 			SDP::OBEX::OBEX_class test_bb = SDP::OBEX::OBEX_class(dd);
 			test_bb.call_ALL_ATTR(device_data_sdp, dd);
 			test_bb.print_ALL_ATTR(dd);
@@ -430,7 +416,6 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP& device_data_sdp, I
 		{
 			SDP::PNPINFO::PNPINFO_class test_bb = SDP::PNPINFO::PNPINFO_class();
 			test_bb.call_ALL_ATTR(device_data_sdp.buffer_res[0], device_data_sdp.bsc->HANDLE_SDP_FIELD_NAME, dd);
-
 			test_bb.print_ALL_ATTR(dd);
 
 			dd.exported_data.pnpinfo_export = (BYTE*)test_bb.export_ALL_ATTR();
@@ -438,7 +423,6 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP& device_data_sdp, I
 
 		if (device_data_sdp.current_used_service == SDP::AudioSource)
 		{
-			// DONE!
 			SDP::A2DP::A2DP_class test_bb = SDP::A2DP::A2DP_class(dd);
 			test_bb.call_ALL_ATTR(device_data_sdp, dd);
 			test_bb.print_ALL_ATTR(dd);
@@ -452,7 +436,7 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP& device_data_sdp, I
 		if (device_data_sdp.current_used_service == SDP::Handsfree)
 		{
 			dd.temp_service = device_data_sdp.current_used_service;
-			// DONE!
+			
 			SDP::HFP::HFP_class test_bb = SDP::HFP::HFP_class(dd);
 			test_bb.call_ALL_ATTR(device_data_sdp, dd);
 			test_bb.print_ALL_ATTR(dd);
@@ -463,7 +447,7 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP& device_data_sdp, I
 		if (device_data_sdp.current_used_service == SDP::HandsfreeAudioGateway)
 		{
 			dd.temp_service = device_data_sdp.current_used_service;
-			// DONE!
+
 			SDP::HFP::HFP_class test_bb = SDP::HFP::HFP_class(dd);
 			test_bb.call_ALL_ATTR(device_data_sdp, dd);
 			test_bb.print_ALL_ATTR(dd);
@@ -476,37 +460,31 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP& device_data_sdp, I
 
 		if (device_data_sdp.current_used_service == SDP::A_V_RemoteControl)
 		{
-			// DONE!
 			SDP::AVRCP::AVRCP_class test_bb = SDP::AVRCP::AVRCP_class(dd);
 			test_bb.call_ALL_ATTR(device_data_sdp, dd);
 			
 			dd.exported_data.avrcp_export_avrc = (BYTE *)test_bb.export_ALL_ATTR(dd);
 
-			//dd.temp_class_id = test_bb.class_id_handle->VALUE.classes[0].value;
 			test_bb.print_ALL_ATTR(dd);
 		}
 
 		if (device_data_sdp.current_used_service == SDP::A_V_RemoteControlTarget)
 		{
-			// DONE!
 			SDP::AVRCP::AVRCP_class test_bb = SDP::AVRCP::AVRCP_class(dd);
 			test_bb.call_ALL_ATTR(device_data_sdp, dd);
 
 			dd.exported_data.avrcp_export_avrct = (BYTE*)test_bb.export_ALL_ATTR(dd);
 
-		//	dd.temp_class_id = test_bb.class_id_handle->VALUE.classes[0].value;
 			test_bb.print_ALL_ATTR(dd);
 		}
 
 		if (device_data_sdp.current_used_service == SDP::A_V_RemoteControlController)
 		{
-			// DONE!
 			SDP::AVRCP::AVRCP_class test_bb = SDP::AVRCP::AVRCP_class(dd);
 			test_bb.call_ALL_ATTR(device_data_sdp, dd);
 
 			dd.exported_data.avrcp_export_avrcc = (BYTE*)test_bb.export_ALL_ATTR(dd);
 
-		//	dd.temp_class_id = test_bb.class_id_handle->VALUE.classes[0].value;
 			test_bb.print_ALL_ATTR(dd);
 		}
 
@@ -515,7 +493,6 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP& device_data_sdp, I
 
 		if (device_data_sdp.current_used_service == SDP::Headset)
 		{
-			// DONE!
 			SDP::HSP::HSP_class test_bb = SDP::HSP::HSP_class(dd);
 			test_bb.call_ALL_ATTR(device_data_sdp, dd);
 			test_bb.print_ALL_ATTR(dd);
@@ -525,7 +502,6 @@ void SDP::FUNCTIONS::call_and_search_service(DEVICE_DATA_SDP& device_data_sdp, I
 
 		if (device_data_sdp.current_used_service == SDP::Headset_Audio_Gateway)
 		{
-			// DONE!
 			SDP::HSP::HSP_class test_bb = SDP::HSP::HSP_class(dd);
 			test_bb.call_ALL_ATTR(device_data_sdp, dd);
 			test_bb.print_ALL_ATTR(dd);
@@ -745,11 +721,8 @@ void SDP::FUNCTIONS::parse_PROTOCOL_DESCRIPTOR_LIST(PPROTOCOL_DESCRIPTOR_LIST ha
 
 void SDP::FUNCTIONS::parse_SERVICE_NAME(SERVICE_NAME& handle)
 {
-	//printf("6. --> DO SEM!!!\n");
 	handle.VALUE.service_name = new char[handle.VALUE.size_bytes]();
-	//printf("7. --> DO SEM!!!\n");
 	memcpy(handle.VALUE.service_name, handle.VALUE.value, handle.VALUE.size_bytes);
-	//printf("8. --> DO SEM!!!\n");
 }
 
 // TODO: reference instead pointer

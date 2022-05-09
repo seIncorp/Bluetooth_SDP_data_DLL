@@ -30,9 +30,7 @@ namespace SDP
 		
 		template<class A, class B>
 		void call_DEAFULT_default_attr(DEVICE_DATA_SDP& device_data_sdp, IOCTL_S::DEFAULT_DATA& dd, A handle, SHORT attr)
-		{
-			//printf("2. --> DO SEM!!!\n");
-			
+		{			
 			FUNCTIONS::getAndParse_DEAFULT<A, B>(
 				device_data_sdp.buffer_res[0],
 				device_data_sdp.bsc->HANDLE_SDP_FIELD_NAME,

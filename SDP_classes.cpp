@@ -61,7 +61,6 @@ void SDP::DEFAULT_class::callDefaultAttributes(DEVICE_DATA_SDP& device_data_sdp,
 	
 	if (dd.attr_search_for_service.all == 1 || dd.attr_search_for_service.att_DEFAULT.ServiceName == 1)
 	{
-		//printf("1. --> DO SEM!!!\n");
 		call_DEAFULT_default_attr<PSERVICE_NAME, SERVICE_NAME::VV>(device_data_sdp, dd, service_name_handle, SDP::ATTRIBUTE_ID::ServiceName);
 	}
 	

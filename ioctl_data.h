@@ -3214,7 +3214,7 @@ namespace SDP
 							dd.sdp_settings.print_service.print_PNPINFO_attributes.VendorIDSource == 1
 							// TODO: dodaj se za dva ostala parametra
 						)
-						{
+						{ 
 							printf(DELIMITER_PRINT);
 							printf(ATTR_NAME_21);
 
