@@ -1,15 +1,15 @@
-# Bluetooth Service Discovery Protocol API
+# Bluetooth Service Discovery Protocol API (DONE!!)
 Source code for Bluetooth Service Discovery Protocol (SDP) using only communication with local bluetooth radio through driver (using IOCTL). 
 This DLL does not use any Windows Bluetooth api (bluetoothapis.h).
 
-# Prerequisites
-- Visual studio 2019
+# Prerequisites (DONE!!)
+- at least Visual studio 2019
 - Windows 10
 - Windows 7 (not tested yet)
 - Bluetooth USB dongle or integrated Bluetooth radio (laptop)
 - Currently you can use only x64 version of DLL (REASON: empty pointer to function)
 
-# How to get/open project and building it
+# How to get/open project and building it (DONE!!)
 1. download this project from Github
 2. open it 
 3. set x64 or x86 (it must be the same as app which will be using it)
@@ -18,26 +18,69 @@ This DLL does not use any Windows Bluetooth api (bluetoothapis.h).
 6. in ..\x64\Debug you will find SDP_data.lib and SDP_data.dll (for X64)
 7. in ..\Debug you will find SDP_data.lib and SDP_data.dll (for X86)
 
-OR
 
-1. you can download all three builded files from Github (IN PROGRESS...)
-
-# Prebuilded files
-You can download prebuilded release and debug files:
-## Release version (x64, x86)
-1. location
-2. files
-## Debug version (x64, x86)
-1. location
-2. files
-
-# Structures definitions
+# Structures  (DONE!!)
 Here you can get details explanations of used structures of exported data.
-- [Devices](devices.md)
-- [Local Device Radio](local_device_radio.md)
-- [Service exported](map_export.md)
+* namespace IOCTL_S ([DETAILS](IOCTL_S.md))
+* DEFAULT_DATA ([DETAILS](default_data.md))
 
-# How to use it
+
+
+
+# Functions
+DLL have next functions:
+
+## Connection and disconnection functions (DONE!!)
+* int connectToDevice(const wchar_t* name, DEFAULT_DATA& dd)
+> connecting to local bluetooth radio before any search/retriving data is made 
+> 
+> input parameters: 
+> * physical device name (example: \\\\?\\GLOBALROOT\\Device\\USBPDO-4)
+> * reference to DEFAULT_DATA structure
+* int closeConnectionToDevice(DEFAULT_DATA& dd)
+> disconnection from local radio (THIS MUST BE CALLED BEFORE APP IS CLOSED!!!)
+> 
+> input parameters: 
+> * reference to DEFAULT_DATA structure
+
+
+
+## Search and retriving data functions (DONE!!)
+* int SDPsearch(DEFAULT_DATA& dd, char address[])
+> search for service of specific device
+> 
+> input parameters: 
+> * reference to DEFAULT_DATA structure
+> * remote Bluetooth device address
+
+
+* int getBthDeviceInfo(DEFAULT_DATA& dd, int print = 1)
+> retriving list of cached bluetooth devices from previous search
+> 
+> input parameters: 
+> * reference to DEFAULT_DATA structure
+> * integer as a flag for printing data in cmd (default: true)
+
+
+* int getLocalBthInfo(DEFAULT_DATA& dd, int print = 1)
+> information about the local Bluetooth system and radio
+> 
+> input parameters: 
+> * reference to DEFAULT_DATA structure
+> * integer as a flag for printing data in cmd (default: true)
+
+
+## Other functions (DONE!!)
+* void printErrorMessage(DWORD id, DEFAULT_DATA& dd)
+> print error message
+> 
+> input parameters: 
+> * id of error (example: from GetLastError function)
+> * reference to DEFAULT_DATA structure
+
+
+
+# How to use it (DONE!!)
 ## Included headers and libraries for using dll
 - stdio.h
 - vector
@@ -49,82 +92,42 @@ Here you can get details explanations of used structures of exported data.
 ## DLL, lib and header
 Before you can use this dll file, you must add to your app:
 1. header: 
-
 > #include "ioctl_data.h"
 
 2. .lib file:
-
 > #pragma comment(lib, "SDP_data.lib")
 
 3. .dll file:
-
 > Add SDP_data.dll into folder where .exe of app will be
 
-## Functions
-DLL have next functions:
-#### Connection and disconnection functions
-- connectToDevice(const wchar_t* name, DEFAULT_DATA* dd)
-> connecting to local bluetooth radio before any search/retriving data is made 
-> 
-> input parameters: 
-> - physical device name (example: \\\\?\\GLOBALROOT\\Device\\USBPDO-4)
-> - pointer to DEFAULT_DATA structure
-- closeConnectionToDevice(DEFAULT_DATA* dd)
-> disconnection from local radio (THIS MUST BE CALLED BEFORE APP IS CLOSED!!!)
-> 
-> input parameters: 
-> - pointer to DEFAULT_DATA structure
-#### Search and retriving data functions
-- SDPsearch(DEFAULT_DATA* dd, char address[])
-> search for service for specific device
-> 
-> input parameters: 
-> - pointer to DEFAULT_DATA structure
-> - remote Bluetooth device address
-- getBthDeviceInfo(DEFAULT_DATA* dd, int print = 1)
-> retriving list of cached bluetooth devices from previous search
-> 
-> input parameters: 
-> - pointer to DEFAULT_DATA structure
-> - integer as a flag for printing data in cmd
-- getLocalBthInfo(DEFAULT_DATA* dd, int print = 1)
-> information about the local Bluetooth system and radio
-> 
-> input parameters: 
-> - pointer to DEFAULT_DATA structure
-> - integer as a flag for printing data in cmd
-#### Other functions
-- printErrorMessage(DWORD id)
-> print error message
-> 
-> input parameters: 
-> - id of error from GetLastError function
-#### DEFAULT_DATA structures functions
-- reset_SDP_service_for_search()
-> all flags in SDP_services_for_search structure are set to 0x00 value [false]
-- set_all_SDP_service_for_search()
-> all flags in SDP_services_for_search structure are set to 0x01 value [true]
-- reset_attr_search_for_service()
-> all attributes are reseted to 0 (FALSE)
-- outside_print_function
-> here you can add function pointer of your own function to print where you want
-
-## Definition of outside print function
-- void (*outside_print_function) (std::string text)
-> return type is void
 
 
-> arg -> std::string type
 
-## Settings of dll
-#### Printing
-- debug
+
+
+
+# Settings of dll
+
+## Printing
+* debug
 > if you set this to 1 you will get printed raw data from bluetooth response
-- print
-> you will get printed all parsed data of every attribute of the searched service
-> and also override every flag in SDP_print_service structure
-- print_info
+```
+default_data.sdp_settings.debug = 1;
+```
+
+* print
+> you will get printed all parsed data of every attribute of the searched service and also override every flag in SDP_print_service structure
+```
+default_data.sdp_settings.print = 1;
+```
+
+* print_info
 > print events when is app connected to radio, remote device, disconnected from remote device, local radio
+```
+default_data.sdp_settings.print_info = 1;
+```
+
+
 - print_service flags
 > here you can enable/disable printing of particular attribute of the searched service (NOTE: only if print is disabled!!)
 - print_with_outside_funct
