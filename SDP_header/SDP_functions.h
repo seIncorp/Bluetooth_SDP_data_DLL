@@ -277,9 +277,9 @@ namespace SDP
 
 			BYTE bssr_response[5000]{ 0 };		// TODO: premisli
 
-			//printf("3. --> DO SEM!!!\n");
+			
 			BOOL test = SDP::FUNCTIONS::SDP_ATTRIBUTE_SEARCH::set_and_call_BTH_SDP_ATTRIBUTE_SEARCH(recordHandle, aa, minAttr, maxAttr, bssr_response, 5000, dd);
-			//printf("4. --> DO SEM!!!\n");
+			
 			if (test)
 			{
 				if (dd.sdp_settings.debug == 1)
@@ -294,17 +294,7 @@ namespace SDP
 				const std::type_info& a1 = typeid(C);
 				
 				parse_by_type<C>(a1, handle, device_data_sdp.current_used_service, dd);
-				//printf("8.3 --> DO SEM!!!\n");
 
-
-				//if (print_local == 1)
-				/*if (dd.sdp_settings.debug == 1)
-				{
-					printf("9.1 --> DO SEM!!!\n");
-					handle->print<D>(handle->VALUE, dd);
-
-					printf("11. --> DO SEM!!!\n");
-				}*/
 				return 1;
 			}
 
