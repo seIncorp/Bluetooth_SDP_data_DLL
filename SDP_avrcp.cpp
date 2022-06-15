@@ -21,10 +21,16 @@ void SDP::AVRCP::parse_SUPPORTED_FEATURES_AVRCP(PSUPPORTED_FEATURES handle, SHOR
 		)
 	{
 		handle->VALUE.sfds = new SUPPORTED_FEATURES_DATA_S(&temp, 0);
+
+		handle->VALUE.supp_features_string_value = handle->VALUE.sfds->getSupportedFeaturesString_AVRC_AVRCC();
 	}
 
 	if (current_used_service == SDP::A_V_RemoteControlTarget)
-		handle->VALUE.sfds = new SUPPORTED_FEATURES_DATA_S(&temp,1);
+	{
+		handle->VALUE.sfds = new SUPPORTED_FEATURES_DATA_S(&temp, 1);
+
+		handle->VALUE.supp_features_string_value = handle->VALUE.sfds->getSupportedFeaturesString_AVRCT();
+	}
 }
 
 

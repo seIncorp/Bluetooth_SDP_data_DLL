@@ -104,6 +104,8 @@ void SDP::NAP::parse_SECURITY_DESCRIPTION_PAN(PSECURITY_DESCRIPTION handle)
 	handle->VALUE.security_value |= handle->VALUE.value[0];
 	handle->VALUE.security_value <<= 8;
 	handle->VALUE.security_value |= handle->VALUE.value[1];
+
+	handle->VALUE.security_string_value = getSecurityDescriptionString(handle->VALUE.security_value);
 }
 
 void SDP::NAP::parse_NET_ACCESS_TYPE_PAN(PNET_ACCESS_TYPE handle)
@@ -111,6 +113,8 @@ void SDP::NAP::parse_NET_ACCESS_TYPE_PAN(PNET_ACCESS_TYPE handle)
 	handle->VALUE.NetAccessType |= handle->VALUE.value[0];
 	handle->VALUE.NetAccessType <<= 8;
 	handle->VALUE.NetAccessType |= handle->VALUE.value[1];
+
+	handle->VALUE.NetAccessType_value = getNetAccessTypeString(handle->VALUE.NetAccessType);
 }
 
 void SDP::NAP::parse_MAX_NET_ACCESS_RATE_PAN(PMAX_NET_ACCESS_RATE handle)

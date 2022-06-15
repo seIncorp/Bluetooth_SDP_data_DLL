@@ -7,44 +7,49 @@ int SDP::SUB_FUNCTIONS::getElementSize(BYTE size, int* add_bits)
 {
 	switch (size)
 	{
-	case SDP::_1_byte:
-		*add_bits = 0;
-		return 1;
+		case SDP::_1_byte:
+			*add_bits = 0;
+			return 1;
 		break;
 
-	case SDP::_2_bytes:
-		*add_bits = 0;
-		return 2;
+		case SDP::_2_bytes:
+			*add_bits = 0;
+			return 2;
 		break;
 
-	case SDP::_4_bytes:
-		*add_bits = 0;
-		return 4;
+		case SDP::_4_bytes:
+			*add_bits = 0;
+			return 4;
 		break;
 
-	case SDP::_8_bytes:
-		*add_bits = 0;
-		return 8;
+		case SDP::_8_bytes:
+			*add_bits = 0;
+			return 8;
 		break;
 
-	case SDP::_16_bytes:
-		*add_bits = 0;
-		return 16;
+		case SDP::_16_bytes:
+			*add_bits = 0;
+			return 16;
 		break;
 
-	case SDP::_additional_8_bits:
-		*add_bits = 1;
-		return 1;
+		case SDP::_additional_8_bits:
+			*add_bits = 1;
+			return 1;
 		break;
 
-	case SDP::_additional_16_bits:
-		*add_bits = 1;
-		return 2;
+		case SDP::_additional_16_bits:
+			*add_bits = 1;
+			return 2;
 		break;
 
-	case SDP::_additional_32_bits:
-		*add_bits = 1;
-		return 4;
+		case SDP::_additional_32_bits:
+			*add_bits = 1;
+			return 4;
+		break;
+
+		default:
+			*add_bits = 0;
+			return 0;
 		break;
 	}
 }
@@ -118,11 +123,11 @@ std::string SDP::SUB_FUNCTIONS::getProtocolTypeString(SHORT type)
 		break;
 
 	case SDP::_TCS_BIN:
-		temp = "TCS‐BIN";
+		temp = "TCS BIN";
 		break;
 
 	case SDP::_TCS_AT:
-		temp = "TCS‐AT";
+		temp = "TCS AT";
 		break;
 
 	case SDP::_ATT:
@@ -549,21 +554,41 @@ void SDP::FUNCTIONS::printResponse(BYTE bssr_response[])
 // TODO: reference instead pointer
 void SDP::FUNCTIONS::parse_SERVICE_CLASS_ID_LIST(PSERVICE_CLASS_ID_LIST handle)
 {
+	//handle->VALUE.num_classes = handle->VALUE.size_bytes / 3;
+	//handle->VALUE.classes = new SDP::SERVICE_CLASS[handle->VALUE.num_classes]();
+
+	//for (int a = 0, b = 0; a < handle->VALUE.size_bytes; a += 3, b++)
+	//{
+	//	SDP::ATTRIBUTE_ID_ELEMENT* temp_att_id = new SDP::ATTRIBUTE_ID_ELEMENT();
+	//	temp_att_id = (SDP::ATTRIBUTE_ID_ELEMENT*)(handle->VALUE.value + a);
+
+	//	//handle->VALUE.classes[b].element = temp_att_id;
+	//	handle->VALUE.classes[b].element = new SDP::ATTRIBUTE_ID_ELEMENT();
+	//	handle->VALUE.classes[b].element = (SDP::ATTRIBUTE_ID_ELEMENT*)(handle->VALUE.value + a);
+
+	//	int temp_size_1 = SDP::SUB_FUNCTIONS::getElementSize(handle->VALUE.classes[b].element->element.size, &(handle->VALUE.classes[b].additional_bits_flag));
+
+	//	handle->VALUE.classes[b].value |= *(handle->VALUE.value + a + 1);
+	//	handle->VALUE.classes[b].value <<= 8;
+	//	handle->VALUE.classes[b].value |= *(handle->VALUE.value + a + 2);
+	//}
+
+
 	handle->VALUE.num_classes = handle->VALUE.size_bytes / 3;
-	handle->VALUE.classes = new SDP::SERVICE_CLASS[handle->VALUE.num_classes]();
+
+	for (int a = 0; a < handle->VALUE.num_classes; a++)
+		handle->VALUE.classes.push_back(new SERVICE_CLASS());
 
 	for (int a = 0, b = 0; a < handle->VALUE.size_bytes; a += 3, b++)
 	{
-		SDP::ATTRIBUTE_ID_ELEMENT* temp_att_id = new SDP::ATTRIBUTE_ID_ELEMENT();
-		temp_att_id = (SDP::ATTRIBUTE_ID_ELEMENT*)(handle->VALUE.value + a);
+			handle->VALUE.classes[b]->element = new SDP::ATTRIBUTE_ID_ELEMENT();
+			handle->VALUE.classes[b]->element = (SDP::ATTRIBUTE_ID_ELEMENT*)(handle->VALUE.value + a);
 
-		handle->VALUE.classes[b].element = temp_att_id;
+			int temp_size_1 = SDP::SUB_FUNCTIONS::getElementSize(handle->VALUE.classes[b]->element->element.size, &(handle->VALUE.classes[b]->additional_bits_flag));
 
-		int temp_size_1 = SDP::SUB_FUNCTIONS::getElementSize(handle->VALUE.classes[b].element->element.size, &(handle->VALUE.classes[b].additional_bits_flag));
-
-		handle->VALUE.classes[b].value |= *(handle->VALUE.value + a + 1);
-		handle->VALUE.classes[b].value <<= 8;
-		handle->VALUE.classes[b].value |= *(handle->VALUE.value + a + 2);
+			handle->VALUE.classes[b]->value |= *(handle->VALUE.value + a + 1);
+			handle->VALUE.classes[b]->value <<= 8;
+			handle->VALUE.classes[b]->value |= *(handle->VALUE.value + a + 2);
 	}
 }
 
@@ -693,14 +718,14 @@ void SDP::FUNCTIONS::parse_PROTOCOL_DESCRIPTOR_LIST(PPROTOCOL_DESCRIPTOR_LIST ha
 									handle->VALUE.protocols[c].pdsp->num_of_Supported_Network_Packet_Type_List_PANU = *(handle->VALUE.protocols[c].value + cc + 1) / 3;
 									handle->VALUE.protocols[c].pdsp->Supported_Network_Packet_Type_List = new SHORT[handle->VALUE.protocols[c].pdsp->num_of_Supported_Network_Packet_Type_List_PANU]();
 
-									int pos = 0;
-									for (int aaa = 0; aaa < handle->VALUE.protocols[c].pdsp->num_of_Supported_Network_Packet_Type_List_PANU; aaa++)
+									size_t pos = 0;
+									for (size_t aaa = 0; aaa < handle->VALUE.protocols[c].pdsp->num_of_Supported_Network_Packet_Type_List_PANU; aaa++)
 									{
 										pos = (3 * aaa);
 										handle->VALUE.protocols[c].pdsp->Supported_Network_Packet_Type_List[aaa] |= *(handle->VALUE.protocols[c].value + cc + 2 + (pos + 1));
 										handle->VALUE.protocols[c].pdsp->Supported_Network_Packet_Type_List[aaa] <<= 8;
 										handle->VALUE.protocols[c].pdsp->Supported_Network_Packet_Type_List[aaa] |= *(handle->VALUE.protocols[c].value + cc + 2 + (pos + 2));
-									}
+									} 
 								}
 								// TODO: naredi se za ostale velikosti 2 in 4
 							}

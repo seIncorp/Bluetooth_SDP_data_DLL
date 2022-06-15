@@ -4,7 +4,7 @@
 // set functions
 
 // SERVICES
-void IOCTL_S::DEFAULT_DATA::set_all_SDP_service_for_search()
+void  IOCTL_S::DEFAULT_DATA::set_all_SDP_service_for_search()
 {
 	set_SDP_service_for_search(SDP::SERVICE_CLASS_ID::Headset, 1);
 	set_SDP_service_for_search(SDP::SERVICE_CLASS_ID::AudioSource, 1);
@@ -1167,7 +1167,13 @@ void IOCTL_S::DEFAULT_DATA::set_special_attr_service_PRINT(unsigned int service,
 	}
 }
 
-
+void IOCTL_S::DEFAULT_DATA::set_printing_type(IOCTL_DATA_STRUCTURES_S::PRINTING_TYPES* obj_types)
+{
+	sdp_settings.debug = obj_types->debug;
+	sdp_settings.print = obj_types->print;
+	sdp_settings.print_info = obj_types->print_info;
+	sdp_settings.print_with_outside_funct = obj_types->print_with_outside_funct;
+}
 
 
 
@@ -1327,6 +1333,44 @@ int IOCTL_S::str2ba(const char* straddr, BTH_ADDR& btaddr)
 	return 0;
 }
 
+
+void IOCTL_S::test123(DEFAULT_DATA& dd)
+{
+	/*
+	
+	https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/bthioctl/ni-bthioctl-ioctl_bth_hci_vendor_command
+	
+
+
+
+	*/
+	
+	
+	BYTE data[5000]{ 0 };
+
+	BTH_COMMAND_HEADER bch = { 0 };
+
+	_BTH_VENDOR_SPECIFIC_COMMAND bvsc = { 0 };
+	
+	BTH_VENDOR_EVENT_INFO bvei = { 0 };
+
+	dd.bResult = DeviceIoControl(
+		dd.hDevice,						// device to be queried
+		IOCTL_BTH_HCI_VENDOR_COMMAND,			// operation to perform
+		&bvsc, sizeof(bvsc),							// no input buffer
+		&bvei, sizeof(bvei),					// output buffer
+		&dd.junk,							// # bytes returned
+		(LPOVERLAPPED)NULL);				// synchronous I/O
+
+
+	if (dd.bResult)
+	{
+
+		printf("DELA!!!\n");
+	}
+}
+
+
 // LIST OF CACHED BTH SEARCHED DEVICES
 int IOCTL_S::getBthDeviceInfo(DEFAULT_DATA& dd, int print)
 {
@@ -1357,6 +1401,12 @@ int IOCTL_S::getBthDeviceInfo(DEFAULT_DATA& dd, int print)
 			BTH_DEVICES::CACHED_DEVICE_S temp{ (bdi + a)->name, bas->rgBytes, (bdi + a)->flags };
 
 			dd.exported_data.devices->devices.push_back(temp);
+
+
+			// TODO: klici se posebej za device tole --> IOCTL_BTH_GET_RADIO_INFO
+			// verjetno je to za connected devices
+
+
 		}
 
 		if (print == 1)
@@ -1394,7 +1444,7 @@ int IOCTL_S::getLocalBthInfo(DEFAULT_DATA& dd, int print)
 			blri.hciVersion
 		);
 
-		BTH_DEVICES::DEVICE_DATA_S temp_d;
+		//BTH_DEVICES::DEVICE_DATA_S temp_d;
 
 		dd.exported_data.local_device_radio->device = new BTH_DEVICES::DEVICE_DATA();
 
@@ -1578,12 +1628,12 @@ void IOCTL_S::DEFAULT_DATA::fill_vendors_list()
 
 			file.getline(word, 100, '\n');
 			
-			char* next_token;
+			char* next_token = nullptr;
 			// Returns first token
 			char* token = strtok_s(word,",", &next_token);
 
 			vendors_list->push_back(new IOCTL_DATA_STRUCTURES_S::vendor_ID_s);
-			int vendors_size = vendors_list->size();
+			size_t vendors_size = vendors_list->size();
 
 			int count = 0;
 			while (token != NULL)
@@ -1606,7 +1656,7 @@ void IOCTL_S::DEFAULT_DATA::fill_vendors_list()
 							}
 
 							std::stringstream ss1;
-							short x;
+							//short x;
 							ss1 << std::dec << temp_string;
 							ss1 >> vendors_list->at(vendors_size - 1)->decimal;
 						}
@@ -1615,7 +1665,7 @@ void IOCTL_S::DEFAULT_DATA::fill_vendors_list()
 				case 1:
 				{
 					std::stringstream ss1;
-					short x;
+					//short x;
 					ss1 << std::hex << token;
 					ss1 >> vendors_list->at(vendors_size - 1)->hexadecimal;
 				}

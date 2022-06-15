@@ -6,11 +6,11 @@ namespace SDP
 	namespace HFP
 	{
 		void parse_NETWORK_HFP(PNETWORK handle);
-		void parse_SUPPORTED_FEATURES_HFP(PSUPPORTED_FEATURES handle);
+		void parse_SUPPORTED_FEATURES_HFP(PSUPPORTED_FEATURES handle, IOCTL_S::DEFAULT_DATA& dd);
 
 
 		template<class C>
-		void parse_by_type_sub_function(const std::type_info& type, C handle, SHORT current_used_service)
+		void parse_by_type_sub_function(const std::type_info& type, C handle, SHORT current_used_service, IOCTL_S::DEFAULT_DATA& dd)
 		{
 			const std::type_info& a10 = typeid(NETWORK_S*);
 			const std::type_info& a11 = typeid(SUPPORTED_FEATURES_S*);
@@ -28,7 +28,7 @@ namespace SDP
 			if (type == a11)
 			{
 				//printf("0.1--DEBUGLE: %X\n", 0x01);
-				parse_SUPPORTED_FEATURES_HFP((PSUPPORTED_FEATURES) handle);
+				parse_SUPPORTED_FEATURES_HFP((PSUPPORTED_FEATURES) handle, dd);
 			}
 		}
 	}

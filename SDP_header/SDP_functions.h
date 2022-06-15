@@ -52,6 +52,8 @@ namespace SDP
 			id_handle->attr_id->element = new SDP::ATTRIBUTE_ID_ELEMENT();
 			id_handle->attr_id->element->element.size = record_handle_element->element.size;
 			id_handle->attr_id->element->element.type = record_handle_element->element.type;
+			id_handle->attr_id->element->type_value = SDP::SUB_FUNCTIONS::getElementTypeString(id_handle->attr_id->element->element.type);
+			
 
 			int temp_size = SDP::SUB_FUNCTIONS::getElementSize(id_handle->attr_id->element->element.size, &(id_handle->attr_id->additional_bits_flag));
 
@@ -75,7 +77,6 @@ namespace SDP
 					position += a;
 					id_handle->attr_id->value[a] = *(res + position);
 				}
-				printf("\n");
 			}
 
 			position++;
@@ -92,6 +93,9 @@ namespace SDP
 			id_handle->VALUE.element = new SDP::ATTRIBUTE_ID_ELEMENT();
 			id_handle->VALUE.element->element.size = record_handle_element_2->element.size;
 			id_handle->VALUE.element->element.type = record_handle_element_2->element.type;
+			id_handle->VALUE.element->type_value = SDP::SUB_FUNCTIONS::getElementTypeString(id_handle->VALUE.element->element.type);
+
+
 
 			int temp_size_VALUE = SDP::SUB_FUNCTIONS::getElementSize(
 										id_handle->VALUE.element->element.size, 
@@ -236,7 +240,7 @@ namespace SDP
 				current_used_service == SDP::HandsfreeAudioGateway
 			)
 			{
-				SDP::HFP::parse_by_type_sub_function<C>(type, handle, current_used_service);
+				SDP::HFP::parse_by_type_sub_function<C>(type, handle, current_used_service,dd);
 			}
 
 			if (current_used_service == SDP::AudioSource)

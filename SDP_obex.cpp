@@ -61,6 +61,8 @@ void SDP::OBEX::parse_SUPPORTED_FORMATS_LIST_OBEX(PSUPPORTED_FORMATS handle)
 	{
 		handle->VALUE.formats[bb] = handle->VALUE.value[aa];
 	}
+
+	handle->VALUE.formats_value = getSupportedFormatsString(handle->VALUE.formats, handle->VALUE.num_of_formats);
 }
 
 

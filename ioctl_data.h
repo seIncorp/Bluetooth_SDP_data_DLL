@@ -23,8 +23,11 @@
 	- ADD: dodaj se moznost za vec razlicnih vrst file-ov za import data (npr.: cvs, exel, xml, json, ...)
 	- ADD: dodaj vec debug level-ov za izpis
 	- CHANGE: iz by value passing daj raje refence v vseh print functions of service
+	- BUG: ko se klice A_V_RemoteControl se vrne razultat od A_V_RemoteControlTarget (kar je prav), samo prevede od A_V_RemoteControl (napacni podatki)
+	
 
 
+	- ADD: naredi funkcijo za vse te parametre: sdp_settings.debug, print, print_info	<-- DONE!!!
 	- ADD: record attribute and not to use default directly	<-- DONE!!!
 	- IMPROVE: da ce ima en service vec klicev za parametre naj se naredi eno defult func za vse te klice	<-- DONE!!!
 	- ADD: dodaj se za reset attr_search_for_service to 0	<-- DONE!!!
@@ -40,14 +43,15 @@
 
 
 	TODO FROM C++/CLI:
-	- DODAJ: da se v DEFAULT struct shrani tudi string od attr_element value, trenutno se samo klice v printATTR_ELEMENT -> getElementTypeString, tako da trenutno ni mozno exportat ta podatek
-	- POPRAVI: glede search all services, da se res vsi poiscejo ali pa pac odstrani to
-	- POPRAVI: izpis vseh praznih vrstic
-	- DODAJ: shranjevanje text-a iz razlicnih servicov, ker trenutno se samo izpise
-	- POPRAVI: v native popravi text izpis za A_V_RemoteControlController
+	- POPRAVI: glede search all services, da se res vsi poiscejo ali pa pac odstrani to (RAJE ODSTRANI)	<-- TRENUTNO SE PRIPOROCA set_all_SDP_service_for_search()
 	- DODAJ: se za PANU service
 
 
+
+	- DODAJ: shranjevanje text-a iz razlicnih servicov, ker trenutno se samo izpise (example: MAP::SUPPORTED_MESSAGE_TYPES_S)	<-- DONE!!!
+	- POPRAVI: v native popravi text izpis za A_V_RemoteControlController	<-- DONE !!
+	- DODAJ: da se v DEFAULT struct shrani tudi string od attr_element value, trenutno se samo klice v printATTR_ELEMENT -> getElementTypeString, tako da trenutno ni mozno exportat ta podatek	<-- DONE!!!
+	- POPRAVI: izpis vseh praznih vrstic	<-- DONE!!!
 	- UREDI: da se lahko za pnpinfo searcha za vsak podatek posebej, ker trenutno se vse searcha	<-- DONE!!!
 	- UREDI: da ce je error, da se shrani v temp id in text in poslje na CLI->.NET	<-- DONE !!
 	- DODAJ: ERROR_BAD_NETPATH --> 0x35	<-- DONE !!
@@ -57,6 +61,15 @@
 	- UREDI: da SDP::FUNCTIONS::SDP_INIT_DISCONNECT::init_for_IOCTL_BTH_SDP_DISCONNECT vraca 1 ali 0, odvisno ali je ok ali failed	<-- DONE !!
 	- UREDI: da IOCTL_S::getLocalBthInfo vraca 1 ali 0, odvisno ali je ok ali failed	<-- DONE !!
 
+
+
+
+	ZA C++/CLI (NOVE SPREMEMBE):
+	- ATTRIBUTE_ID_ELEMENT->type_value
+	- set_printing_type()
+	- shranjeni stringi (MAP, A2DP, AVRCP, HFP, ...)
+	- popravljeni warningi (preglej ce vse deluje)
+	- SERVICE_CLASS_ID_LIST namesto array je vector
 */
 
 /*************************************************/
@@ -120,9 +133,11 @@ namespace SDP
 		Handsfree = 0x111E,
 		OBEXObjectPush = 0x1105,
 		OBEXFileTransfer = 0x1106,
+
 		A_V_RemoteControl = 0x110E,
 		A_V_RemoteControlTarget = 0x110C,
 		A_V_RemoteControlController = 0x110F,
+
 		PANU = 0x1115,
 		_NAP = 0x1116,
 		HandsfreeAudioGateway = 0x111F,
@@ -453,9 +468,9 @@ namespace BTH_DEVICES
 
 	} CACHED_DEVICE, * PCACHED_DEVICE;
 	
-	typedef struct SEARCHED_CACHED_DEVICES_S
+	/*typedef struct SEARCHED_CACHED_DEVICES_S
 	{
-		ULONG numOfDevices;
+		size_t numOfDevices = 0;
 		std::vector<CACHED_DEVICE> devices;
 
 		void print()
@@ -464,7 +479,20 @@ namespace BTH_DEVICES
 				d.print();
 		}
 
-	} SEARCHED_CACHED_DEVICES, * PSEARCHED_CACHED_DEVICES;
+	} SEARCHED_CACHED_DEVICES, * PSEARCHED_CACHED_DEVICES;*/
+	struct SEARCHED_CACHED_DEVICES_S
+	{
+		size_t numOfDevices = 0;
+		std::vector<CACHED_DEVICE> devices;
+
+		void print()
+		{
+			for (auto d : devices)
+				d.print();
+		}
+
+	}; 
+	typedef SEARCHED_CACHED_DEVICES_S SEARCHED_CACHED_DEVICES;
 
 
 
@@ -536,10 +564,11 @@ namespace BTH_DEVICES
 
 	typedef struct LOCAL_RADIO_DEVICE_DATA_S
 	{
-		LOCAL_RADIO_DEVICE_DATA_S(ULONG f, USHORT hciR, UCHAR hciV)
-			: flags{ f }, HCI_minor_version{ hciR }, HCI_major_version{ hciV }
+		LOCAL_RADIO_DEVICE_DATA_S(ULONG f, USHORT hciR, UCHAR hciV, PDEVICE_DATA pd = nullptr)
+			: flags{ f }, HCI_minor_version{ hciR }, HCI_major_version{ hciV }, device{ pd }
 		{
-
+			//device = nullptr;
+			radio = nullptr;
 		};
 
 		void print()
@@ -552,7 +581,7 @@ namespace BTH_DEVICES
 				HCI_minor_version
 			);
 			device->print();
-			radio->print();
+			radio->print(); 
 			
 		}
 
@@ -857,19 +886,25 @@ namespace IOCTL_DATA_STRUCTURES_S
 
 	struct returned_ERROR
 	{
-		int error_occurred_flag;
-		short id;
-		std::string name;
+		int error_occurred_flag{0};
+		DWORD id{0};
+		std::string name{""};
 	};
 
 	struct vendor_ID_s
 	{
-		int decimal;
-		short hexadecimal;
-		std::string company;
+		int decimal{ 0 };
+		short hexadecimal{ 0 };
+		std::string company{ "" };
 	};
 
-	
+	struct PRINTING_TYPES
+	{
+		int debug;
+		int print;
+		int print_info;
+		int print_with_outside_funct;
+	};
 }
 
 namespace IOCTL_S
@@ -912,6 +947,8 @@ namespace IOCTL_S
 		
 
 		// PRINTINGS functions
+		void set_printing_type(IOCTL_DATA_STRUCTURES_S::PRINTING_TYPES* obj_types);
+
 		void set_all_default_attr_service_PRINT(int onOff);
 		void set_all_special_attr_service_PRINT(unsigned int service, int onOff);
 
@@ -925,7 +962,7 @@ namespace IOCTL_S
 		void fill_vendors_list();
 		std::vector<IOCTL_DATA_STRUCTURES_S::vendor_ID_s*> *vendors_list;
 		
-
+		
 		// TODO: add check if OS is 64 or 32bit
 		// currently only for x64, does not work for x86
 		// pointer to outside print function
@@ -959,6 +996,10 @@ namespace IOCTL_S
 	SDP_DATA_API int getLocalBthInfo(DEFAULT_DATA& dd, int print = 1);
 
 	SDP_DATA_API void printErrorMessage(DWORD id, DEFAULT_DATA& dd);
+
+
+
+	SDP_DATA_API void test123(DEFAULT_DATA& dd);
 };
 
 
@@ -978,6 +1019,9 @@ namespace SDP
 			BYTE size : 3;		// ID for enum
 			BYTE type : 5;		// ID for enum
 		} element;
+
+		std::string type_value;
+
 	} ATTRIBUTE_ID_ELEMENT, * PATTRIBUTE_ID_ELEMENT;
 
 	typedef struct
@@ -1044,6 +1088,8 @@ namespace SDP
 		int additional_bits_for_size;		// additional bytes for size value (after this you must read those bytes for real size of element value)
 
 		BYTE* value;
+
+		
 
 	} ATTR_ID;
 
@@ -1133,7 +1179,7 @@ namespace SDP
 			else
 			{
 				printf(VALUE_2);
-				printf("%s %s [%d]\n", VALUE_3, SDP::SUB_FUNCTIONS::getElementTypeString(attr_id->element->element.type).c_str(), attr_id->element->element.type);
+				printf("%s %s [%d]\n", VALUE_3, attr_id->element->type_value.c_str(), attr_id->element->element.type);
 
 				if (attr_id->additional_bits_flag)
 				{
@@ -1199,8 +1245,8 @@ namespace SDP
 			else
 			{
 				printf(VALUE_1);
-				printf("%s %s [%d]\n", VALUE_3, SDP::SUB_FUNCTIONS::getElementTypeString(v.element->element.type).c_str(), v.element->element.type);
-
+				printf("%s %s [%d]\n", VALUE_3, v.element->type_value.c_str(), v.element->element.type);
+				
 				if (v.additional_bits_flag)
 				{
 					printf("%s %d\n", VALUE_6, v.additional_bits_for_size);
@@ -1320,7 +1366,10 @@ namespace SDP
 		{
 
 			int num_classes;
-			SERVICE_CLASS* classes;				// pointer to array of SERVICE_CLASS objects
+			//SERVICE_CLASS* classes;	// pointer to array of SERVICE_CLASS objects
+
+			std::vector<SERVICE_CLASS*> classes;
+
 		} VALUE;
 
 		template<class T>
@@ -1336,7 +1385,7 @@ namespace SDP
 
 				char test[MAX_TEMP_STRING_LENGTH]{ 0 };
 				for (int a = 0; a < VALUE.num_classes; a++)
-					sprintf_s(test, "%sClass ID [%d]: 0x%04X\n", test, a, VALUE.classes[a].value);
+					sprintf_s(test, "%sClass ID [%d]: 0x%04X\n", test, a, VALUE.classes[a]->value);
 				dd.outside_print_function(test);
 			}
 			else
@@ -1349,9 +1398,9 @@ namespace SDP
 				printVALUE_ELEMENT(v, dd);
 
 				// TODO: naredi tako da se bodo kreirali objekt za vsak class posebej, ker jih je v prihodnosti lahko vec
-
+				 
 				for (int a = 0; a < VALUE.num_classes; a++)
-					printf("Class ID [%d]: 0x%04X\n", a, VALUE.classes[a].value);
+					printf("Class ID [%d]: 0x%04X\n", a, VALUE.classes[a]->value);
 
 				printf("\n");
 			}
@@ -1894,7 +1943,7 @@ namespace SDP
 				BYTE : 3;
 			};
 
-			SMT_S* ttt;
+			SMT_S* ttt{nullptr};
 
 
 			struct SF_S
@@ -1926,12 +1975,12 @@ namespace SDP
 				BYTE : 3;
 			};
 
-			SF_S* aaa;
+			SF_S* aaa{ nullptr } ;
 
 			// TODO: bolje preimenuj, da bo bolj razumljivo
-			int flag;
-			DWORD sf_s_value;
-			BYTE smt_s_value;
+			int flag{0};
+			DWORD sf_s_value{ 0 };
+			BYTE smt_s_value{ 0x00 };
 
 			SUPPORTED_FEATURES_MESSAGES_S(int i, DWORD a1, BYTE a2)
 			{
@@ -1990,7 +2039,6 @@ namespace SDP
 				}
 			}
 
-
 		} GOEPL2CAPPSM, * PGOEPL2CAPPSM;
 
 		typedef struct SUPPORTED_MESSAGE_TYPES_S : DEFAULT_OBJECT
@@ -1998,6 +2046,8 @@ namespace SDP
 			struct VV : VALUE
 			{
 				SUPPORTED_FEATURES_MESSAGES_S* sfm;
+
+				std::string message_types_value;
 
 			} VALUE;
 
@@ -2013,7 +2063,7 @@ namespace SDP
 					printVALUE_ELEMENT(v, dd);
 
 					std::string temp_s = "Message types: \n";
-					temp_s.append(getMessageTypesString(VALUE.sfm));
+					temp_s.append(VALUE.message_types_value);
 					temp_s.append("\n");
 					dd.outside_print_function(temp_s);
 				}
@@ -2025,9 +2075,7 @@ namespace SDP
 					printATTR_ELEMENT(dd);
 					printVALUE_ELEMENT(v, dd);
 
-					printf("Message types: \n%s\n", getMessageTypesString(VALUE.sfm).c_str());
-
-					printf("\n");
+					printf("Message types: \n%s\n", VALUE.message_types_value.c_str());
 				}
 			}
 
@@ -2079,6 +2127,8 @@ namespace SDP
 			{
 				SUPPORTED_FEATURES_MESSAGES_S* sfm;
 
+				std::string supported_messages_value;
+
 			} VALUE;
 
 			template<class T>
@@ -2093,7 +2143,7 @@ namespace SDP
 					printVALUE_ELEMENT(v, dd);
 
 					std::string temp_s = "Features: \n";
-					temp_s.append(getSupportedFeaturesString(*v.sfm));
+					temp_s.append(v.supported_messages_value);
 					temp_s.append("\n");
 					dd.outside_print_function(temp_s);
 				}
@@ -2105,7 +2155,7 @@ namespace SDP
 					printATTR_ELEMENT(dd);
 					printVALUE_ELEMENT(v, dd);
 
-					printf("Features: \n%s\n", getSupportedFeaturesString(*v.sfm).c_str());
+					printf("Features: \n%s\n", v.supported_messages_value.c_str());
 					printf("\n");
 				}
 			}
@@ -2185,6 +2235,8 @@ namespace SDP
 
 				SUPPORTED_FEATURES_DATA_S* sfds;
 
+				std::string supported_features_string_value;
+
 			} VALUE;
 
 			template<class T>
@@ -2203,7 +2255,7 @@ namespace SDP
 					sprintf_s(test, "%s 0x%04X\n", VALUE_7, v.supported_features_value);
 					dd.outside_print_function(test);
 
-					sprintf_s(test, "%s\n", v.sfds->getSupportedFeaturesString().c_str());
+					sprintf_s(test, "%s\n", v.supported_features_string_value.c_str());
 					dd.outside_print_function(test);
 				}
 				else
@@ -2216,7 +2268,7 @@ namespace SDP
 
 
 					printf("%s 0x%04X\n", VALUE_7, v.supported_features_value);
-					printf("%s\n", v.sfds->getSupportedFeaturesString().c_str());
+					printf("%s\n", v.supported_features_string_value.c_str());
 				}
 			}
 
@@ -2394,6 +2446,8 @@ namespace SDP
 
 				SUPPORTED_FEATURES_DATA_S* sfds;
 
+				std::string supp_features_string_value;
+
 			} VALUE;
 
 			template<class T>
@@ -2411,22 +2465,10 @@ namespace SDP
 					sprintf_s(test, "%s 0x%04X\n", VALUE_7, v.supported_features_value);
 					dd.outside_print_function(test);
 
-					// TODO: najdi boljso resitev, ker se pri klicu printVALUE_ELEMENT() value spremeni na random
-					v.sfds->avrct = (SUPPORTED_FEATURES_DATA_S::AVRCT_S*)&v.supported_features_value;
-
-					if (dd.temp_class_id == SDP::A_V_RemoteControlTarget)
-					{
-						sprintf_s(test, "%s\n", v.sfds->getSupportedFeaturesString_AVRCT().c_str());
-						dd.outside_print_function(test);
-					}
-
-					if (dd.temp_class_id == SDP::A_V_RemoteControl ||
-						dd.temp_class_id == SDP::A_V_RemoteControlController
-					)
-					{
-						sprintf_s(test, "%s\n", v.sfds->getSupportedFeaturesString_AVRC_AVRCC().c_str());
-						dd.outside_print_function(test);
-					}
+					
+					sprintf_s(test, "%s\n", v.supp_features_string_value.c_str());
+					dd.outside_print_function(test);
+					
 				}
 				else
 				{
@@ -2438,16 +2480,8 @@ namespace SDP
 
 					printf("%s 0x%04X\n", VALUE_7, v.supported_features_value);
 
-					// TODO: najdi boljso resitev, ker se pri klicu printVALUE_ELEMENT() value spremeni na random
-					v.sfds->avrct = (SUPPORTED_FEATURES_DATA_S::AVRCT_S*)&v.supported_features_value;
 
-					if (dd.temp_class_id == SDP::A_V_RemoteControlTarget)
-						printf("%s\n", v.sfds->getSupportedFeaturesString_AVRCT().c_str());
-
-					if (dd.temp_class_id == SDP::A_V_RemoteControl ||
-						dd.temp_class_id == SDP::A_V_RemoteControlController
-						)
-						printf("%s\n", v.sfds->getSupportedFeaturesString_AVRC_AVRCC().c_str());
+					printf("%s\n", v.supp_features_string_value.c_str());
 				}
 			}
 
@@ -2587,6 +2621,12 @@ namespace SDP
 
 		typedef struct NETWORK_S : DEFAULT_OBJECT
 		{
+			struct VV : VALUE
+			{
+				std::string network_value;
+
+			} VALUE;
+			
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA& dd)
 			{
@@ -2599,7 +2639,7 @@ namespace SDP
 					printVALUE_ELEMENT(v, dd);
 
 					char test[MAX_TEMP_STRING_LENGTH]{ 0 };
-					sprintf_s(test, "Network: %s\n", v.value[0] == 0x01 ? "Ability to reject a call" : "No ability to reject a call");
+					sprintf_s(test, "Network: %s\n", v.network_value.c_str());
 					dd.outside_print_function(test);
 
 					sprintf_s(test, "\n");
@@ -2614,7 +2654,7 @@ namespace SDP
 
 					printVALUE_ELEMENT(v, dd);
 
-					printf("Network: %s\n", v.value[0] == 0x01 ? "Ability to reject a call" : "No ability to reject a call");
+					printf("Network: %s\n", v.network_value.c_str());
 					printf("\n");
 				}
 			}
@@ -2629,13 +2669,13 @@ namespace SDP
 
 				SUPPORTED_FEATURES_DATA_S* sfds;
 
+				std::string supp_features_string_value;
+
 			} VALUE;
 
 			template<class T>
 			void print(T v, IOCTL_S::DEFAULT_DATA& dd)
 			{
-				
-				
 				if (dd.outside_print_function != NULL && dd.sdp_settings.print_with_outside_funct == 1)
 				{
 					dd.outside_print_function(DELIMITER_PRINT);
@@ -2648,16 +2688,9 @@ namespace SDP
 					sprintf_s(test, "Supported features: 0x%04X\n", v.supported_features_value);
 					dd.outside_print_function(test);
 
-					if (dd.temp_service == SDP::HandsfreeAudioGateway)
-					{
-						sprintf_s(test, "%s\n", v.sfds->getSupportedFeatures_AG_String().c_str());
-						dd.outside_print_function(test);
-					}
-					else
-					{
-						sprintf_s(test, "%s\n", v.sfds->getSupportedFeaturesString().c_str());
-						dd.outside_print_function(test);
-					}
+					sprintf_s(test, "%s\n", v.supp_features_string_value.c_str());
+					dd.outside_print_function(test);
+					
 				}
 				else
 				{
@@ -2669,11 +2702,7 @@ namespace SDP
 
 					printf("Supported features: 0x%04X\n", v.supported_features_value);
 
-					if (dd.temp_service == SDP::HandsfreeAudioGateway)
-						printf("%s\n", v.sfds->getSupportedFeatures_AG_String().c_str());
-					else
-						printf("%s\n", v.sfds->getSupportedFeaturesString().c_str());
-					
+					printf("%s\n", v.supp_features_string_value.c_str());
 					printf("\n");
 				}
 			}
@@ -2741,6 +2770,9 @@ namespace SDP
 			struct VV : VALUE
 			{
 				SHORT security_value;
+
+				std::string security_string_value;
+
 			} VALUE;
 
 			template<class T>
@@ -2755,7 +2787,7 @@ namespace SDP
 					printVALUE_ELEMENT(v, dd);
 
 					char test[MAX_TEMP_STRING_LENGTH]{ 0 };
-					sprintf_s(test, "Security Description [0x%04X][%s]\n", VALUE.security_value, getSecurityDescriptionString(VALUE.security_value).c_str());
+					sprintf_s(test, "Security Description [0x%04X][%s]\n", VALUE.security_value, VALUE.security_string_value.c_str());
 					dd.outside_print_function(test);
 				}
 				else
@@ -2766,7 +2798,7 @@ namespace SDP
 					printATTR_ELEMENT(dd);
 					printVALUE_ELEMENT(v, dd);
 
-					printf("Security Description [0x%04X][%s]\n", VALUE.security_value, getSecurityDescriptionString(VALUE.security_value).c_str());
+					printf("Security Description [0x%04X][%s]\n", VALUE.security_value, VALUE.security_string_value.c_str());
 					printf("\n");
 				}
 			}
@@ -2778,6 +2810,9 @@ namespace SDP
 			struct VV : VALUE
 			{
 				SHORT NetAccessType;
+
+				std::string NetAccessType_value;
+
 			} VALUE;
 
 			template<class T>
@@ -2792,7 +2827,7 @@ namespace SDP
 					printVALUE_ELEMENT(v, dd);
 
 					char test[MAX_TEMP_STRING_LENGTH]{ 0 };
-					sprintf_s(test, "Type of Network Access Available[0x%04X][%s]\n", VALUE.NetAccessType, getNetAccessTypeString(VALUE.NetAccessType).c_str());
+					sprintf_s(test, "Type of Network Access Available[0x%04X][%s]\n", VALUE.NetAccessType, VALUE.NetAccessType_value.c_str());
 					dd.outside_print_function(test);
 				}
 				else
@@ -2804,7 +2839,7 @@ namespace SDP
 					printATTR_ELEMENT(dd);
 					printVALUE_ELEMENT(v, dd);
 
-					printf("Type of Network Access Available[0x%04X][%s]\n", VALUE.NetAccessType, getNetAccessTypeString(VALUE.NetAccessType).c_str());
+					printf("Type of Network Access Available[0x%04X][%s]\n", VALUE.NetAccessType, VALUE.NetAccessType_value.c_str());
 					printf("\n");
 				}
 			}
@@ -2877,6 +2912,8 @@ namespace SDP
 				int num_of_formats;
 				BYTE* formats;
 
+				std::string formats_value;
+
 			} VALUE;
 
 			template<class T>
@@ -2903,7 +2940,7 @@ namespace SDP
 					dd.outside_print_function(test);
 
 
-					sprintf_s(test, "Formats: \n%s\n", getSupportedFormatsString(v.formats, v.num_of_formats).c_str());
+					sprintf_s(test, "Formats: \n%s\n", v.formats_value.c_str());
 					dd.outside_print_function(test);
 				}
 				else
@@ -2922,7 +2959,7 @@ namespace SDP
 						printf("0x%02X ", v.formats[aa]);
 					printf("\n");
 
-					printf("Formats: \n%s\n", getSupportedFormatsString(v.formats, v.num_of_formats).c_str());
+					printf("Formats: \n%s\n", v.formats_value.c_str());
 				}
 			}
 
@@ -2994,6 +3031,8 @@ namespace SDP
 			{
 				SUPPORTED_REPOSITORIES_DATA_S* srs;
 
+				std::string repositories_value;
+
 			} VALUE;
 
 			template<class T>
@@ -3008,7 +3047,7 @@ namespace SDP
 					printVALUE_ELEMENT(v, dd);
 
 					char test[MAX_TEMP_STRING_LENGTH]{ 0 };
-					sprintf_s(test, "Repositories: \n%s\n", v.srs->getSupportedRepositoriesString().c_str());
+					sprintf_s(test, "Repositories: \n%s\n", v.repositories_value.c_str());
 					dd.outside_print_function(test);
 				}
 				else
@@ -3019,7 +3058,7 @@ namespace SDP
 					printATTR_ELEMENT(dd);
 					printVALUE_ELEMENT(v, dd);
 
-					printf("Repositories: \n%s\n", v.srs->getSupportedRepositoriesString().c_str());
+					printf("Repositories: \n%s\n", v.repositories_value.c_str());
 				}
 			}
 
@@ -3183,7 +3222,10 @@ namespace SDP
 					sprintf_s(test, "Product ID: 0x%04X\n", this->ProductID);
 					dd.outside_print_function(test);
 
-					sprintf_s(test, "Version: 0x%04X\n", this->Version);
+					sprintf_s(test, "Version: %02X.%X.%X\n",
+						this->Version.major_version,
+						this->Version.minor_version,
+						this->Version.sub_minor_version);
 					dd.outside_print_function(test);
 
 					sprintf_s(test, "Primary Record: [0x%02X] [%s]\n", this->PrimaryRecord == 0x01, this->PrimaryRecord == 0x01 ? "TRUE" : "FALSE");

@@ -180,6 +180,10 @@ void SDP::MAP::parse_GOEPL2CAPPSM_MAP(GOEPL2CAPPSM& handle)
 void SDP::MAP::parse_SUPPORTED_MESSAGE_TYPES_MAP(SUPPORTED_MESSAGE_TYPES& handle)
 {
 	handle.VALUE.sfm = new SUPPORTED_FEATURES_MESSAGES_S(0, 0, handle.VALUE.value[handle.VALUE.size_bytes-1]);
+
+	handle.VALUE.message_types_value = getMessageTypesString(handle.VALUE.sfm);
+
+
 }
 
 void SDP::MAP::parse_MAS_INSTANCE_ID_MAP(MAS_INSTANCE_ID& handle)
@@ -200,6 +204,8 @@ void SDP::MAP::parse_MAP_SUPPORTED_FEATURES_MAP(MAP_SUPPORTED_FEATURES& handle)
 	temp |= handle.VALUE.value[3];
 
 	handle.VALUE.sfm = new SUPPORTED_FEATURES_MESSAGES_S(1, temp,0);
+
+	handle.VALUE.supported_messages_value = getSupportedFeaturesString(*handle.VALUE.sfm);
 }
 
 

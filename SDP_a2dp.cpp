@@ -16,6 +16,7 @@ void SDP::A2DP::parse_SUPPORTED_FEATURES_A2DP(PSUPPORTED_FEATURES handle)
 
 	handle->VALUE.sfds = new SUPPORTED_FEATURES_DATA_S(&handle->VALUE.supported_features_value);
 
+	handle->VALUE.supported_features_string_value = handle->VALUE.sfds->getSupportedFeaturesString();
 }
 
 

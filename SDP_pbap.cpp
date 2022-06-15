@@ -9,6 +9,10 @@
 void SDP::PBAP::parse_SUPPORTED_REPOSITORIES_PBAP(PSUPPORTED_REPOSITORIES handle)
 {
 	handle->VALUE.srs = new SUPPORTED_REPOSITORIES_DATA_S(handle->VALUE.value);
+
+
+	handle->VALUE.repositories_value = handle->VALUE.srs->getSupportedRepositoriesString();
+
 }
 
 void SDP::PBAP::parse_PBAP_SUPPORTED_FEATURES_PBAP(PPBAP_SUPPORTED_FEATURES handle)

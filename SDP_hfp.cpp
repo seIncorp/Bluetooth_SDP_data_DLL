@@ -6,10 +6,10 @@
 
 void SDP::HFP::parse_NETWORK_HFP(PNETWORK handle)
 {
-
+	handle->VALUE.network_value = handle->VALUE.value[0] == 0x01 ? "Ability to reject a call" : "No ability to reject a call";
 }
 
-void SDP::HFP::parse_SUPPORTED_FEATURES_HFP(PSUPPORTED_FEATURES handle)
+void SDP::HFP::parse_SUPPORTED_FEATURES_HFP(PSUPPORTED_FEATURES handle, IOCTL_S::DEFAULT_DATA& dd)
 {
 	SHORT temp = 0x00;
 
@@ -22,6 +22,16 @@ void SDP::HFP::parse_SUPPORTED_FEATURES_HFP(PSUPPORTED_FEATURES handle)
 
 	handle->VALUE.supported_features_value = temp;
 	handle->VALUE.sfds = new SDP::HFP::SUPPORTED_FEATURES_DATA_S(temp);
+
+	if (dd.temp_service == SDP::HandsfreeAudioGateway)
+	{
+		handle->VALUE.supp_features_string_value = handle->VALUE.sfds->getSupportedFeatures_AG_String();
+	}
+	else
+	{
+		handle->VALUE.supp_features_string_value = handle->VALUE.sfds->getSupportedFeaturesString();
+	}
+
 }
 
 
